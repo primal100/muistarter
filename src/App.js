@@ -8,6 +8,7 @@ import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import ForgotPassword from "./modules/components/ForgotPassword";
+import mockBackend from "./modules/backend"
 
 
 function App() {
@@ -25,4 +26,6 @@ function App() {
   );
 }
 
+
+mockBackend();
 export default withRoot(App);

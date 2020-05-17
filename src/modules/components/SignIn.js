@@ -3,7 +3,6 @@ import withRoot from '../withRoot';
 import React from 'react';
 import compose from 'recompose/compose';
 import { Field, Form, FormSpy } from 'react-final-form';
-import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
@@ -11,20 +10,9 @@ import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
 import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
+import { withStyles } from '@material-ui/core/styles';
+import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
-
-const useStyles = (theme) => ({
-  form: {
-    marginTop: theme.spacing(6),
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-  },
-  feedback: {
-    marginTop: theme.spacing(2),
-  },
-})
 
 
 class SignIn extends React.Component {
@@ -48,8 +36,29 @@ class SignIn extends React.Component {
       return errors;
     };
 
-    handleSubmit = () => {
-      this.setState({sent: true})
+    handleSubmit = async (values) => {
+        console.log(values)
+        this.setState({sent: true})
+
+        let response = await fetch(process.env.REACT_APP_SIGN_IN_URL, {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(values)
+        })
+        let status = response.status;
+        let data = await response.json()
+        console.log(status)
+        console.log(data)
+        if (status === 200) {
+            window.location.reload();
+        }else{
+            this.setState({sent: false})
+            console.log('returning')
+            return data;
+        }
     }
 
     render() {
@@ -68,9 +77,9 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.validate}>
-              {({ handleSubmit2, submitting }) => (
-                <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.validate}
+              render={({ handleSubmit, submitting }) => (
+                <form onSubmit={handleSubmit} className={classes.form} noValidate>
                   <Field
                     autoComplete="email"
                     autoFocus
@@ -115,6 +124,7 @@ class SignIn extends React.Component {
                   </FormButton>
                 </form>
               )}
+            >
             </Form>
             <Typography variant="body2" align="center">
               <Link underline="always" component={RouterLink} to="/forgot-password">
@@ -132,7 +142,3 @@ export default compose(
   withStyles(useStyles),
   withRoot
 )(SignIn);
-
-
-// export default withRoot(React.mapStateToProps, React.mapDispatchToProps)(withStyles(useStyles)(SignIn));
-
