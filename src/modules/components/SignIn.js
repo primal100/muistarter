@@ -13,6 +13,10 @@ import FormFeedback from '../form/FormFeedback';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
+import { FORM_ERROR } from "final-form";
+
+
+const response_key = process.env.REACT_APP_GENERAL_KEY_ERRORS
 
 
 class SignIn extends React.Component {
@@ -57,7 +61,11 @@ class SignIn extends React.Component {
         }else{
             this.setState({sent: false})
             console.log('returning')
-            return data;
+            if (data[response_key]) {
+                return {[FORM_ERROR]: data[response_key]}
+            }else{
+                return data;
+            }
         }
     }
 
@@ -78,7 +86,7 @@ class SignIn extends React.Component {
               </Typography>
             </React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.validate}
-              render={({ handleSubmit, submitting }) => (
+              render={({ submitError, handleSubmit, submitting }) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                   <Field
                     autoComplete="email"
