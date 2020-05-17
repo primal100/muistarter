@@ -1,0 +1,4 @@
+login component
+register component
+forgot password component
+ui-router component
