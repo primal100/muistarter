@@ -19,14 +19,13 @@ const sign_in_url = process.env.REACT_APP_SIGN_IN_URL
 
 class SignIn extends React.Component {
 
-
     validate = (values) => {
-      const errors = required(['email', 'password'], values);
+      const errors = required(['login', 'password'], values);
 
-      if (!errors.email) {
-        const emailError = email(values.email, values);
-      if (emailError) {
-          errors.email = emailError;
+      if (!errors.login) {
+        const loginError = email(values.login, values);
+      if (loginError) {
+          errors.login = loginError;
         }
       }
 
@@ -34,7 +33,7 @@ class SignIn extends React.Component {
     };
 
     onSuccess = (values) => {
-        window.location.reload();
+        window.location = "/";
     }
 
     render() {
@@ -52,7 +51,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={sign_in_url} method="POST" success_status="200" onSuccess={this.onSuccess} validate={this.validate} submit_str="sign in" classes={this.props.classes}>
+            <AjaxForm url={sign_in_url} method="POST" successStatus="200" onSuccess={this.onSuccess} validate={this.validate} buttonText="sign in" classes={this.props.classes}>
                   <Field
                     autoComplete="email"
                     autoFocus
@@ -60,7 +59,7 @@ class SignIn extends React.Component {
                     fullWidth
                     label="Email"
                     margin="normal"
-                    name="email"
+                    name="login"
                     required
                     size="large"
                   />

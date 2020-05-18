@@ -2,14 +2,12 @@ import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
 import compose from 'recompose/compose';
-import { Field, Form, FormSpy } from 'react-final-form';
+import { Field, } from 'react-final-form';
 import Link from '@material-ui/core/Link';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { email, required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import FormButton from '../form/FormButton';
-import FormFeedback from '../form/FormFeedback';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
@@ -21,15 +19,9 @@ const sign_up_url = process.env.REACT_APP_SIGN_UP_URL
 
 
 class SignUp extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          sent: false
-      }
-    };
 
     validate = (values) => {
-      const errors = required(['firstName', 'lastName', 'email', 'password', 'password_confirm'], values);
+      const errors = required(['first_name', 'last_name', 'email', 'password', 'password_confirm'], values);
 
       if (!errors.email) {
         const emailError = email(values.email);
@@ -48,12 +40,14 @@ class SignUp extends React.Component {
       return errors;
     };
 
-    handleSubmit = () => {
-      this.setState({sent: true})
-    }
-
     render() {
-      const { classes } = this.props
+      const successMessage = "We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.\n" +
+          "\n" +
+          "If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form."
+      const redirect = {
+          pathname: "/",
+          state: {successMessage: successMessage}
+      }
       return (
           <React.Fragment>
             <AppForm>
@@ -67,9 +61,7 @@ class SignUp extends React.Component {
                   </Link>
                 </Typography>
               </React.Fragment>
-              <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={this.validate}>
-                {({handleSubmit2, submitting}) => (
-                    <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+              <AjaxForm url={sign_up_url} method="POST" successStatus="201" successTo={redirect} validate={this.validate} buttonText="Sign Up" classes={this.props.classes}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                           <Field
@@ -78,7 +70,7 @@ class SignUp extends React.Component {
                               autoComplete="fname"
                               fullWidth
                               label="First name"
-                              name="firstName"
+                              name="first_name"
                               required
                           />
                         </Grid>
@@ -88,7 +80,7 @@ class SignUp extends React.Component {
                               autoComplete="lname"
                               fullWidth
                               label="Last name"
-                              name="lastName"
+                              name="last_name"
                               required
                           />
                         </Grid>
@@ -96,7 +88,6 @@ class SignUp extends React.Component {
                       <Field
                           autoComplete="email"
                           component={RFTextField}
-                          disabled={submitting || this.state.sent}
                           fullWidth
                           label="Email"
                           margin="normal"
@@ -106,7 +97,6 @@ class SignUp extends React.Component {
                       <Field
                           fullWidth
                           component={RFTextField}
-                          disabled={submitting || this.state.sent}
                           required
                           name="password"
                           autoComplete="current-password"
@@ -117,7 +107,6 @@ class SignUp extends React.Component {
                       <Field
                           fullWidth
                           component={RFTextField}
-                          disabled={submitting || this.state.sent}
                           required
                           name="password_confirm"
                           autoComplete="current-password"
@@ -125,26 +114,7 @@ class SignUp extends React.Component {
                           type="password"
                           margin="normal"
                       />
-                      <FormSpy subscription={{submitError: true}}>
-                        {({submitError}) =>
-                            submitError ? (
-                                <FormFeedback className={classes.feedback} error>
-                                  {submitError}
-                                </FormFeedback>
-                            ) : null
-                        }
-                      </FormSpy>
-                      <FormButton
-                          className={classes.button}
-                          disabled={submitting || this.state.sent}
-                          color="secondary"
-                          fullWidth
-                      >
-                        {submitting || this.state.sent ? 'In progress…' : 'Sign Up'}
-                      </FormButton>
-                    </form>
-                )}
-              </Form>
+              </AjaxForm>
             </AppForm>
           </React.Fragment>
       );

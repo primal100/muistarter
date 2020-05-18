@@ -1,6 +1,7 @@
 import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
+import { Redirect } from 'react-router-dom'
 import compose from 'recompose/compose';
 import { Form, FormSpy } from 'react-final-form';
 import FormButton from '../form/FormButton';
@@ -10,14 +11,20 @@ import useStyles from '../form/styles';
 import { FORM_ERROR } from "final-form";
 
 
-const response_key = process.env.REACT_APP_GENERAL_KEY_ERRORS
+const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
+const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 
+
+function capitalize(str){
+    return  `${str[0].toUpperCase()}${str.slice(1)}`
+}
 
 class AjaxForm extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          sent: false
+          sent: false,
+          redirect: false
       }
     };
 
@@ -35,18 +42,37 @@ class AjaxForm extends React.Component {
         })
         let status = response.status;
         let data = await response.json()
-        if (status === parseInt(this.props.success_status)) {
-            this.props.onSuccess(data);
+        if (status === parseInt(this.props.successStatus)) {
+            if (this.props.onSuccess) {
+                this.props.onSuccess(data);
+            }else if (this.props.successTo) {
+                this.setState({redirect: true})
+            }
         }else{
             this.setState({sent: false})
             if (data[response_key]) {
                 return {[FORM_ERROR]: data[response_key]}
+            }else if (data[non_field_errors_key]){
+                return {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
-                return data;
+                return Object.keys(data).reduce(function(obj, k) {
+                    let value = obj[k]
+                    if (value) {
+                        if (Array.isArray(value)) {
+                            obj[k] = value.map(v => capitalize(v));
+                        } else {
+                            obj[k] = capitalize(value);
+                        }
+                    }
+                    return obj;
+            }, data);
             }
         }
     }
     render() {
+      if (this.state.redirect){
+          return <Redirect to={this.props.successTo} />
+      }
       const { classes } = this.props;
       return (
         <React.Fragment>
@@ -72,7 +98,7 @@ class AjaxForm extends React.Component {
                     color="secondary"
                     fullWidth
                   >
-                    {submitting || this.state.sent ? 'In progress…' : this.props.submit_str}
+                    {submitting || this.state.sent ? 'In progress…' : this.props.buttonText}
                   </FormButton>
                 </form>
               )}
