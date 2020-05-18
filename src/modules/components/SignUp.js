@@ -14,6 +14,10 @@ import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
+import AjaxForm from '../form/AjaxForm';
+
+
+const sign_up_url = process.env.REACT_APP_SIGN_UP_URL
 
 
 class SignUp extends React.Component {

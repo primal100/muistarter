@@ -1,0 +1,90 @@
+import withRoot from '../withRoot';
+// --- Post bootstrap -----
+import React from 'react';
+import compose from 'recompose/compose';
+import { Form, FormSpy } from 'react-final-form';
+import FormButton from '../form/FormButton';
+import FormFeedback from '../form/FormFeedback';
+import { withStyles } from '@material-ui/core/styles';
+import useStyles from '../form/styles';
+import { FORM_ERROR } from "final-form";
+
+
+const response_key = process.env.REACT_APP_GENERAL_KEY_ERRORS
+
+
+class AjaxForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+          sent: false
+      }
+    };
+
+
+    handleSubmit = async (values) => {
+        this.setState({sent: true})
+
+        let response = await fetch(this.props.url, {
+              method: this.props.method,
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(values)
+        })
+        let status = response.status;
+        let data = await response.json()
+        if (status === parseInt(this.props.success_status)) {
+            this.props.onSuccess(data);
+        }else{
+            this.setState({sent: false})
+            if (data[response_key]) {
+                return {[FORM_ERROR]: data[response_key]}
+            }else{
+                return data;
+            }
+        }
+    }
+    render() {
+      const { classes } = this.props;
+      return (
+        <React.Fragment>
+            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate}
+              render={({ submitError, handleSubmit, submitting }) => (
+                <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                  <fieldset disabled={submitting || this.state.sent}>
+                  {this.props.children}
+                  </fieldset>
+                  <FormSpy subscription={{ submitError: true }}>
+                    {({ submitError }) =>
+                      submitError ? (
+                        <FormFeedback className={classes.feedback} error>
+                          {submitError}
+                        </FormFeedback>
+                      ) : null
+                    }
+                  </FormSpy>
+                  <FormButton
+                    className={classes.button}
+                    disabled={submitting || this.state.sent}
+                    size="large"
+                    color="secondary"
+                    fullWidth
+                  >
+                    {submitting || this.state.sent ? 'In progress…' : this.props.submit_str}
+                  </FormButton>
+                </form>
+              )}
+            >
+            </Form>
+        </React.Fragment>
+      );
+    }
+}
+
+
+export default compose(
+  withStyles(useStyles),
+  withRoot
+)(AjaxForm);
