@@ -41,6 +41,7 @@ class SignUp extends React.Component {
     };
 
     render() {
+      const { classes } = this.props
       const successMessage = "We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.\n" +
           "\n" +
           "If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form."
@@ -61,7 +62,7 @@ class SignUp extends React.Component {
                   </Link>
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={sign_up_url} method="POST" successStatus="201" successTo={redirect} validate={this.validate} buttonText="Sign Up" classes={this.props.classes}>
+              <AjaxForm url={sign_up_url} method="POST" successStatus="201" successTo={redirect} validate={this.validate} buttonText="Sign Up" classes={classes}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                           <Field

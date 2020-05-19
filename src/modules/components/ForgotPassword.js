@@ -1,46 +1,43 @@
 import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
-import { Field, Form, FormSpy } from 'react-final-form';
+import { Field } from 'react-final-form';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import FormButton from '../form/FormButton';
-import FormFeedback from '../form/FormFeedback';
 import useStyles from '../form/styles';
 import compose from "recompose/compose";
+import AjaxForm from "../form/AjaxForm";
+
+
+const reset_password_url = process.env.REACT_APP_RESET_PASSWORD_URL
 
 
 class ForgotPassword extends React.Component {
-      constructor(props) {
-      super(props);
-      this.state = {
-          sent: false
-      }
-    };
 
     validate = (values) => {
-      const errors = required(['email', 'password'], values);
+      const errors = required(['email'], values);
 
-      if (!errors.email) {
-        const emailError = email(values.email, values);
-      if (emailError) {
-          errors.email = email(values.email, values);
+      if (!errors.login) {
+        const loginError = email(values.login, values);
+      if (loginError) {
+          errors.login = loginError;
         }
       }
 
     return errors;
   };
 
-    handleSubmit = () => {
-      this.setState({sent: true})
-    }
-
     render() {
-      const { classes } = this.props
-      return (
+       const successMessage = "We have sent you an email with a link to reset your password.\n"
+       const { classes } = this.props
+       const redirect = {
+          pathname: "/",
+          state: {successMessage: successMessage}
+       }
+       return (
         <React.Fragment>
           <AppForm>
             <React.Fragment>
@@ -52,14 +49,11 @@ class ForgotPassword extends React.Component {
                   'send you a link to reset your password.'}
               </Typography>
             </React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.validate}>
-              {({ handleSubmit2, submitting }) => (
-                <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+             <AjaxForm url={reset_password_url} method="POST" successStatus="200" successTo={redirect} validate={this.validate} buttonText="Send Reset Password E-mail" classes={classes}>
                   <Field
                     autoFocus
                     autoComplete="email"
                     component={RFTextField}
-                    disabled={submitting || this.state.sent}
                     fullWidth
                     label="Email"
                     margin="normal"
@@ -67,27 +61,7 @@ class ForgotPassword extends React.Component {
                     required
                     size="large"
                   />
-                  <FormSpy subscription={{ submitError: true }}>
-                    {({ submitError }) =>
-                      submitError ? (
-                        <FormFeedback className={classes.feedback} error>
-                          {submitError}
-                        </FormFeedback>
-                      ) : null
-                    }
-                  </FormSpy>
-                  <FormButton
-                    className={classes.button}
-                    disabled={submitting || this.state.sent}
-                    size="large"
-                    color="secondary"
-                    fullWidth
-                  >
-                    {submitting || this.state.sent ? 'In progress…' : 'Send reset link'}
-                  </FormButton>
-                </form>
-              )}
-            </Form>
+            </AjaxForm>
           </AppForm>
         </React.Fragment>
       );
