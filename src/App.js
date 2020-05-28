@@ -15,7 +15,7 @@ import mockBackend from "./modules/backend"
 function App() {
   return (
    <Router>
-     <ScrollToTop>
+    <ScrollToTop>
     <AppAppBar />
     <div>
     <Route exact path="/" component={Home} />
