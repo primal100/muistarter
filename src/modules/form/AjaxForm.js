@@ -8,6 +8,7 @@ import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
+import API from '../api';
 import { FORM_ERROR } from "final-form";
 
 
@@ -32,16 +33,13 @@ class AjaxForm extends React.Component {
     handleSubmit = async (values) => {
         this.setState({sent: true})
 
-        let response = await fetch(this.props.url, {
-              method: this.props.method,
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(values)
+        let response = await API({
+            method: this.props.method,
+            url: this.props.url,
+            data: values
         })
         let status = response.status;
-        let data = await response.json()
+        let data = response.data;
         if (status === parseInt(this.props.successStatus)) {
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);

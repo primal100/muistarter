@@ -22,6 +22,7 @@ function Home(props) {
   return (
     <React.Fragment>
       {props.location.state && props.location.state.successMessage && <div classes={classes.root} ><Alert severity="success">{props.location.state.successMessage}</Alert></div>}
+      {props.location.state && props.location.state.errorMessage && <div classes={classes.root} ><Alert severity="error">{props.location.state.errorMessage}</Alert></div>}
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">

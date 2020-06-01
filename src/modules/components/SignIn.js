@@ -33,6 +33,8 @@ class SignIn extends React.Component {
     };
 
     onSuccess = (values) => {
+        localStorage.setItem('access', values.access)
+        localStorage.setItem('refresh', values.refresh)
         window.location = "/";
     }
 
@@ -60,7 +62,7 @@ class SignIn extends React.Component {
                     fullWidth
                     label="Email"
                     margin="normal"
-                    name="login"
+                    name="email"
                     required
                     size="large"
                   />

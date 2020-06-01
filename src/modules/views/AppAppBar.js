@@ -56,6 +56,7 @@ function AppAppBar(props) {
           </Link>
           <div className={classes.right}>
             <Link
+              id="sign-in"
               color="inherit"
               variant="h6"
               underline="none"
@@ -65,6 +66,7 @@ function AppAppBar(props) {
               {'Sign In'}
             </Link>
             <Link
+              id="sign-up"
               variant="h6"
               underline="none"
               className={clsx(classes.rightLink, classes.linkSecondary)}
