@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.18.1",
     "fetch-mock": "^9.9.0",
     "jest-puppeteer": "^4.4.0",
     "puppeteer": "^2.1.1"

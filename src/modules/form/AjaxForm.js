@@ -8,7 +8,7 @@ import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
-import API from '../api';
+import { API } from '../api';
 import { FORM_ERROR } from "final-form";
 
 
@@ -28,7 +28,6 @@ class AjaxForm extends React.Component {
           redirect: false
       }
     };
-
 
     handleSubmit = async (values) => {
         this.setState({sent: true})

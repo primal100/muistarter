@@ -20,15 +20,14 @@ const sign_in_url = process.env.REACT_APP_SIGN_IN_URL
 class SignIn extends React.Component {
 
     validate = (values) => {
-      const errors = required(['login', 'password'], values);
+      const errors = required(['email', 'password'], values);
 
-      if (!errors.login) {
-        const loginError = email(values.login, values);
-      if (loginError) {
-          errors.login = loginError;
+      if (!errors.email) {
+        const emailError = email(values.email, values);
+      if (emailError) {
+          errors.email = emailError;
         }
       }
-
       return errors;
     };
 

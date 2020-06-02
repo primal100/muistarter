@@ -1,5 +1,4 @@
 import axios from 'axios';
-import React from "react";
 
 export const API = axios.create({
 });
@@ -28,7 +27,7 @@ export const getUserProfile = async (values) => {
 }
 
 
-const onSignIn = async (values) => {
+export const onSignIn = async (values) => {
     localStorage.setItem('access', values.access)
     localStorage.setItem('refresh', values.refresh)
     window.location = "/";

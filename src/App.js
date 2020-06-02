@@ -9,14 +9,14 @@ import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import ForgotPassword from "./modules/components/ForgotPassword";
-import {API, getUserProfile} from 'modules/api';
+import { API, getUserProfile } from './modules/api';
 import mockBackend from "./modules/backend"
 
 
 export const UserContext = React.createContext({user: {}});
 
 
-class ProtectedRoute extends React.Component {
+export class ProtectedRoute extends React.Component {
   render() {
     const { component: Component, authenticated, ...props } = this.props
 
@@ -34,7 +34,7 @@ class ProtectedRoute extends React.Component {
 }
 
 
-class App extends React.component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.accessToken = localStorage.getItem('access')
@@ -45,9 +45,9 @@ class App extends React.component {
     }
   }
 
-  async componentDidMount (){
+    async componentDidMount (){
     if (this.accessToken) {
-      this.userDetails =  await getUserProfile();
+      //this.userDetails =  await getUserProfile();
     }
   }
 
