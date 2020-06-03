@@ -11,6 +11,9 @@ export const load = async () => {
 
 export const getTitle = async () => await page.title();
 
-
+export const clearLocalStorage = async () => await page.evaluate(() => localStorage.clear())
 export const getLocalStorageAccessToken = async () => await page.evaluate(() => localStorage.getItem('access'))
 export const getLocalStorageRefreshToken = async () => await page.evaluate(() => localStorage.getItem('refresh'))
+
+
+export const url = async () => await page.url();

@@ -7,5 +7,6 @@ module.exports = {
   transform: {
     "\\.js$": "react-scripts/config/jest/babelTransform"
   },
+  setupFilesAfterEnv: ['./setupTestFramework.js'],
   verbose: true
 };
