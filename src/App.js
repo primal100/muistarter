@@ -9,7 +9,7 @@ import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import ForgotPassword from "./modules/components/ForgotPassword";
-import { API, getUserProfile } from './modules/api';
+import { API } from './modules/api';
 import mockBackend from "./modules/backend"
 
 

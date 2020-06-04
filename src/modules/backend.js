@@ -9,7 +9,7 @@ var mock = new MockAdapter(API);
 
 // const email = 'testuser@example.com'
 // const password =  'testpassword1'
-const response_key = process.env.REACT_APP_GENERAL_KEY_ERRORS
+const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
 const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 const email_address = 'a@a.com'
 const password = 'x1y@4f!21a'
@@ -53,7 +53,7 @@ const verify_response_invalid_signature = {[response_key]: 'Invalid signature'}
 export default function mockBackend() {
     if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
         console.log(`Running in ${process.env.NODE_ENV} mode`)
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(400, login_failed_response);
+        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, login_failed_response);
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, login_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);

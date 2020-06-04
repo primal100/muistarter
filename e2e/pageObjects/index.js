@@ -15,5 +15,6 @@ export const clearLocalStorage = async () => await page.evaluate(() => localStor
 export const getLocalStorageAccessToken = async () => await page.evaluate(() => localStorage.getItem('access'))
 export const getLocalStorageRefreshToken = async () => await page.evaluate(() => localStorage.getItem('refresh'))
 
+export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 
 export const url = async () => await page.url();

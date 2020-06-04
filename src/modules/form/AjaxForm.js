@@ -32,20 +32,20 @@ class AjaxForm extends React.Component {
     handleSubmit = async (values) => {
         this.setState({sent: true})
 
-        let response = await API({
-            method: this.props.method,
-            url: this.props.url,
-            data: values
-        })
-        let status = response.status;
-        let data = response.data;
-        if (status === parseInt(this.props.successStatus)) {
+        try {
+            let response = await API({
+                method: this.props.method,
+                url: this.props.url,
+                data: values
+            })
+            let data = response.data;
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);
             }else if (this.props.successTo) {
                 this.setState({redirect: true})
             }
-        }else{
+        }catch (e) {
+            let data = e.response.data;
             this.setState({sent: false})
             if (data[response_key]) {
                 return {[FORM_ERROR]: data[response_key]}
@@ -71,6 +71,7 @@ class AjaxForm extends React.Component {
           return <Redirect to={this.props.successTo} />
       }
       const { classes } = this.props;
+      console.log(classes)
       return (
         <React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate}
@@ -82,7 +83,7 @@ class AjaxForm extends React.Component {
                   <FormSpy subscription={{ submitError: true }}>
                     {({ submitError }) =>
                       submitError ? (
-                        <FormFeedback className={classes.feedback} error>
+                        <FormFeedback className={classes.feedback + " submit-error"} error>
                           {submitError}
                         </FormFeedback>
                       ) : null

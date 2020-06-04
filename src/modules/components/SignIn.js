@@ -39,6 +39,7 @@ class SignIn extends React.Component {
 
     render() {
       const { classes } = this.props
+      console.log(classes)
       return (
         <React.Fragment>
           <AppForm>
@@ -53,7 +54,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={sign_in_url} method="POST" successStatus="200" onSuccess={this.onSuccess} validate={this.validate} buttonText="sign in" classes={classes}>
+            <AjaxForm url={sign_in_url} method="POST" onSuccess={this.onSuccess} validate={this.validate} buttonText="sign in" classes={classes}>
                   <Field
                     autoComplete="email"
                     autoFocus

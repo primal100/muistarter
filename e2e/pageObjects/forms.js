@@ -17,3 +17,5 @@ export const click_submit_button = async () => {
 export const getErrors = async () => { await page.evaluate('.Mui-error') }
 
 export const getFieldErrorText = async () => await page.$$eval('p.Mui-error', els => els.map((el) => el.textContent))
+
+export const getSubmitErrorText = async () => await page.$$eval('.submit-error', els => els.map((el) => el.textContent))
