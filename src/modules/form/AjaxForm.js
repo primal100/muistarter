@@ -31,7 +31,14 @@ class AjaxForm extends React.Component {
 
     handleSubmit = async (values) => {
         this.setState({sent: true})
-
+        const formKeys = Object.keys(values)
+        if (this.props.additonalValues){
+            const additionalValues = {};
+            Object.assign(additionalValues, this.props.additonalValues)
+            Object.assign(values, additionalValues);
+        }
+        console.log(this.props.url);
+        console.log(values);
         try {
             let response = await API({
                 method: this.props.method,
@@ -54,7 +61,10 @@ class AjaxForm extends React.Component {
             }else{
                 return Object.keys(data).reduce(function(obj, k) {
                     let value = obj[k]
-                    if (value) {
+                    if (value && obj[k].length > 0) {
+                        if ( !formKeys.includes(k)){
+                            k = [FORM_ERROR]
+                        }
                         if (Array.isArray(value)) {
                             obj[k] = value.map(v => capitalize(v));
                         } else {

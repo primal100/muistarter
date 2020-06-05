@@ -9,6 +9,7 @@ import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
+import ResetPassword from "./modules/components/ResetPassword";
 import { API } from './modules/api';
 import mockBackend from "./modules/backend"
 
@@ -26,7 +27,7 @@ export class ProtectedRoute extends React.Component {
         render={props => (
           this.props.authenticated ?
             <Component {...props} /> :
-            <Redirect to='/login' />
+            <Redirect to='/sign-in' />
         )}
       />
     )
@@ -62,6 +63,7 @@ class App extends React.Component {
               <Route path="/sign-in" component={SignIn}/>
               <Route path="/sign-up" component={SignUp}/>
               <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
+              <Route path="/reset-password" component={ResetPassword}/>
             </div>
             <AppFooter/>
           </ScrollToTop>
