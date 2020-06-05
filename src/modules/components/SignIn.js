@@ -39,7 +39,6 @@ class SignIn extends React.Component {
 
     render() {
       const { classes } = this.props
-      console.log(classes)
       return (
         <React.Fragment>
           <AppForm>
@@ -49,7 +48,7 @@ class SignIn extends React.Component {
               </Typography>
               <Typography variant="body2" align="center">
                 {'Not a member yet? '}
-                <Link align="center" underline="always" component={RouterLink} to="/sign-up">
+                <Link id="sign-up2" align="center" underline="always" component={RouterLink} to="/sign-up">
                   Sign Up here
                 </Link>
               </Typography>
@@ -79,7 +78,7 @@ class SignIn extends React.Component {
                   />
             </AjaxForm>
             <Typography variant="body2" align="center">
-              <Link underline="always" component={RouterLink} to="/forgot-password">
+              <Link id="send_reset_password_link" underline="always" component={RouterLink} to="/send-reset-password-url">
                 Forgot password?
               </Link>
             </Typography>

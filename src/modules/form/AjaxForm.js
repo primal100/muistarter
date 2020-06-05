@@ -47,9 +47,9 @@ class AjaxForm extends React.Component {
         }catch (e) {
             let data = e.response.data;
             this.setState({sent: false})
-            if (data[response_key]) {
+            if (data[response_key] && data[response_key].length > 0) {
                 return {[FORM_ERROR]: data[response_key]}
-            }else if (data[non_field_errors_key]){
+            }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
                 return {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
                 return Object.keys(data).reduce(function(obj, k) {
@@ -71,7 +71,6 @@ class AjaxForm extends React.Component {
           return <Redirect to={this.props.successTo} />
       }
       const { classes } = this.props;
-      console.log(classes)
       return (
         <React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate}

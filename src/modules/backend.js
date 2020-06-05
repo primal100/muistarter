@@ -16,6 +16,7 @@ const password = 'x1y@4f!21a'
 const first_name = 'test'
 const last_name = 'user'
 const epoch_time = 1589819019;
+const non_existing_email_details = {login: 'b@a.com'}
 //const login_details = {email: email_address, password: password}
 const wrong_login_details = {email: email_address, password: 'b'}
 // const existing_user_login_details = {'login': 'second', 'password': 'b'}
@@ -32,6 +33,8 @@ const user_details_response = {id: 1, first_name: first_name, last_name: last_na
 //const wrong_password_change_response = {old_password: ['Old password is not correct']}
 //const wrong_password_change_no_match_response = {password_confirm: ["Passwords don't match"]}
 //const register_no_match_response = {password_confirm: ["Passwords don't match"], [non_field_errors_key]: []}
+const register_data_short_password = {email: email_address, password: 'x', password_confirm: 'x',
+                      first_name: first_name, last_name: last_name}
 const register_too_short_password_response = {password: ['This password is too short. It must contain at least 8 characters.'], [non_field_errors_key]: []}
 //const too_short_password_response = {password: ['This password is too short. It must contain at least 8 characters.']}
 //const alphanumeric_password_response = {password: ['Password must contain at least one number or special character.']}
@@ -39,11 +42,10 @@ const register_too_short_password_response = {password: ['This password is too s
 //                      'first_name': first_name, 'last_name': last_name}
 const register_data_already_exists = {email: 'c@a.com', password: password, password_confirm: password,
                       first_name: first_name, last_name: last_name}
-const register_data_short_password = {email: 'c@a.com', 'password': 'z', password_confirm: 'z',
-                      first_name: first_name, last_name: last_name}
 const register_user_already_exists = {email: ['user with this email address already exists.']}
 const verify_registration_response = {[response_key]: 'User verified successfully'}
 const send_reset_password_response = {[response_key]: 'Reset link sent'}
+const send_reset_password_no_user_response = {[response_key]: 'User not found'}
 const reset_password_response = {[response_key]: 'Reset password successful'}
 // const change_email_response = {[response_key]: 'Register email link email sent'}
 // const verify_email_response = {[response_key]: 'Email verified successfully'}
@@ -57,13 +59,14 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, login_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
-        mock.onPost(process.env.REACT_APP_SIGN_OUT_URL, register_data_short_password).reply(200, logout_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(200, user_details_response);
+        mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
         mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, {user_id: 1, password: 'z', password_confirm: 'z', timestamp: epoch_time, signature :1234}).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, {user_id: 1, timestamp: epoch_time, signature :1234}).reply(400, verify_response_invalid_signature);
+        mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
         mock.onPost(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_response);
     } else {
         // production code

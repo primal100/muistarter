@@ -8,7 +8,7 @@ import ScrollToTop from 'react-router-scroll-top'
 import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
-import ForgotPassword from "./modules/components/ForgotPassword";
+import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import { API } from './modules/api';
 import mockBackend from "./modules/backend"
 
@@ -61,7 +61,7 @@ class App extends React.Component {
               <Route exact path="/" component={Home}/>
               <Route path="/sign-in" component={SignIn}/>
               <Route path="/sign-up" component={SignUp}/>
-              <Route path="/forgot-password" component={ForgotPassword}/>
+              <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
             </div>
             <AppFooter/>
           </ScrollToTop>

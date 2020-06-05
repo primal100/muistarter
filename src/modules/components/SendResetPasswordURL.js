@@ -12,18 +12,18 @@ import compose from "recompose/compose";
 import AjaxForm from "../form/AjaxForm";
 
 
-const reset_password_url = process.env.REACT_APP_RESET_PASSWORD_URL
+const send_reset_password_url = process.env.REACT_APP_SEND_RESET_PASSWORD_URL
 
 
-class ForgotPassword extends React.Component {
+class SendResetPasswordURL extends React.Component {
 
     validate = (values) => {
-      const errors = required(['email'], values);
+      const errors = required(['login'], values);
 
-      if (!errors.login) {
-        const loginError = email(values.login, values);
-      if (loginError) {
-          errors.login = loginError;
+      if (!errors.error) {
+        const emailError = email(values.login, values);
+      if (emailError) {
+          errors.login = emailError;
         }
       }
 
@@ -49,7 +49,7 @@ class ForgotPassword extends React.Component {
                   'send you a link to reset your password.'}
               </Typography>
             </React.Fragment>
-             <AjaxForm url={reset_password_url} method="POST" successStatus="200" successTo={redirect} validate={this.validate} buttonText="Send Reset Password E-mail" classes={classes}>
+             <AjaxForm url={send_reset_password_url} method="POST" successTo={redirect} validate={this.validate} buttonText="Send Reset Password E-mail" classes={classes}>
                   <Field
                     autoFocus
                     autoComplete="email"
@@ -57,7 +57,7 @@ class ForgotPassword extends React.Component {
                     fullWidth
                     label="Email"
                     margin="normal"
-                    name="email"
+                    name="login"
                     required
                     size="large"
                   />
@@ -72,4 +72,4 @@ class ForgotPassword extends React.Component {
 export default compose(
   withStyles(useStyles),
   withRoot
-)(ForgotPassword);
+)(SendResetPasswordURL);

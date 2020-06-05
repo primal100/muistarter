@@ -9,6 +9,13 @@ export const load = async () => {
   });
 };
 
+export const waitForNavigation = async () => {
+  await page.waitForNavigation({
+    waitUntil: "networkidle0",
+    timeout: 10000
+  });
+};
+
 export const getTitle = async () => await page.title();
 
 export const clearLocalStorage = async () => await page.evaluate(() => localStorage.clear())
@@ -18,3 +25,5 @@ export const getLocalStorageRefreshToken = async () => await page.evaluate(() =>
 export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 
 export const url = async () => await page.url();
+
+export const getSuccessMessageText = async () => await page.$$eval('.success-message', els => els.map((el) => el.textContent))
