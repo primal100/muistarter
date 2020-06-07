@@ -3,26 +3,13 @@ import withRoot from '../withRoot';
 import React from 'react';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
-import { makeStyles } from '@material-ui/core/styles';
-import Alert from '@material-ui/lab/Alert';
-
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(12),
-    },
-  },
-}));
 
 
 function Home(props) {
-  const classes = useStyles();
+    console.log("HOME")
+    console.log(props)
   return (
     <React.Fragment>
-      {props.location.state && props.location.state.successMessage && <div className={classes.root + " success-message"} ><Alert severity="success">{props.location.state.successMessage}</Alert></div>}
-      {props.location.state && props.location.state.errorMessage && <div className={classes.root + " error-message"} ><Alert severity="error">{props.location.state.errorMessage}</Alert></div>}
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">

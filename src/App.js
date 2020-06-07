@@ -3,7 +3,7 @@ import withRoot from './modules/withRoot';
 import React from 'react';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
-import {BrowserRouter as Router, Route, Redirect} from "react-router-dom";
+import {BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import ScrollToTop from 'react-router-scroll-top'
 import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
@@ -12,14 +12,12 @@ import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import { API } from './modules/api';
 import mockBackend from "./modules/backend"
-
-
-export const UserContext = React.createContext({user: {}});
+import Alerts from "./Alerts";
 
 
 export class ProtectedRoute extends React.Component {
   render() {
-    const { component: Component, authenticated, ...props } = this.props
+    const { component: Component, authenticated, ...props } = this.props;
 
     return (
       <Route
@@ -38,26 +36,22 @@ export class ProtectedRoute extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    console.log("APP")
+    console.log(props)
+    console.log(this.props)
     this.accessToken = localStorage.getItem('access')
     this.authenticated = Boolean(this.accessToken)
-    this.userDetails = {};
     if (this.accessToken){
        API.defaults.headers.common['Authorization'] = 'Bearer' + this.accessToken;
     }
   }
 
-    async componentDidMount (){
-    if (this.accessToken) {
-      //this.userDetails =  await getUserProfile();
-    }
-  }
-
   render() {
     return (
-        <UserContext.Provider value={this.userDetails}>
         <Router>
           <ScrollToTop>
             <AppAppBar/>
+            <Alerts></Alerts>
             <div>
               <Route exact path="/" component={Home}/>
               <Route path="/sign-in" component={SignIn}/>
@@ -68,7 +62,6 @@ class App extends React.Component {
             <AppFooter/>
           </ScrollToTop>
         </Router>
-        </UserContext.Provider>
     );
   }
 }
