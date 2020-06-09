@@ -10,9 +10,13 @@ import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
+import SendParams from "./modules/components/SendParams"
 import { API } from './modules/api';
 import mockBackend from "./modules/backend"
 import Alerts from "./Alerts";
+
+
+const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 
 
 export class ProtectedRoute extends React.Component {
@@ -36,9 +40,6 @@ export class ProtectedRoute extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log("APP")
-    console.log(props)
-    console.log(this.props)
     this.accessToken = localStorage.getItem('access')
     this.authenticated = Boolean(this.accessToken)
     if (this.accessToken){
@@ -56,6 +57,7 @@ class App extends React.Component {
               <Route exact path="/" component={Home}/>
               <Route path="/sign-in" component={SignIn}/>
               <Route path="/sign-up" component={SignUp}/>
+              <Route path="/sign-up-verify-email" render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"></SendParams>} />
               <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
               <Route path="/reset-password" component={ResetPassword}/>
             </div>

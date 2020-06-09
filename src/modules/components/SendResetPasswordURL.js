@@ -35,7 +35,7 @@ class SendResetPasswordURL extends React.Component {
        const { classes } = this.props
        const redirect = {
           pathname: "/",
-          state: {successMessage: successMessage}
+          state: {successMessages: [successMessage]}
        }
        return (
         <React.Fragment>

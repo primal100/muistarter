@@ -13,7 +13,6 @@ import AjaxForm from '../form/AjaxForm';
 
 
 const reset_password_url = process.env.REACT_APP_RESET_PASSWORD_URL
-console.log(process.env.REACT_APP_RESET_PASSWORD_URL)
 
 class ResetPassword extends React.Component {
 
@@ -42,7 +41,7 @@ class ResetPassword extends React.Component {
       const successMessage = "Password has been reset successfully, Sign-in with the new password";
       const redirect = {
           pathname: "/sign-in",
-          state: {successMessage: successMessage}
+          state: {successMessages: [successMessage]}
       }
       return (
           <React.Fragment>

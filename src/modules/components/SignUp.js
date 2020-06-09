@@ -47,7 +47,7 @@ class SignUp extends React.Component {
           "If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form."
       const redirect = {
           pathname: "/",
-          state: {successMessage: successMessage}
+          state: {successMessages: [successMessage]}
       }
       return (
           <React.Fragment>

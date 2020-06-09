@@ -20,14 +20,29 @@ const useStyles = makeStyles((theme) => ({
 
 class Alerts extends React.Component {
     render() {
-        console.log(this.props)
         const { classes } = this.props;
-        return (
-            <React.Fragment>
-            {this.props.location.state && this.props.location.state.successMessage && <div className={classes.root + " success-message"} ><Alert severity="success">{this.props.location.state.successMessage}</Alert></div>}
-            {this.props.location.state && this.props.location.state.errorMessage && <div className={classes.root + " error-message"} ><Alert severity="error">{this.props.location.state.errorMessage}</Alert></div>}
-            </React.Fragment>
-        )
+        if (this.props.location.state) {
+            return (
+                <React.Fragment>
+                    {this.props.location.state.successMessages && this.props.location.state.successMessages.map((value, index) => {
+                        return (
+                            <div className={classes.root + " success-message"}>
+                                <Alert severity="success">{value}</Alert>
+                            </div>
+                        )
+                    })}
+                   {this.props.location.state.errorMessages && this.props.location.state.errorMessages.map((value, index) => {
+                       return (
+                           <div className={classes.root + " error-message"}>
+                               <Alert severity="error">{value}</Alert>
+                           </div>
+                       )
+                   })}
+                </React.Fragment>
+            )
+        }else {
+            return (<div></div>)
+        }
     }
 }
 

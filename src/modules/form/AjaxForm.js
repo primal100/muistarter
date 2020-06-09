@@ -37,8 +37,6 @@ class AjaxForm extends React.Component {
             Object.assign(additionalValues, this.props.additonalValues)
             Object.assign(values, additionalValues);
         }
-        console.log(this.props.url);
-        console.log(values);
         try {
             let response = await API({
                 method: this.props.method,

@@ -51,7 +51,7 @@ describe("test reset password view", () => {
 });
 
 
-describe("test reset password view wrong signature", () => {
+describe("test reset password view with wrong signature", () => {
   beforeEach(async () => {
     await load_reset_password_url("user_id=1&timestamp=1589819019&signature=1234");
   });
