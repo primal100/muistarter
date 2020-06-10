@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import AjaxForm from '../form/AjaxForm';
+import { onSignIn } from '../api';
 
 
 const sign_in_url = process.env.REACT_APP_SIGN_IN_URL
@@ -31,12 +32,6 @@ class SignIn extends React.Component {
       return errors;
     };
 
-    onSuccess = (values) => {
-        localStorage.setItem('access', values.access)
-        localStorage.setItem('refresh', values.refresh)
-        window.location = "/";
-    }
-
     render() {
       const { classes } = this.props
       return (
@@ -53,7 +48,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={sign_in_url} method="POST" onSuccess={this.onSuccess} validate={this.validate} buttonText="sign in" classes={classes}>
+            <AjaxForm url={sign_in_url} method="POST" onSuccess={onSignIn} validate={this.validate} buttonText="sign in" classes={classes}>
                   <Field
                     autoComplete="email"
                     autoFocus

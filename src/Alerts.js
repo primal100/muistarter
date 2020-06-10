@@ -26,14 +26,14 @@ class Alerts extends React.Component {
                 <React.Fragment>
                     {this.props.location.state.successMessages && this.props.location.state.successMessages.map((value, index) => {
                         return (
-                            <div className={classes.root + " success-message"}>
+                            <div key={index} className={classes.root + " success-message"}>
                                 <Alert severity="success">{value}</Alert>
                             </div>
                         )
                     })}
                    {this.props.location.state.errorMessages && this.props.location.state.errorMessages.map((value, index) => {
                        return (
-                           <div className={classes.root + " error-message"}>
+                           <div key={index} className={classes.root + " error-message"}>
                                <Alert severity="error">{value}</Alert>
                            </div>
                        )

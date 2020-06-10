@@ -39,7 +39,7 @@ class AjaxForm extends React.Component {
         }
         try {
             let response = await API({
-                method: this.props.method,
+                method: this.props.method || 'POST',
                 url: this.props.url,
                 data: values
             })

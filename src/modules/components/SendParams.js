@@ -11,36 +11,36 @@ class SendParams extends React.Component {
           redirectState: {},
       }
     };
-    async componentDidMount() {
-        console.log('running componentDidMount()')
+    async sendParams() {
         const params = new URLSearchParams(this.props.location.search);
         const values = {
             user_id: params.get('user_id'),
             timestamp: params.get('timestamp'),
             signature: params.get('signature')
             }
-        console.log(values);
+        const redirectState = {};
         try {
-            let response = await API({
+            await API({
                 method: this.props.method || 'POST',
                 url: this.props.url,
                 data: values
             })
-            const data = response.data;
-            console.log("Setting state", data)
-            this.setState({redirectState: {successMessages: Object.values(data)}});
-            console.log("State set")
+            redirectState.successMessages = ["Your e-mail address has been verified. Please sign-in below."];
         }catch (e) {
             const data = e.response.data;
-            console.log(data)
-            this.setState({redirectState: {errorMessages: Object.values(data)}});
+            redirectState.errorMessages = Object.values(data);
+            redirectState.errorMessages[0] += '. Please check again the link in the email you received.'
         }
-        console.log('ComponentDidMount finished')
+        this.setState({redirectState: redirectState});
+    }
+
+    async componentDidMount() {
+        await this.sendParams();
     }
 
     render() {
-      if (this.state.redirectState && this.state.redirectState !== {}){
-          const redirect = {
+        if (Object.keys(this.state.redirectState).length !== 0){
+            const redirect = {
             pathname: this.props.redirectTo,
             state: this.state.redirectState
         }

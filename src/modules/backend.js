@@ -44,11 +44,13 @@ const register_data_already_exists = {email: 'c@a.com', password: password, pass
                       first_name: first_name, last_name: last_name}
 const register_user_already_exists = {email: ['user with this email address already exists.']}
 const verify_registration_response = {[response_key]: 'User verified successfully'}
+const invalid_signature = "1234";
+const verify_invalid_signature = {user_id: "1", timestamp: epoch_time, signature: invalid_signature}
 const send_reset_password_response = {[response_key]: 'Reset link sent'}
 const send_reset_password_no_user_response = {[response_key]: 'User not found'}
 const reset_password_response = {[response_key]: 'Reset password successful'}
 const reset_password_too_short = {user_id: '1', password: 'x', password_confirm: 'x', timestamp: epoch_time, signature: "1235"}
-const reset_password_invalid_signature = {user_id: '1', password: password, password_confirm: password, timestamp: epoch_time, signature: "1234"}
+const reset_password_invalid_signature = {user_id: '1', password: password, password_confirm: password, timestamp: epoch_time, signature: invalid_signature}
 // const change_email_response = {[response_key]: 'Register email link email sent'}
 // const verify_email_response = {[response_key]: 'Email verified successfully'}
 const verify_response_invalid_signature = {[response_key]: 'Invalid signature'}
@@ -67,8 +69,8 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
+        mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
-        mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, {user_id: 1, timestamp: epoch_time, signature :1234}).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
         mock.onPost(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_response);
     } else {

@@ -13,6 +13,7 @@
     "@types/puppeteer": "^3.0.0",
     "@uirouter/react": "^1.0.3",
     "axios": "^0.19.2",
+    "axios-jwt": "^1.2.0",
     "final-form": "^4.19.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

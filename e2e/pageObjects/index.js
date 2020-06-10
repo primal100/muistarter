@@ -27,3 +27,4 @@ export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 export const url = async () => await page.url();
 
 export const getSuccessMessageText = async () => await page.$$eval('.success-message', els => els.map((el) => el.textContent))
+export const getErrorMessageText = async () => await page.$$eval('.error-message', els => els.map((el) => el.textContent))
