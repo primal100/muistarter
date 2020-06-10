@@ -6,8 +6,6 @@ import AppForm from '../views/AppForm';
 
 
 function Home(props) {
-    console.log("HOME")
-    console.log(props)
   return (
     <React.Fragment>
       <AppForm>

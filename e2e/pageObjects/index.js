@@ -19,8 +19,7 @@ export const waitForNavigation = async () => {
 export const getTitle = async () => await page.title();
 
 export const clearLocalStorage = async () => await page.evaluate(() => localStorage.clear())
-export const getLocalStorageAccessToken = async () => await page.evaluate(() => localStorage.getItem('access'))
-export const getLocalStorageRefreshToken = async () => await page.evaluate(() => localStorage.getItem('refresh'))
+export const getLocalStorageTokens = async () => await page.evaluate(() => JSON.parse(localStorage.getItem('auth-tokens-development')))
 
 export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 
