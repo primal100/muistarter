@@ -1,15 +1,15 @@
 import axios from 'axios';
 import {
-  useAuthTokenInterceptor,
-  isLoggedIn,
-  setAuthTokens,
-  clearAuthTokens,
+    useAuthTokenInterceptor,
+    setAuthTokens,
+    clearAuthTokens,
+    getRefreshToken,
 } from "axios-jwt";
 
 
 const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
-const logoutEndpoint = process.env.REACT_APP_LOGOUT_URL
-const userProfileEndpoint = process.env.REACT_APP_USER_PROFILE_URL
+const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
+//const userProfileEndpoint = process.env.REACT_APP_USER_PROFILE_URL
 
 
 export const API = axios.create({
@@ -37,8 +37,9 @@ export const onSignIn = (values) => {
 }
 
 export const logout = async () => {
-    await API.post(logoutEndpoint)
+    await API.post(logoutEndpoint, {'refresh': getRefreshToken()})
     clearAuthTokens();
+    window.location = "/";
 }
 
 

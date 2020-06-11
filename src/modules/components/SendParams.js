@@ -48,7 +48,7 @@ class SendParams extends React.Component {
             <Redirect to={redirect} />
             );
         }else{
-          return (<div></div>)
+          return (<div/>)
       }
     }
 }

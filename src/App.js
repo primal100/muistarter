@@ -8,12 +8,14 @@ import ScrollToTop from 'react-router-scroll-top'
 import Home from "./modules/components/Home";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
+import SignOut from "./modules/components/SignOut";
 import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import SendParams from "./modules/components/SendParams"
-import { API } from './modules/api';
 import mockBackend from "./modules/backend"
 import Alerts from "./Alerts";
+import { isLoggedIn } from "axios-jwt";
+
 
 
 const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
@@ -21,13 +23,14 @@ const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 
 export class ProtectedRoute extends React.Component {
   render() {
-    const { component: Component, authenticated, ...props } = this.props;
+    const authenticated = isLoggedIn();
+    const { component: Component, ...props } = this.props;
 
     return (
       <Route
         {...props}
         render={props => (
-          this.props.authenticated ?
+          authenticated ?
             <Component {...props} /> :
             <Redirect to='/sign-in' />
         )}
@@ -38,26 +41,19 @@ export class ProtectedRoute extends React.Component {
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.accessToken = localStorage.getItem('access')
-    this.authenticated = Boolean(this.accessToken)
-    if (this.accessToken){
-       API.defaults.headers.common['Authorization'] = 'Bearer' + this.accessToken;
-    }
-  }
 
   render() {
     return (
         <Router>
           <ScrollToTop>
             <AppAppBar/>
-            <Alerts></Alerts>
+            <Alerts/>
             <div>
               <Route exact path="/" component={Home}/>
               <Route path="/sign-in" component={SignIn}/>
+              <ProtectedRoute path="/sign-out" component={SignOut}/>
               <Route path="/sign-up" component={SignUp}/>
-              <Route path="/sign-up-verify-email" render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"></SendParams>} />
+              <Route path="/sign-up-verify-email" render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"/>} />
               <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
               <Route path="/reset-password" component={ResetPassword}/>
             </div>
