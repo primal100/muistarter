@@ -9,8 +9,6 @@ import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isLoggedIn } from "axios-jwt";
 
@@ -46,29 +44,9 @@ const styles = (theme) => ({
 
 
 class AppAppBar extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        auth: true,
-        anchorEl: null,
-      }
-  }
-
-  handleChange = (event) => {
-    this.setState({auth: event.target.checked});
-  };
-
-  handleMenu = (event) => {
-    this.setState({anchorEl: event.currentTarget});
-  };
-
-  handleClose = () => {
-    this.setState({anchorEl: null});
-  };
 
   render() {
     const authenticated = isLoggedIn();
-    const open = Boolean(this.state.anchorEl);
     const {classes} = this.props;
 
     return (
@@ -107,45 +85,24 @@ class AppAppBar extends React.Component {
                 </Link>
               </div>}
               {authenticated && <div className={classes.right}>
-                <Tooltip title="Profile">
+               <Tooltip title="Profile">
                 <IconButton
                     aria-label="account of current user"
-                    aria-haspopup="true"
-                    onClick={this.handleMenu}
+                    href="/profile"
                     color="inherit"
                 >
                   <AccountCircle/>
                 </IconButton>
-                </Tooltip>
-                <Tooltip title="Sign out">
+               </Tooltip>
+               <Tooltip title="Sign out">
                 <IconButton
                     aria-label="sign out"
-                    //component={Link}
                     href="/sign-out"
                     color="inherit"
                 >
                   <ExitToAppIcon/>
                 </IconButton>
-                </Tooltip>
-                <Menu
-                    id="menu-appbar"
-                    elevation={0}
-                    anchorEl={this.state.anchorEl}
-                    getContentAnchorEl={null}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                    open={open}
-                    onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                </Menu>
+               </Tooltip>
               </div>}
             </Toolbar>
           </AppBar>

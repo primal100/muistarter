@@ -29,6 +29,14 @@ const login_failed_response = {[response_key]: 'Login or password invalid.'}
 //const not_found_response = {[response_key]: 'Not found.'}
 const user_details_response = {id: 1, first_name: first_name, last_name: last_name,
                               email: email_address}
+const new_first_name = 'Jane'
+const new_last_name = 'Doe'
+const change_first_name_data = {first_name: new_first_name}
+const change_last_name_data = {last_name: new_last_name}
+const user_details_first_name_changed_response = {id: 1, first_name: new_first_name, last_name: last_name,
+                              email: email_address}
+const user_details_both_names_changed_response = {id: 1, first_name: new_first_name, last_name: new_last_name,
+                              email: email_address}
 //const password_change_response = {[response_key]: 'Password changed successfully'}
 //const wrong_password_change_response = {old_password: ['Old password is not correct']}
 //const wrong_password_change_no_match_response = {password_confirm: ["Passwords don't match"]}
@@ -51,9 +59,13 @@ const send_reset_password_no_user_response = {[response_key]: 'User not found'}
 const reset_password_response = {[response_key]: 'Reset password successful'}
 const reset_password_too_short = {user_id: '1', password: 'x', password_confirm: 'x', timestamp: epoch_time, signature: "1235"}
 const reset_password_invalid_signature = {user_id: '1', password: password, password_confirm: password, timestamp: epoch_time, signature: invalid_signature}
-// const change_email_response = {[response_key]: 'Register email link email sent'}
-// const verify_email_response = {[response_key]: 'Email verified successfully'}
+const change_email_response = {[response_key]: 'Register email link email sent'}
+const verify_email_response = {[response_key]: 'Email verified successfully'}
 const verify_response_invalid_signature = {[response_key]: 'Invalid signature'}
+const change_password_response = {'detail': 'Password changed successfully'}
+const change_password_request_wrong_old_password = {old_password: 'b', password: 'xzer12q3', password_confirm: 'xzer12q3'}
+const change_password_response_wrong_old_password = {'old_password': ['Old password is not correct']}
+
 
 
 export default function mockBackend() {
@@ -63,7 +75,7 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, login_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
-        mock.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(200, user_details_response);
+        mock.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, user_details_response);
         mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
         mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
@@ -72,7 +84,15 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
-        mock.onPost(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_response);
+        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_response);
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply(200, user_details_first_name_changed_response);
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply(200, user_details_both_names_changed_response);
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_first_name_changed_response);
+        mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply(200, change_email_response);
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply(400, change_password_response_wrong_old_password);
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply(200, change_password_response);
     } else {
         // production code
     }

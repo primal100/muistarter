@@ -12,6 +12,7 @@ import SignOut from "./modules/components/SignOut";
 import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import SendParams from "./modules/components/SendParams"
+import UserProfile from "./modules/components/UserProfile";
 import mockBackend from "./modules/backend"
 import Alerts from "./Alerts";
 import { isLoggedIn } from "axios-jwt";
@@ -56,6 +57,7 @@ class App extends React.Component {
               <Route path="/sign-up-verify-email" render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"/>} />
               <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
               <Route path="/reset-password" component={ResetPassword}/>
+              <Route path="/profile" component={UserProfile}/>
             </div>
             <AppFooter/>
           </ScrollToTop>

@@ -25,11 +25,20 @@ class AjaxForm extends React.Component {
       super(props);
       this.state = {
           sent: false,
-          redirect: false
+          redirect: false,
+          initialValues: {},
       }
     };
 
+    async componentDidMount(){
+        if (this.props.loadInitialValuesFromURL){
+            const response = await API.get(this.props.loadInitialValuesFromURL);
+            this.setState({initialValues: response.data})
+        }
+    }
+
     handleSubmit = async (values) => {
+        console.log('Submitting')
         this.setState({sent: true})
         const formKeys = Object.keys(values)
         if (this.props.additonalValues){
@@ -37,20 +46,43 @@ class AjaxForm extends React.Component {
             Object.assign(additionalValues, this.props.additonalValues)
             Object.assign(values, additionalValues);
         }
+        if (this.props.submitModifiedValuesOnly) {
+            values = Object.keys(values).reduce((obj, key) => {
+                if (values[key] !== this.state.initialValues[key]) {
+                    obj[key] = values[key];
+                }
+                return obj;
+            }, {})
+        }
+
+        console.log("Submitting values", values)
         try {
-            let response = await API({
-                method: this.props.method || 'POST',
-                url: this.props.url,
-                data: values
-            })
-            let data = response.data;
+            let data;
+            if (Object.keys(values).length !== 0) {
+                console.log('Making request', this.props.method, this.props.url, values);
+                let response = await API({
+                    method: this.props.method || 'POST',
+                    url: this.props.url,
+                    data: values
+                })
+                console.log('OK', response);
+                data = response.data;
+            }else{
+                this.setState({sent: false});
+                return
+            }
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);
             }else if (this.props.successTo) {
                 this.setState({redirect: true})
+            }else if ((Object.keys(this.state.initialValues).length !== 0)){
+                console.log('Updating Initial Values', data)
+                this.setState({initialValues: data, sent: false})
             }
         }catch (e) {
+            console.log('Not OK', e.response);
             let data = e.response.data;
+            console.log(data)
             this.setState({sent: false})
             if (data[response_key] && data[response_key].length > 0) {
                 return {[FORM_ERROR]: data[response_key]}
@@ -74,14 +106,16 @@ class AjaxForm extends React.Component {
             }
         }
     }
+
     render() {
       if (this.state.redirect){
           return <Redirect to={this.props.successTo} />
       }
       const { classes } = this.props;
+      console.log('Render', this.state.initialValues)
       return (
         <React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate}
+            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues}
               render={({ submitError, handleSubmit, submitting }) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                   <fieldset disabled={submitting || this.state.sent}>
@@ -96,7 +130,7 @@ class AjaxForm extends React.Component {
                       ) : null
                     }
                   </FormSpy>
-                  <FormButton
+                  {!this.props.noSubmitButton && <FormButton
                     className={classes.button}
                     disabled={submitting || this.state.sent}
                     size="large"
@@ -104,7 +138,7 @@ class AjaxForm extends React.Component {
                     fullWidth
                   >
                     {submitting || this.state.sent ? 'In progress…' : this.props.buttonText}
-                  </FormButton>
+                  </FormButton>}
                 </form>
               )}
             >
