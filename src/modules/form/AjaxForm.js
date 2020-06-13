@@ -38,7 +38,6 @@ class AjaxForm extends React.Component {
     }
 
     handleSubmit = async (values) => {
-        console.log('Submitting')
         this.setState({sent: true})
         const formKeys = Object.keys(values)
         if (this.props.additonalValues){
@@ -55,17 +54,14 @@ class AjaxForm extends React.Component {
             }, {})
         }
 
-        console.log("Submitting values", values)
         try {
             let data;
             if (Object.keys(values).length !== 0) {
-                console.log('Making request', this.props.method, this.props.url, values);
                 let response = await API({
                     method: this.props.method || 'POST',
                     url: this.props.url,
                     data: values
                 })
-                console.log('OK', response);
                 data = response.data;
             }else{
                 this.setState({sent: false});
@@ -76,13 +72,10 @@ class AjaxForm extends React.Component {
             }else if (this.props.successTo) {
                 this.setState({redirect: true})
             }else if ((Object.keys(this.state.initialValues).length !== 0)){
-                console.log('Updating Initial Values', data)
                 this.setState({initialValues: data, sent: false})
             }
         }catch (e) {
-            console.log('Not OK', e.response);
             let data = e.response.data;
-            console.log(data)
             this.setState({sent: false})
             if (data[response_key] && data[response_key].length > 0) {
                 return {[FORM_ERROR]: data[response_key]}
@@ -112,7 +105,6 @@ class AjaxForm extends React.Component {
           return <Redirect to={this.props.successTo} />
       }
       const { classes } = this.props;
-      console.log('Render', this.state.initialValues)
       return (
         <React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues}

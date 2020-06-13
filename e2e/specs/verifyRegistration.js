@@ -1,5 +1,5 @@
 import { waitForNavigation, url, getSuccessMessageText, getErrorMessageText } from "../pageObjects/index"
-import { load_verify_registration_url } from "../pageObjects/verify_registration";
+import { load_verify_registration_url } from "../pageObjects/verifyRegistration";
 
 
 const successMessages = ["Your e-mail address has been verified. Please sign-in below."];

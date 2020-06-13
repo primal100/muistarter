@@ -3,6 +3,9 @@ module.exports = {
   globals: {
     URL: "http://localhost:3000"
   },
+  moduleDirectories: [
+    "node_modules", "..\\src"
+  ],
   testMatch: ["**/specs/*.js"],
   transform: {
     "\\.js$": "react-scripts/config/jest/babelTransform"

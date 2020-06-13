@@ -43,7 +43,7 @@ class EditableField extends React.Component {
                  InputProps={{
                        endAdornment:
                            <InputAdornment position="end">
-                                   <IconButton onClick={this.handleClick}><EditIcon/></IconButton>
+                                   <IconButton id={`enable-${fieldProps.name}`} onClick={this.handleClick}><EditIcon/></IconButton>
                            </InputAdornment>
                        }}
                  />

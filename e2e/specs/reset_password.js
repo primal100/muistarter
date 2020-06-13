@@ -1,6 +1,6 @@
 import { waitForNavigation, url, getSuccessMessageText } from "../pageObjects/index"
 import {fill_form, submit_form_enter, getFieldErrorText, getSubmitErrorText} from "../pageObjects/forms";
-import { load_reset_password_url } from "../pageObjects/reset_password";
+import { load_reset_password_url } from "../pageObjects/resetPassword";
 
 
 const successMessages = ["Password has been reset successfully, Sign-in with the new password"]

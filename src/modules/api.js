@@ -4,6 +4,7 @@ import {
     setAuthTokens,
     clearAuthTokens,
     getRefreshToken,
+    getAccessToken
 } from "axios-jwt";
 
 
@@ -17,7 +18,7 @@ export const API = axios.create({
 
 
 const requestRefresh = async (refreshToken) => {
-  return (await axios.post(refreshEndpoint, { token: refreshToken })).data
+   return (await axios.post(refreshEndpoint, { token: refreshToken })).data
     .access;
 };
 
@@ -43,7 +44,7 @@ export const logout = async () => {
 }
 
 
-export const checkAuthentication = () => {
-    const accessToken = localStorage.getItem('access')
-    API.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken;
-}
+//export const checkAuthentication = () => {
+//    const accessToken = localStorage.getItem('access')
+//    API.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken;
+//}

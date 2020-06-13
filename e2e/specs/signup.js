@@ -62,7 +62,7 @@ describe("test signup view", () => {
     expect(await getSuccessMessageText()).toEqual(successMessages);
   });
 
-  it("should say password is not strong enough", async () => {
+  it("signup view should say password is not strong enough", async () => {
     expect(await getFieldErrorText()).toEqual([]);
     await fill_form({email: 'a@a.com', password: 'x', password_confirm: 'x', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual([]);

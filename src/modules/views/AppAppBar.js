@@ -87,6 +87,7 @@ class AppAppBar extends React.Component {
               {authenticated && <div className={classes.right}>
                <Tooltip title="Profile">
                 <IconButton
+                    id="profile"
                     aria-label="account of current user"
                     href="/profile"
                     color="inherit"
@@ -96,6 +97,7 @@ class AppAppBar extends React.Component {
                </Tooltip>
                <Tooltip title="Sign out">
                 <IconButton
+                    id="sign-out"
                     aria-label="sign out"
                     href="/sign-out"
                     color="inherit"

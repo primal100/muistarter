@@ -20,13 +20,14 @@ const non_existing_email_details = {login: 'b@a.com'}
 //const login_details = {email: email_address, password: password}
 const wrong_login_details = {email: email_address, password: 'b'}
 // const existing_user_login_details = {'login': 'second', 'password': 'b'}
-const login_response_ok = {'access': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.p2LvatOtvnZ42WBsSP0jb2OXtX_5gkbbzqyRMZMUE8k',
-                           'refresh': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.3J6JVkEL8Sv0MJlV4bkKtmHZ7WNjz5-F8h_VvOwRHng'}
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.p2LvatOtvnZ42WBsSP0jb2OXtX_5gkbbzqyRMZMUE8k';
+const refreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.3J6JVkEL8Sv0MJlV4bkKtmHZ7WNjz5-F8h_VvOwRHng';
+const login_response_ok = {'access': accessToken, 'refresh': refreshToken}
 const logout_response_ok = {[response_key]: 'Logout successful'}
 const login_failed_response = {[response_key]: 'Login or password invalid.'}
-//const not_logged_in_response = {[response_key]: 'Authentication credentials were not provided.'}
-//const no_permission_response = {[response_key]: 'You do not have permission to perform this action.'}
-//const not_found_response = {[response_key]: 'Not found.'}
+const header = 'Authorization';
+const headerPrefix = 'Bearer ';
+const authorization_header = `${headerPrefix}${accessToken}`;
 const user_details_response = {id: 1, first_name: first_name, last_name: last_name,
                               email: email_address}
 const new_first_name = 'Jane'
@@ -67,6 +68,13 @@ const change_password_request_wrong_old_password = {old_password: 'b', password:
 const change_password_response_wrong_old_password = {'old_password': ['Old password is not correct']}
 
 
+function checkHeaders(config, ok_reply){
+    if (config.headers[header] === authorization_header){
+        return ok_reply
+    }
+    return [401, {[response_key]: 'Authentication credentials were not provided.'}]
+}
+
 
 export default function mockBackend() {
     if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
@@ -84,15 +92,18 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
-        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_response);
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply(200, user_details_first_name_changed_response);
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply(200, user_details_both_names_changed_response);
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL).reply(200, user_details_first_name_changed_response);
-        mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply(200, change_email_response);
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
-        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply(400, change_password_response_wrong_old_password);
-        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply(200, change_password_response);
+        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => checkHeaders(config, [200, user_details_response]));
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => checkHeaders(config, [200, user_details_first_name_changed_response]));
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => checkHeaders(config, [200, user_details_both_names_changed_response]));
+        mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => checkHeaders(config, [200, change_email_response]));
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_invalid_signature).reply((config) => checkHeaders(config, [400, verify_response_invalid_signature]));
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply((config) => checkHeaders(config, [200, verify_email_response]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => checkHeaders(config, [400, change_password_response_wrong_old_password]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => checkHeaders(config, [200, change_password_response]));
+        mock.onAny().reply((config) => {
+            console.log("Mock request did not match", config);
+            return [404, {}]
+        })
     } else {
         // production code
     }

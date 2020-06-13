@@ -4,7 +4,7 @@ import {
   getSuccessMessageText
 } from "../pageObjects/index"
 import { fill_form, submit_form_enter, getSubmitErrorText, getFieldErrorText } from "../pageObjects/forms";
-import { load_send_reset_password_url } from "../pageObjects/send_reset_password_url";
+import { load_send_reset_password_url } from "../pageObjects/sendResetPasswordUrl";
 
 const successMessages = ["We have sent you an email with a link to reset your password.\n"];
 

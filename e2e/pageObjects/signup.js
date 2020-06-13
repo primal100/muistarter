@@ -6,5 +6,6 @@ export const load_signup = async () => {
     waitUntil: "networkidle0",
     timeout: 10000
   });
+  await page.waitForSelector('input[name=email]')
 };
 
