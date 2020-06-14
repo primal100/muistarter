@@ -41,7 +41,7 @@ class Alerts extends React.Component {
                 </React.Fragment>
             )
         }else {
-            return (<div></div>)
+            return (<div/>)
         }
     }
 }

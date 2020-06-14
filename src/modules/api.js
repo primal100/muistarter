@@ -4,7 +4,6 @@ import {
     setAuthTokens,
     clearAuthTokens,
     getRefreshToken,
-    getAccessToken
 } from "axios-jwt";
 
 

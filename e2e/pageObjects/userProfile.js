@@ -2,10 +2,12 @@ import { signedIn } from "./signin";
 
 export const loadUserProfile = async () => {
   await signedIn();
+  await page.waitForSelector('#profile')
   await page.click('#profile', {
     waitUntil: "domcontentloaded",
     timeout: 10000
   });
   await page.waitForSelector('input[name=first_name]')
+  await page.waitForSelector('#enable-first_name')
 };
 

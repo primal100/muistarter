@@ -7,6 +7,11 @@ export const load = async () => {
     waitUntil: "networkidle0",
     timeout: 60000
   });
+  await clearLocalStorage();
+  await page.goto(URL, {
+    waitUntil: "networkidle0",
+    timeout: 60000
+  });
 };
 
 export const waitForNavigation = async () => {
@@ -19,7 +24,6 @@ export const waitForNavigation = async () => {
 export const getTitle = async () => await page.title();
 
 export const clearLocalStorage = async () => await page.evaluate(() => localStorage.clear())
-export const getLocalStorageTokens = async () => await page.evaluate(() => JSON.parse(localStorage.getItem('auth-tokens-development')))
 
 export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 

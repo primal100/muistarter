@@ -4,6 +4,9 @@ import {Redirect} from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
 
+const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
+
+
 class SendParams extends React.Component {
     constructor(props) {
       super(props);
@@ -20,16 +23,15 @@ class SendParams extends React.Component {
             }
         const redirectState = {};
         try {
-            await API({
+            let response = await API({
                 method: this.props.method || 'POST',
                 url: this.props.url,
                 data: values
             })
-            redirectState.successMessages = ["Your e-mail address has been verified. Please sign-in below."];
+            redirectState.successMessages = [response.data[response_key]];
         }catch (e) {
             const data = e.response.data;
             redirectState.errorMessages = Object.values(data);
-            redirectState.errorMessages[0] += '. Please check again the link in the email you received.'
         }
         this.setState({redirectState: redirectState});
     }

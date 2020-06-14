@@ -13,8 +13,8 @@ import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 
 
-const user_profile_url = process.env.REACT_APP_USER_PROFILE_URL
-//const change_email_url = process.env.REACT_APP_CHANGE_EMAIL_URL
+const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
+const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 //const change_password_url = process.env.REACT_APP_CHANGE_PASSWORD_URL
 
 
@@ -39,9 +39,23 @@ class UserProfile extends React.Component {
       return errors;
     };
 
-    handleChange = async (values) => {
-        console.log(values);
-        this.setState({enabled: null});
+    createRequest = (values) => {
+        if (values.email){
+            return {
+                method: 'POST',
+                url: changeEmailUrl,
+                data: {email: values.email}
+            }
+        }
+        return {
+            method: 'PATCH',
+            url: userProfileUrl,
+            data: values
+        }
+    }
+
+    getSuccessMessages = (request, data) => {
+        return ['Your details have been updated'];
     }
 
     render() {
@@ -54,8 +68,9 @@ class UserProfile extends React.Component {
                   User Details
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={user_profile_url} method="PATCH" loadInitialValuesFromURL={user_profile_url}
-                        noSubmitButton={true} submitModifiedValuesOnly={true} classes={classes}>
+              <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
+                        getSuccessMessages={this.getSuccessMessages} noSubmitButton={true}
+                        submitModifiedValuesOnly={true} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField
@@ -79,6 +94,15 @@ class UserProfile extends React.Component {
                         />
                      </Grid>
                   </Grid>
+                  <EditableField
+                          component={RFTextField}
+                          autoComplete="email"
+                          fullWidth
+                          label="Email"
+                          margin="normal"
+                          name="email"
+                          required
+                  />
               </AjaxForm>
             </AppForm>
           </React.Fragment>

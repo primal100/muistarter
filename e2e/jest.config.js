@@ -10,6 +10,7 @@ module.exports = {
   transform: {
     "\\.js$": "react-scripts/config/jest/babelTransform"
   },
+  setupFiles: ["jest-localstorage-mock"],
   setupFilesAfterEnv: ['./setupTestFramework.js'],
   verbose: true
 };

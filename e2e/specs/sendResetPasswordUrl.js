@@ -6,10 +6,10 @@ import {
 import { fill_form, submit_form_enter, getSubmitErrorText, getFieldErrorText } from "../pageObjects/forms";
 import { load_send_reset_password_url } from "../pageObjects/sendResetPasswordUrl";
 
-const successMessages = ["We have sent you an email with a link to reset your password.\n"];
+const successMessages = ["A link to reset your password has been sent to your e-mail address."];
 
 
-describe("test send reset password view", () => {
+describe("test send reset password url view", () => {
   beforeEach(async () => {
     await load_send_reset_password_url();
   });

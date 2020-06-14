@@ -1,15 +1,16 @@
 import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
-import { Redirect } from 'react-router-dom'
+import {Redirect, withRouter} from 'react-router-dom'
 import compose from 'recompose/compose';
-import { Form, FormSpy } from 'react-final-form';
+import {Form, FormSpy} from 'react-final-form';
 import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import useStyles from '../form/styles';
-import { API } from '../api';
-import { FORM_ERROR } from "final-form";
+import {changeLocationState} from '../utils'
+import {API} from '../api';
+import {FORM_ERROR} from "final-form";
 
 
 const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
@@ -53,38 +54,60 @@ class AjaxForm extends React.Component {
                 return obj;
             }, {})
         }
-
-        try {
-            let data;
-            if (Object.keys(values).length !== 0) {
-                let response = await API({
+        let request;
+        if (this.props.createRequest) request = this.props.createRequest(values);
+        else request = {
                     method: this.props.method || 'POST',
                     url: this.props.url,
                     data: values
-                })
+                }
+        console.log(request);
+        try {
+            let data;
+            if (Object.keys(values).length !== 0) {
+                let response = await API(request);
                 data = response.data;
+                console.log(data);
             }else{
                 this.setState({sent: false});
                 return
             }
+            let msgs;
+            if (this.props.getSuccessMessages) {
+                msgs = {successMessages: this.props.getSuccessMessages(request, data)};
+            }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
+                msgs = {successMessages: [data[response_key]]};
+            }
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);
+                if (msgs) changeLocationState(this.props, msgs);
+                this.setState({sent: false})
             }else if (this.props.successTo) {
-                this.setState({redirect: true})
-            }else if ((Object.keys(this.state.initialValues).length !== 0)){
+                if (msgs) this.props.successTo.state = msgs;
+                this.setState({redirect: true});
+            }else if (this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)){
+                if (msgs) changeLocationState(this.props, msgs);
                 this.setState({initialValues: data, sent: false})
+            }else{
+                if (msgs) changeLocationState(this.props, msgs);
+                this.setState({sent: false})
             }
         }catch (e) {
+            if (! e.response){
+                throw e
+            }
             let data = e.response.data;
+            console.log(data);
             this.setState({sent: false})
             if (data[response_key] && data[response_key].length > 0) {
                 return {[FORM_ERROR]: data[response_key]}
             }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
                 return {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
+                console.log(data);
                 return Object.keys(data).reduce(function(obj, k) {
                     let value = obj[k]
-                    if (value && obj[k].length > 0) {
+                    if (value && value.length > 0) {
                         if ( !formKeys.includes(k)){
                             k = [FORM_ERROR]
                         }
@@ -102,7 +125,7 @@ class AjaxForm extends React.Component {
 
     render() {
       if (this.state.redirect){
-          return <Redirect to={this.props.successTo} />
+          return <Redirect to={this.successTo || this.props.successTo} />
       }
       const { classes } = this.props;
       return (
@@ -143,5 +166,6 @@ class AjaxForm extends React.Component {
 
 export default compose(
   withStyles(useStyles),
-  withRoot
+  withRoot,
+  withRouter
 )(AjaxForm);

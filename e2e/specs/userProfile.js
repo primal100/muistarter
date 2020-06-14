@@ -1,6 +1,9 @@
-import { clearLocalStorage, url, } from "../pageObjects";
+import {clearLocalStorage, getSuccessMessageText, url,} from "../pageObjects";
 import { loadUserProfile } from "../pageObjects/userProfile"
 import { getFormValues, getFormIsDisabled, click_enable_editable_field_button, fill_form, submit_field_tab, submit_form_enter } from "../pageObjects/forms"
+
+
+const successMessages = ['Your details have been updated']
 
 
 describe("test user profile view", () => {
@@ -25,6 +28,7 @@ describe("test user profile view", () => {
         await submit_field_tab();
         expect(await getFormValues(['first_name', 'last_name'])).toEqual(['Jane', 'user']);
         expect(await getFormIsDisabled(['first_name', 'last_name'])).toEqual([true, true]);
+        expect(await getSuccessMessageText()).toEqual(successMessages);
     });
 
     it("should enable the last name form field, edit and submit values with enter, simulate first name being modified elsewhere, and disable the form fields", async () => {
@@ -34,5 +38,6 @@ describe("test user profile view", () => {
         await submit_form_enter();
         expect(await getFormIsDisabled(['first_name', 'last_name'])).toEqual([true, true]);
         expect(await getFormValues(['first_name', 'last_name'])).toEqual(['Jane', 'Doe']);
+        expect(await getSuccessMessageText()).toEqual(successMessages);
     });
 })

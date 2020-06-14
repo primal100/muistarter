@@ -38,10 +38,8 @@ class ResetPassword extends React.Component {
           signature: params.get('signature')
       }
       const { classes } = this.props;
-      const successMessage = "Password has been reset successfully, Sign-in with the new password";
       const redirect = {
           pathname: "/sign-in",
-          state: {successMessages: [successMessage]}
       }
       return (
           <React.Fragment>
@@ -52,7 +50,8 @@ class ResetPassword extends React.Component {
                 </Typography>
               </React.Fragment>
               <AjaxForm url={reset_password_url} method="POST" successTo={redirect} validate={this.validate}
-                        buttonText="Set New Password" classes={classes} additonalValues={this.additionalValues}>
+                        buttonText="Set New Password" showSuccessMessage={true} classes={classes}
+                        additonalValues={this.additionalValues}>
                   <Field
                       fullWidth
                       component={RFTextField}

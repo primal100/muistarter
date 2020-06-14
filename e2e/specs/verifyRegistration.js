@@ -1,8 +1,9 @@
 import { waitForNavigation, url, getSuccessMessageText, getErrorMessageText } from "../pageObjects/index"
 import { load_verify_registration_url } from "../pageObjects/verifyRegistration";
+import {loadUserProfile} from "../pageObjects/userProfile";
 
 
-const successMessages = ["Your e-mail address has been verified. Please sign-in below."];
+const successMessages = ["Your e-mail address has been verified. Please sign in."];
 const errorMessages = ['Invalid signature. Please check again the link in the email you received.']
 
 

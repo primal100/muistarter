@@ -1,9 +1,9 @@
-import { waitForNavigation, url, getSuccessMessageText } from "../pageObjects/index"
+import {waitForNavigation, url, getSuccessMessageText, clearLocalStorage} from "../pageObjects/index"
 import {fill_form, submit_form_enter, getFieldErrorText, getSubmitErrorText} from "../pageObjects/forms";
 import { load_reset_password_url } from "../pageObjects/resetPassword";
 
 
-const successMessages = ["Password has been reset successfully, Sign-in with the new password"]
+const successMessages = ["Reset password successful. Please sign in with the new password."]
 
 
 describe("test reset password view", () => {
@@ -69,6 +69,6 @@ describe("test reset password view with wrong signature", () => {
     expect(await getSubmitErrorText()).toEqual([]);
     await submit_form_enter();
     expect(await url()).toBe(URL + "/reset-password?user_id=1&timestamp=1589819019&signature=1234");
-    expect(await getSubmitErrorText()).toEqual(['Invalid signature']);
+    expect(await getSubmitErrorText()).toEqual(["Invalid signature. Please check again the link in the email you received."]);
   });
 });
