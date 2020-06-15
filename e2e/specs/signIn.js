@@ -1,6 +1,6 @@
 import { waitForNavigation, clearLocalStorage, url } from "../pageObjects/index"
 import { fill_form, submit_form_enter, click_submit_button, getSubmitErrorText, getFieldErrorText } from "../pageObjects/forms";
-import { load_signin, load_signup_via_signin, getLocalStorageTokens, tokens } from "../pageObjects/signin";
+import { load_signin, load_signup_via_signin, getLocalStorageTokens, tokens } from "../pageObjects/signIn";
 
 
 describe("test signin view", () => {

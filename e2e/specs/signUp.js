@@ -1,6 +1,6 @@
 import { waitForNavigation, url, getSuccessMessageText } from "../pageObjects/index"
 import {fill_form, submit_form_enter, getFieldErrorText} from "../pageObjects/forms";
-import { load_signup } from "../pageObjects/signup";
+import { load_signup } from "../pageObjects/signUp";
 
 
 const successMessages = ["We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.\n" +
