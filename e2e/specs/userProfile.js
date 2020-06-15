@@ -1,6 +1,6 @@
 import {clearLocalStorage, getSuccessMessageText, url,} from "../pageObjects";
 import { loadUserProfile, loadUserProfileNotLoggedIn } from "../pageObjects/userProfile"
-import { getFormValues, getFormIsDisabled, click_enable_editable_field_button, fill_form, submit_field_tab, submit_form_enter } from "../pageObjects/forms"
+import { getFormValues, getFormIsDisabled, clickEnableEditableFieldButton, fillForm, submitFieldTab, submitFormEnter } from "../pageObjects/forms"
 
 
 const successMessages = ["Your details have been updated"]
@@ -23,30 +23,30 @@ describe("test user profile view", () => {
     });
 
     it("should enable the first name form field, edit and submit values with tab, and disable the form field", async () => {
-        await click_enable_editable_field_button('first_name');
+        await clickEnableEditableFieldButton('first_name');
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([false, true, true]);
-        await fill_form({first_name: 'Jane'}, true);
-        await submit_field_tab();
+        await fillForm({first_name: 'Jane'}, true);
+        await submitFieldTab();
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'user', 'a@a.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(successMessages);
     });
 
     it("should enable the last name form field, edit and submit values with enter, simulate first name being modified elsewhere, and disable the form fields", async () => {
-        await click_enable_editable_field_button('last_name');
+        await clickEnableEditableFieldButton('last_name');
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, false, true]);
-        await fill_form({last_name: 'Doe'}, true);
-        await submit_form_enter();
+        await fillForm({last_name: 'Doe'}, true);
+        await submitFormEnter();
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'a@a.com']);
         expect(await getSuccessMessageText()).toEqual(successMessages);
     });
 
     it("should enable the email form field, edit and submit, disable the form field, and show success message", async () => {
-        await click_enable_editable_field_button('email');
+        await clickEnableEditableFieldButton('email');
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, false]);
-        await fill_form({email: 'a@c.com'}, true);
-        await submit_field_tab();
+        await fillForm({email: 'a@c.com'}, true);
+        await submitFieldTab();
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'a@c.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(changeEmailSuccessMessages);

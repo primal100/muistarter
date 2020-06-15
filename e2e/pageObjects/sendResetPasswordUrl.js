@@ -1,18 +1,10 @@
 import { load } from './index'
+import {click} from "./index";
 
-export const load_send_reset_password_url = async () => {
+export const loadSendResetPasswordURL = async () => {
   await load()
-  await page.click('#sign-in', {
-    waitUntil: "networkidle0",
-    timeout: 10000
-  });
-  await page.click('#send_reset_password_link', {
-    waitUntil: "networkidle0",
-    timeout: 10000
-  });
-  await page.click('#send_reset_password_link', {
-    waitUntil: "networkidle0",
-    timeout: 10000
-  });
+  await click('#sign-in');
+  await click('#send_reset_password_link')
+  await click('#send_reset_password_link');
 };
 

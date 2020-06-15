@@ -1,13 +1,6 @@
-import {waitForNavigation} from "./index";
-
+import { clickAndWaitNavigation } from "./index";
 
 export const clickSignOut = async () => {
-  await page.click('#sign-out', {
-    waitUntil: "networkidle0",
-    timeout: 10000
-  });
+  await page.waitForSelector('#sign-out');
+  await clickAndWaitNavigation('#sign-out');
 };
-
-export const clickSignOutAndWait = async () => {
-  await Promise.all([clickSignOut(), waitForNavigation()]);
-}

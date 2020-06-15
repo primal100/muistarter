@@ -1,7 +1,7 @@
-import { url } from "../pageObjects/index";
+import {clearLocalStorage, url} from "../pageObjects/index";
 import {getLocalStorageTokens, signedIn, tokens} from "../pageObjects/signIn";
-import { clickSignOutAndWait } from "../pageObjects/signOut"
-import { loadUserProfile} from "../pageObjects/userProfile";
+import { clickSignOut } from "../pageObjects/signOut"
+import { goToUserProfile} from "../pageObjects/userProfile";
 
 
 describe("test sign out", () => {
@@ -10,18 +10,22 @@ describe("test sign out", () => {
     expect(await getLocalStorageTokens()).toEqual(tokens);
   });
 
-  it("should sign out from home page, remove access tokens and go to home page'", async () => {
-     await signedIn();
+  afterEach(async () => {
+    await clearLocalStorage();
+  });
+
+  it("should sign out from home page, remove access tokens and go to home page", async () => {
+    console.log('starting test');
     expect(await url()).toBe(URL + "/");
-    await clickSignOutAndWait();
+    await clickSignOut();
     expect(await url()).toBe(URL + "/");
     expect(await getLocalStorageTokens()).toBeNull();
   });
 
-  it("should sign out from user profile page, remove access tokens and go to home page'", async () => {
-    await loadUserProfile();
+  it("should sign out from user profile page, remove access tokens and go to home page", async () => {
+    await goToUserProfile();
     expect(await url()).toBe(URL + "/profile");
-    await clickSignOutAndWait();
+    await clickSignOut();
     expect(await url()).toBe(URL + "/");
     expect(await getLocalStorageTokens()).toBeNull();
   });

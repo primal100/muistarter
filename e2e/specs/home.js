@@ -1,10 +1,10 @@
 import { clickAndWaitNavigation, url} from "../pageObjects";
 import { load } from "../pageObjects";
-import { load_signin } from "../pageObjects/signIn";
+import { loadSignIn } from "../pageObjects/signIn";
 
 describe("test home", () => {
   beforeEach(async () => {
-    await load_signin();
+    await loadSignIn();
     expect(await url()).toBe(URL + "/sign-in");
   });
 

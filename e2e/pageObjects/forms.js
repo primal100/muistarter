@@ -1,4 +1,6 @@
-export const fill_form = async (values, clear=false) => {
+import { click, clickAndWaitNavigation } from "./index";
+
+export const fillForm = async (values, clear=false) => {
     for (const name in values) {
         // noinspection JSUnfilteredForInLoop
         if (values.hasOwnProperty(name)){
@@ -29,26 +31,39 @@ export const getFormIsDisabled = async (names) => await page.$$eval(getInputElem
 
 
 
-export const submit_form_enter = async () => {
+export const submitFormEnter = async () => {
   await page.keyboard.press('Enter');
 };
 
 
-export const click_submit_button = async () => {
-  await page.$eval('form button', el => el.click());
+export const clickSubmitButton = async () => {
+    await click('form button');
+  //await page.$eval(, el => el.click());
 };
 
-export const click_enable_editable_field_button = async (name) => {
-  await page.$eval(`#enable-${name}`, el => el.click());
+
+export const clickSubmitButtonAndWaitNavigation = async () => {
+    await clickAndWaitNavigation('form button');
+  //await page.$eval(, el => el.click());
 };
 
-export const submit_field_tab = async () => {
+
+export const clickSubmitButtonAndWait = async () => {
+    await clickAndWaitNavigation('form button');
+  //await page.$eval(, el => el.click());
+};
+
+export const clickEnableEditableFieldButton = async (name) => {
+  await click(`#enable-${name}`)
+  //await page.$eval(, el => el.click());
+};
+
+export const submitFieldTab = async () => {
   await page.keyboard.press('Tab');
 };
 
-
 export const getErrors = async () => { await page.evaluate('.Mui-error') }
 
-export const getFieldErrorText = async () => await page.$$eval('p.Mui-error', els => els.map((el) => el.textContent))
-
-export const getSubmitErrorText = async () => await page.$$eval('.submit-error', els => els.map((el) => el.textContent))
+export const getTextContent = async (selector) => await page.$$eval(selector, els => els.map((el) => el.textContent))
+export const getFieldErrorText = async () => await getTextContent('p.Mui-error')
+export const getSubmitErrorText = async () => await getTextContent('.submit-error')
