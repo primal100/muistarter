@@ -13,6 +13,7 @@ import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 
 
+const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 //const change_password_url = process.env.REACT_APP_CHANGE_PASSWORD_URL
@@ -55,6 +56,9 @@ class UserProfile extends React.Component {
     }
 
     getSuccessMessages = (request, data) => {
+        if (data[response_key] && data[response_key].length > 0){
+            return [data[response_key]];
+        }
         return ['Your details have been updated'];
     }
 

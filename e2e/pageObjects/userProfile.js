@@ -11,3 +11,10 @@ export const loadUserProfile = async () => {
   await page.waitForSelector('#enable-first_name')
 };
 
+
+export const loadUserProfileNotLoggedIn = async () => {
+  await page.goto(URL + '/profile', {
+    waitUntil: "networkidle0",
+    timeout: 60000
+  });
+};

@@ -20,6 +20,7 @@ import { isLoggedIn } from "axios-jwt";
 
 
 const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
+const verify_email_url = process.env.REACT_APP_VERIFY_EMAIL_URL
 
 
 export class ProtectedRoute extends React.Component {
@@ -57,7 +58,8 @@ class App extends React.Component {
               <Route path="/sign-up-verify-email" render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"/>} />
               <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
               <Route path="/reset-password" component={ResetPassword}/>
-              <Route path="/profile" component={UserProfile}/>
+              <ProtectedRoute path="/profile" component={UserProfile}/>
+              <Route path="/verify-email" render={() => <SendParams url={verify_email_url} redirectTo="/"/>} />
             </div>
             <AppFooter/>
           </ScrollToTop>

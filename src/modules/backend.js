@@ -55,13 +55,14 @@ const register_user_already_exists = {email: ['user with this email address alre
 const verify_registration_response = {[response_key]: "Your e-mail address has been verified. Please sign in."}
 const invalid_signature = "1234";
 const verify_invalid_signature = {user_id: "1", timestamp: epoch_time, signature: invalid_signature}
+const verify_email_invalid_signature = {user_id: "1", timestamp: epoch_time, signature: invalid_signature, email: 'a@c.com'}
 const send_reset_password_response = {[response_key]: "A link to reset your password has been sent to your e-mail address."}
 const send_reset_password_no_user_response = {[response_key]: 'User not found'}
 const reset_password_response = {[response_key]: "Reset password successful. Please sign in with the new password."}
 const reset_password_too_short = {user_id: '1', password: 'x', password_confirm: 'x', timestamp: epoch_time, signature: "1235"}
 const reset_password_invalid_signature = {user_id: '1', password: password, password_confirm: password, timestamp: epoch_time, signature: invalid_signature}
 const change_email_response = {[response_key]: "A verification e-mail has been sent to the newly configured e-mail address. Please click the link in that e-mail to update your e-mail address."}
-const verify_email_response = {[response_key]: 'Email verified successfully'}
+const verify_email_response = {[response_key]: "Email verified successfully"}
 const verify_response_invalid_signature = {[response_key]: 'Invalid signature. Please check again the link in the email you received.'}
 const change_password_response = {'detail': 'Password changed successfully'}
 const change_password_request_wrong_old_password = {old_password: 'b', password: 'xzer12q3', password_confirm: 'xzer12q3'}
@@ -96,8 +97,8 @@ export default function mockBackend() {
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => checkHeaders(config, [200, user_details_first_name_changed_response]));
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => checkHeaders(config, [200, user_details_both_names_changed_response]));
         mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => checkHeaders(config, [200, change_email_response]));
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_invalid_signature).reply((config) => checkHeaders(config, [400, verify_response_invalid_signature]));
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply((config) => checkHeaders(config, [200, verify_email_response]));
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
+        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => checkHeaders(config, [400, change_password_response_wrong_old_password]));
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => checkHeaders(config, [200, change_password_response]));
         mock.onAny().reply((config) => {
