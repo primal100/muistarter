@@ -53,11 +53,12 @@ class ResetPassword extends React.Component {
                         buttonText="Set New Password" showSuccessMessage={true} classes={classes}
                         additonalValues={this.additionalValues}>
                   <Field
+                      autoFocus
                       fullWidth
                       component={RFTextField}
                       required
                       name="password"
-                      autoComplete="current-password"
+                      autoComplete="new-password"
                       label="Password"
                       type="password"
                       margin="normal"
@@ -67,7 +68,7 @@ class ResetPassword extends React.Component {
                       component={RFTextField}
                       required
                       name="password_confirm"
-                      autoComplete="current-password"
+                      autoComplete="new-password"
                       label="Confirm Password"
                       type="password"
                       margin="normal"

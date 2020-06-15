@@ -8,12 +8,10 @@ describe("test sign out", () => {
   beforeEach(async () => {
     await signedIn();
     expect(await getLocalStorageTokens()).toEqual(tokens);
-    expect(await url()).toBe(URL + "/");
   });
 
   it("should sign out from home page, remove access tokens and go to home page'", async () => {
      await signedIn();
-    expect(await getLocalStorageTokens()).toEqual(tokens);
     expect(await url()).toBe(URL + "/");
     await clickSignOutAndWait();
     expect(await url()).toBe(URL + "/");
@@ -22,7 +20,6 @@ describe("test sign out", () => {
 
   it("should sign out from user profile page, remove access tokens and go to home page'", async () => {
     await loadUserProfile();
-    expect(await getLocalStorageTokens()).toEqual(tokens);
     expect(await url()).toBe(URL + "/profile");
     await clickSignOutAndWait();
     expect(await url()).toBe(URL + "/");

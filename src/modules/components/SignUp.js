@@ -100,7 +100,7 @@ class SignUp extends React.Component {
                           component={RFTextField}
                           required
                           name="password"
-                          autoComplete="current-password"
+                          autoComplete="new-password"
                           label="Password"
                           type="password"
                           margin="normal"
@@ -110,7 +110,7 @@ class SignUp extends React.Component {
                           component={RFTextField}
                           required
                           name="password_confirm"
-                          autoComplete="current-password"
+                          autoComplete="new-password"
                           label="Confirm Password"
                           type="password"
                           margin="normal"

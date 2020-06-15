@@ -1,4 +1,4 @@
-import { signedIn } from "./signin";
+import { signedIn } from "./signIn";
 
 export const loadUserProfile = async () => {
   await signedIn();

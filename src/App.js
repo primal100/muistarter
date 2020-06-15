@@ -3,9 +3,10 @@ import withRoot from './modules/withRoot';
 import React from 'react';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
-import {BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import ScrollToTop from 'react-router-scroll-top'
 import Home from "./modules/components/Home";
+import ChangePassword from "./modules/components/ChangePassword";
 import SignIn from "./modules/components/SignIn";
 import SignUp from "./modules/components/SignUp";
 import SignOut from "./modules/components/SignOut";
@@ -44,6 +45,13 @@ export class ProtectedRoute extends React.Component {
 
 class App extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      authenticated: isLoggedIn()
+    }
+  }
+
   render() {
     return (
         <Router>
@@ -51,6 +59,7 @@ class App extends React.Component {
             <AppAppBar/>
             <Alerts/>
             <div>
+              <Switch>
               <Route exact path="/" component={Home}/>
               <Route path="/sign-in" component={SignIn}/>
               <ProtectedRoute path="/sign-out" component={SignOut}/>
@@ -60,6 +69,9 @@ class App extends React.Component {
               <Route path="/reset-password" component={ResetPassword}/>
               <ProtectedRoute path="/profile" component={UserProfile}/>
               <Route path="/verify-email" render={() => <SendParams url={verify_email_url} redirectTo="/"/>} />
+              <ProtectedRoute path="/change-password" component={ChangePassword}/>
+              <Route exact render={props => <Redirect to="/"/>}/>
+              </Switch>
             </div>
             <AppFooter/>
           </ScrollToTop>

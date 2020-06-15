@@ -6,6 +6,7 @@ import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
+import HomeIcon from '@material-ui/icons/Home';
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -23,9 +24,14 @@ const styles = (theme) => ({
   },
   left: {
     flex: 1,
+    justifyContent: "flex-start"
   },
   leftLinkActive: {
     color: theme.palette.common.white,
+  },
+  center: {
+    flex: 0,
+    justifyContent: "center"
   },
   right: {
     flex: 1,
@@ -53,7 +59,18 @@ class AppAppBar extends React.Component {
         <div>
           <AppBar position="fixed">
             <Toolbar className={classes.toolbar}>
-              <div className={classes.left}/>
+              <div className={classes.left}>
+               <Tooltip title="Home" aria-label="Go Home">
+                <IconButton
+                    id="home"
+                    href="/"
+                    color="inherit"
+                >
+                  <HomeIcon/>
+                </IconButton>
+               </Tooltip>
+              </div>
+              <div className={classes.center}/>
               <Link
                   variant="h6"
                   underline="none"
@@ -85,20 +102,18 @@ class AppAppBar extends React.Component {
                 </Link>
               </div>}
               {authenticated && <div className={classes.right}>
-               <Tooltip title="Profile">
+               <Tooltip title="Profile" aria-label="Account of current user">
                 <IconButton
                     id="profile"
-                    aria-label="account of current user"
                     href="/profile"
                     color="inherit"
                 >
                   <AccountCircle/>
                 </IconButton>
                </Tooltip>
-               <Tooltip title="Sign out">
+               <Tooltip title="Sign out" aria-label="Sign out">
                 <IconButton
                     id="sign-out"
-                    aria-label="sign out"
                     href="/sign-out"
                     color="inherit"
                 >

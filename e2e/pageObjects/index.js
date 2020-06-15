@@ -2,13 +2,13 @@ const rootSelector = '#root';
 
 export const root = async () => await page.$(rootSelector);
 
-export const load = async () => {
-  await page.goto(URL, {
+export const load = async (url='') => {
+  await page.goto(URL + url, {
     waitUntil: "networkidle0",
     timeout: 60000
   });
   await clearLocalStorage();
-  await page.goto(URL, {
+  await page.goto(URL + url, {
     waitUntil: "networkidle0",
     timeout: 60000
   });
@@ -20,6 +20,19 @@ export const waitForNavigation = async () => {
     timeout: 10000
   });
 };
+
+export const click = async (selector) => {
+  await page.click(selector, {
+    waitUntil: "networkidle0",
+    timeout: 10000
+  });
+}
+
+
+export const clickAndWaitNavigation = async (selector) => {
+  await Promise.all([click(selector), waitForNavigation()])
+}
+
 
 export const getTitle = async () => await page.title();
 

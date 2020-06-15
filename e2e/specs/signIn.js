@@ -67,4 +67,14 @@ describe("test signin view", () => {
     expect(await getLocalStorageTokens()).toEqual(tokens);
   });
 
+  it("should show failed login error for non-verified user", async () => {
+    expect(await getSubmitErrorText()).toEqual([]);
+    await fill_form({email: 'c@a.com', password: 'b'})
+    expect(await getSubmitErrorText()).toEqual([]);
+    await submit_form_enter();
+    expect(await url()).toEqual(URL + "/sign-in");
+    expect(await getSubmitErrorText()).toEqual(['No active account found with the given credentials']);
+    expect(await getLocalStorageTokens()).toBeNull();
+  });
+
 });

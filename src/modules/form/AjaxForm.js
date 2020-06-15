@@ -78,6 +78,7 @@ class AjaxForm extends React.Component {
             }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
                 msgs = {successMessages: [data[response_key]]};
             }
+            console.log(msgs)
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);
                 if (msgs) changeLocationState(this.props, msgs);

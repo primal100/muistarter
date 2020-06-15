@@ -11,6 +11,8 @@ import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
+import {Link as RouterLink} from "react-router-dom";
 
 
 const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
@@ -108,6 +110,11 @@ class UserProfile extends React.Component {
                           required
                   />
               </AjaxForm>
+              <Typography variant="body2" align="center">
+                <Link id="change_password_link" underline="always" component={RouterLink} to="/change-password">
+                    Click here to change your password
+                </Link>
+            </Typography>
             </AppForm>
           </React.Fragment>
       );

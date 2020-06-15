@@ -17,14 +17,14 @@ const first_name = 'test'
 const last_name = 'user'
 const epoch_time = '1589819019';
 const non_existing_email_details = {login: 'b@a.com'}
-//const login_details = {email: email_address, password: password}
 const wrong_login_details = {email: email_address, password: 'b'}
-// const existing_user_login_details = {'login': 'second', 'password': 'b'}
+const user_inactive_details = {email: 'c@a.com', password: 'b'}
 const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.p2LvatOtvnZ42WBsSP0jb2OXtX_5gkbbzqyRMZMUE8k';
 const refreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.3J6JVkEL8Sv0MJlV4bkKtmHZ7WNjz5-F8h_VvOwRHng';
 const login_response_ok = {'access': accessToken, 'refresh': refreshToken}
 const logout_response_ok = {[response_key]: 'Logout successful'}
 const login_failed_response = {[response_key]: 'Login or password invalid.'}
+const user_inactive_response = {[response_key]: 'No active account found with the given credentials'}
 const header = 'Authorization';
 const headerPrefix = 'Bearer ';
 const authorization_header = `${headerPrefix}${accessToken}`;
@@ -64,9 +64,10 @@ const reset_password_invalid_signature = {user_id: '1', password: password, pass
 const change_email_response = {[response_key]: "A verification e-mail has been sent to the newly configured e-mail address. Please click the link in that e-mail to update your e-mail address."}
 const verify_email_response = {[response_key]: "Email verified successfully"}
 const verify_response_invalid_signature = {[response_key]: 'Invalid signature. Please check again the link in the email you received.'}
-const change_password_response = {'detail': 'Password changed successfully'}
-const change_password_request_wrong_old_password = {old_password: 'b', password: 'xzer12q3', password_confirm: 'xzer12q3'}
-const change_password_response_wrong_old_password = {'old_password': ['Old password is not correct']}
+const change_password_response = {[response_key]: 'Password changed successfully'}
+const change_password_request_password_too_short = {old_password: password, password: 'z', password_confirm: 'z'}
+const change_password_request_wrong_old_password = {old_password: 'a', password: 'z00g5r32!', password_confirm: 'z00g5r32!'}
+const change_password_response_wrong_old_password = {old_password: ['Old password is not correct']}
 
 
 function checkHeaders(config, ok_reply){
@@ -81,6 +82,7 @@ export default function mockBackend() {
     if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
         console.log(`Running in ${process.env.NODE_ENV} mode`)
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, login_failed_response);
+        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, user_inactive_details).reply(401, user_inactive_response);
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, login_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
@@ -100,6 +102,7 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => checkHeaders(config, [400, change_password_response_wrong_old_password]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_password_too_short).reply((config) => checkHeaders(config, [400, register_too_short_password_response]));
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => checkHeaders(config, [200, change_password_response]));
         mock.onAny().reply((config) => {
             console.log("Mock request did not match", config);
