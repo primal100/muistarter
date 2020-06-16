@@ -6,6 +6,13 @@ import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
+import HomeIcon from '@material-ui/icons/Home';
+import IconButton from '@material-ui/core/IconButton';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Tooltip from '@material-ui/core/Tooltip';
+import { isLoggedIn } from "axios-jwt";
+
 
 const styles = (theme) => ({
   title: {
@@ -17,9 +24,14 @@ const styles = (theme) => ({
   },
   left: {
     flex: 1,
+    justifyContent: "flex-start"
   },
   leftLinkActive: {
     color: theme.palette.common.white,
+  },
+  center: {
+    flex: 0,
+    justifyContent: "center"
   },
   right: {
     flex: 1,
@@ -37,47 +49,84 @@ const styles = (theme) => ({
 });
 
 
-function AppAppBar(props) {
-  const { classes } = props;
+class AppAppBar extends React.Component {
 
-  return (
-    <div>
-      <AppBar position="fixed">
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.left} />
-          <Link
-            variant="h6"
-            underline="none"
-            color="inherit"
-            className={classes.title}
-            component={RouterLink} to="/"
-          >
-            {'onepirate'}
-          </Link>
-          <div className={classes.right}>
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              component={RouterLink} to="/sign-in"
-            >
-              {'Sign In'}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
-              className={clsx(classes.rightLink, classes.linkSecondary)}
-              component={RouterLink} to="/sign-up"
-            >
-              {'Sign Up'}
-            </Link>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.placeholder} />
-    </div>
-  );
+  render() {
+    const authenticated = isLoggedIn();
+    const {classes} = this.props;
+
+    return (
+        <div>
+          <AppBar position="fixed">
+            <Toolbar className={classes.toolbar}>
+              <div className={classes.left}>
+               <Tooltip title="Home" aria-label="Go Home">
+                <IconButton
+                    id="home"
+                    href="/"
+                    color="inherit"
+                >
+                  <HomeIcon/>
+                </IconButton>
+               </Tooltip>
+              </div>
+              <div className={classes.center}/>
+              <Link
+                  variant="h6"
+                  underline="none"
+                  color="inherit"
+                  className={classes.title}
+                  component={RouterLink} to="/"
+              >
+                {'onepirate'}
+              </Link>
+              {!authenticated && <div className={classes.right}>
+                <Link
+                    id="sign-in"
+                    color="inherit"
+                    variant="h6"
+                    underline="none"
+                    className={classes.rightLink}
+                    component={RouterLink} to="/sign-in"
+                >
+                  {'Sign In'}
+                </Link>
+                <Link
+                    id="sign-up"
+                    variant="h6"
+                    underline="none"
+                    className={clsx(classes.rightLink, classes.linkSecondary)}
+                    component={RouterLink} to="/sign-up"
+                >
+                  {'Sign Up'}
+                </Link>
+              </div>}
+              {authenticated && <div className={classes.right}>
+               <Tooltip title="Profile" aria-label="Account of current user">
+                <IconButton
+                    id="profile"
+                    href="/profile"
+                    color="inherit"
+                >
+                  <AccountCircle/>
+                </IconButton>
+               </Tooltip>
+               <Tooltip title="Sign out" aria-label="Sign out">
+                <IconButton
+                    id="sign-out"
+                    href="/sign-out"
+                    color="inherit"
+                >
+                  <ExitToAppIcon/>
+                </IconButton>
+               </Tooltip>
+              </div>}
+            </Toolbar>
+          </AppBar>
+          <div className={classes.placeholder}/>
+        </div>
+    );
+  }
 }
 
 AppAppBar.propTypes = {

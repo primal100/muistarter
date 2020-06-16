@@ -5,8 +5,7 @@ import Typography from './Typography';
 import AppForm from '../views/AppForm';
 
 
-function Home() {
-
+function Home(props) {
   return (
     <React.Fragment>
       <AppForm>
