@@ -70,6 +70,7 @@ class App extends React.Component {
               <ProtectedRoute path="/profile" component={UserProfile}/>
               <Route path="/verify-email" render={() => <SendParams url={verify_email_url} redirectTo="/"/>} />
               <ProtectedRoute path="/change-password" component={ChangePassword}/>
+              {this.props.routes}
               <Route exact render={props => <Redirect to="/"/>}/>
               </Switch>
             </div>
