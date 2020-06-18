@@ -14,3 +14,10 @@ export const paramsToObject = (props) => {
       }
       return values;
 }
+
+
+export const isPageRefreshed = () => {
+    console.log(window.performance)
+    console.log(performance.navigation.type);
+    return window.performance && performance.navigation.type === 1;
+}

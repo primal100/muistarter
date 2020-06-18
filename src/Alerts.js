@@ -6,6 +6,7 @@ import compose from "recompose/compose";
 import { makeStyles } from '@material-ui/core/styles';
 import {withStyles} from "@material-ui/core/styles";
 import withRoot from "./modules/withRoot";
+import { isPageRefreshed } from "./modules/utils"
 
 
 const useStyles = makeStyles((theme) => ({
