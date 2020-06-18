@@ -19,7 +19,8 @@ import Alerts from "./Alerts";
 import { isLoggedIn } from "axios-jwt";
 
 
-
+console.log(process.env.NODE_ENV);
+console.log(window.location.pathname);
 const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verify_email_url = process.env.REACT_APP_VERIFY_EMAIL_URL
 

@@ -1,5 +1,6 @@
 import { signedIn } from "./signIn";
 import { click, load } from "./index";
+import { sleep} from "./index";
 
 
 export const goToUserProfile = async () => {
@@ -10,6 +11,7 @@ export const goToUserProfile = async () => {
   await page.waitForSelector('#enable-first_name',{
         timeout: 1000
   })
+    //await sleep(60);
 }
 
 export const loadUserProfile = async () => {

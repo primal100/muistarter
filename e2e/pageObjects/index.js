@@ -2,16 +2,19 @@ const rootSelector = '#root';
 
 export const root = async () => await page.$(rootSelector);
 
-export const load = async (url='') => {
-  await page.goto(URL, {
-    waitUntil: "networkidle0",
-    timeout: 60000
-  });
-  await clearLocalStorage();
+
+
+export const load_once = async (url='') => {
   await page.goto(URL + url, {
     waitUntil: "networkidle0",
     timeout: 60000
   });
+}
+
+export const load = async (url='') => {
+  await load_once();
+  await clearLocalStorage();
+  await load_once(url);
 };
 
 export const waitForNavigation = async () => {

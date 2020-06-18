@@ -16,20 +16,18 @@ class SendParams extends React.Component {
       }
     };
     async sendParams() {
+        console.log("Running sendParams component @ " + window.location.pathname);
         const values = paramsToObject(this.props);
         const redirectState = {};
-        console.log(values);
         try {
             let response = await API({
                 method: this.props.method || 'POST',
                 url: this.props.url,
                 data: values
             })
-            console.log(response.data);
             redirectState.successMessages = [response.data[response_key]];
         }catch (e) {
             const data = e.response.data;
-            console.log(data);
             redirectState.errorMessages = Object.values(data);
         }
         this.setState({redirectState: redirectState});

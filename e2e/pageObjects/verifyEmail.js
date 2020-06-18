@@ -1,4 +1,4 @@
-import { load} from "./index";
+import { load } from "./index";
 
 
 export const loadVerifyEmailUrl = async (params) => {
