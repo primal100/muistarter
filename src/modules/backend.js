@@ -27,8 +27,8 @@ const logout_response_ok = {[response_key]: 'Logout successful'}
 const login_failed_response = {[response_key]: 'Login or password invalid.'}
 const user_inactive_response = {[response_key]: 'No active account found with the given credentials'}
 const header = 'Authorization';
-const headerPrefix = 'Bearer ';
-const authorization_header = `${headerPrefix}${accessToken}`;
+//const headerPrefix = 'Bearer ';
+//const authorization_header = `${headerPrefix}${accessToken}`;
 const user_details_response = {id: 1, first_name: first_name, last_name: last_name,
                               email: email_address}
 const new_first_name = 'Jane'
