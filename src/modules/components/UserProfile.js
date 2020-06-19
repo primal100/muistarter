@@ -18,7 +18,6 @@ import {Link as RouterLink} from "react-router-dom";
 const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
-//const change_password_url = process.env.REACT_APP_CHANGE_PASSWORD_URL
 
 
 class UserProfile extends React.Component {

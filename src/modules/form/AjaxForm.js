@@ -78,7 +78,6 @@ class AjaxForm extends React.Component {
             }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
                 msgs = {successMessages: [data[response_key]]};
             }
-            console.log(msgs)
             if (this.props.onSuccess) {
                 this.props.onSuccess(data);
                 if (msgs) changeLocationState(this.props, msgs);
@@ -98,14 +97,12 @@ class AjaxForm extends React.Component {
                 throw e
             }
             let data = e.response.data;
-            console.log(data);
             this.setState({sent: false})
             if (data[response_key] && data[response_key].length > 0) {
                 return {[FORM_ERROR]: data[response_key]}
             }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
                 return {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
-                console.log(data);
                 return Object.keys(data).reduce(function(obj, k) {
                     let value = obj[k]
                     if (value && value.length > 0) {
@@ -132,9 +129,9 @@ class AjaxForm extends React.Component {
       return (
         <React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues}
-              render={({ submitError, handleSubmit, submitting }) => (
+              render={({ submitError, handleSubmit}) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                  <fieldset disabled={submitting || this.state.sent}>
+                  <fieldset disabled={this.state.sent}>
                   {this.props.children}
                   </fieldset>
                   <FormSpy subscription={{ submitError: true }}>
@@ -148,12 +145,12 @@ class AjaxForm extends React.Component {
                   </FormSpy>
                   {!this.props.noSubmitButton && <FormButton
                     className={classes.button}
-                    disabled={submitting || this.state.sent}
+                    disabled={this.state.sent}
                     size="large"
                     color="secondary"
                     fullWidth
                   >
-                    {submitting || this.state.sent ? 'In progress…' : this.props.buttonText}
+                    {this.state.sent ? 'In progress…' : this.props.buttonText}
                   </FormButton>}
                 </form>
               )}

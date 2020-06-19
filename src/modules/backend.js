@@ -1,10 +1,11 @@
 //import fetchMock from 'fetch-mock';
 //fetchMock.config.overwriteRoutes = false;
 
-import { API } from './api'
+import { API, APINoHeader } from './api'
 import MockAdapter from 'axios-mock-adapter'
 
 var mock = new MockAdapter(API);
+var mockRaw = new MockAdapter(APINoHeader);
 
 
 // const email = 'testuser@example.com'
@@ -26,8 +27,8 @@ const logout_response_ok = {[response_key]: 'Logout successful'}
 const login_failed_response = {[response_key]: 'Login or password invalid.'}
 const user_inactive_response = {[response_key]: 'No active account found with the given credentials'}
 const header = 'Authorization';
-const headerPrefix = 'Bearer ';
-const authorization_header = `${headerPrefix}${accessToken}`;
+//const headerPrefix = 'Bearer ';
+//const authorization_header = `${headerPrefix}${accessToken}`;
 const user_details_response = {id: 1, first_name: first_name, last_name: last_name,
                               email: email_address}
 const new_first_name = 'Jane'
@@ -71,7 +72,8 @@ const change_password_response_wrong_old_password = {old_password: ['Old passwor
 
 
 function checkHeaders(config, ok_reply){
-    if (config.headers[header] === authorization_header){
+    console.log('Received request', config);
+    if (config.headers[header] && config.headers[header].length > 0){
         return ok_reply
     }
     return [401, {[response_key]: 'Authentication credentials were not provided.'}]
@@ -94,6 +96,7 @@ export default function mockBackend() {
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
+        mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(200, login_response_ok);
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
         mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => checkHeaders(config, [200, user_details_response]));
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => checkHeaders(config, [200, user_details_first_name_changed_response]));
