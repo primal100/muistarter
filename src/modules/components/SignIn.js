@@ -2,7 +2,7 @@ import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
 import compose from 'recompose/compose';
-import { Field, } from 'react-final-form';
+import { Field } from 'react-final-form';
 import Link from '@material-ui/core/Link';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';

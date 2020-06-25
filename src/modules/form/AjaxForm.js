@@ -24,6 +24,7 @@ function capitalize(str){
 class AjaxForm extends React.Component {
     constructor(props) {
       super(props);
+      console.log('Ajax form constructing')
       this.state = {
           sent: false,
           redirect: false,
@@ -32,6 +33,7 @@ class AjaxForm extends React.Component {
     };
 
     async componentDidMount(){
+        console.log('Mounting');
         if (this.props.loadInitialValuesFromURL){
             const response = await API.get(this.props.loadInitialValuesFromURL);
             this.setState({initialValues: response.data})
@@ -39,6 +41,7 @@ class AjaxForm extends React.Component {
     }
 
     handleSubmit = async (values) => {
+        console.log('Loading');
         this.setState({sent: true})
         const formKeys = Object.keys(values)
         if (this.props.additonalValues){
@@ -122,6 +125,7 @@ class AjaxForm extends React.Component {
     }
 
     render() {
+      console.log('Rendering AjaxForm')
       if (this.state.redirect){
           return <Redirect to={this.successTo || this.props.successTo} />
       }

@@ -1,11 +1,8 @@
-//import fetchMock from 'fetch-mock';
-//fetchMock.config.overwriteRoutes = false;
-
 import { API, APINoHeader } from './api'
 import MockAdapter from 'axios-mock-adapter'
 
-var mock = new MockAdapter(API);
-var mockRaw = new MockAdapter(APINoHeader);
+export const mock = new MockAdapter(API);
+export const mockRaw = new MockAdapter(APINoHeader);
 
 
 // const email = 'testuser@example.com'
