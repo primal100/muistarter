@@ -28,12 +28,11 @@ class AjaxForm extends React.Component {
       this.state = {
           sent: false,
           redirect: false,
-          initialValues: {},
+          initialValues: null,
       }
     };
 
     async componentDidMount(){
-        console.log('Mounting');
         if (this.props.loadInitialValuesFromURL){
             const response = await API.get(this.props.loadInitialValuesFromURL);
             this.setState({initialValues: response.data})
@@ -125,14 +124,14 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-      console.log('Rendering AjaxForm')
       if (this.state.redirect){
           return <Redirect to={this.successTo || this.props.successTo} />
       }
-      const { classes } = this.props;
+      const { classes, initialValues, ...formProps } = this.props;
+      console.log(initialValues);
       return (
         <React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues}
+            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues || initialValues} {...formProps}
               render={({ submitError, handleSubmit}) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                   <fieldset disabled={this.state.sent}>
