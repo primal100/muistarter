@@ -40,7 +40,7 @@ class AjaxForm extends React.Component {
     }
 
     handleSubmit = async (values) => {
-        console.log('Loading');
+        console.log('Submitting form with values', values);
         this.setState({sent: true})
         const formKeys = Object.keys(values)
         if (this.props.additonalValues){
@@ -58,6 +58,13 @@ class AjaxForm extends React.Component {
         }
         let request;
         if (this.props.createRequest) request = this.props.createRequest(values);
+        else if (this.props.method === 'GET'){
+            request = {
+                    method: 'GET',
+                    url: this.props.url,
+                    params: values
+                }
+        }
         else request = {
                     method: this.props.method || 'POST',
                     url: this.props.url,
@@ -66,7 +73,7 @@ class AjaxForm extends React.Component {
         console.log(request);
         try {
             let data;
-            if (Object.keys(values).length !== 0) {
+            if (Object.keys(values).length !== 0 || request.method === 'GET') {
                 let response = await API(request);
                 data = response.data;
                 console.log(data);

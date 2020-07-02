@@ -102,10 +102,11 @@ class AppAppBar extends React.Component {
                 </Link>
               </div>}
               {authenticated && <div className={classes.right}>
+               {this.props.children}
                <Tooltip title="Profile" aria-label="Account of current user">
                 <IconButton
                     id="profile"
-                    href="/profile"
+                    component={RouterLink} to="/profile"
                     color="inherit"
                 >
                   <AccountCircle/>
@@ -114,7 +115,7 @@ class AppAppBar extends React.Component {
                <Tooltip title="Sign out" aria-label="Sign out">
                 <IconButton
                     id="sign-out"
-                    href="/sign-out"
+                    component={RouterLink} to="/sign-out"
                     color="inherit"
                 >
                   <ExitToAppIcon/>
