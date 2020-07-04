@@ -135,7 +135,6 @@ class AjaxForm extends React.Component {
           return <Redirect to={this.successTo || this.props.successTo} />
       }
       const { classes, initialValues, ...formProps } = this.props;
-      console.log(initialValues);
       return (
         <React.Fragment>
             <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues || initialValues} {...formProps}
