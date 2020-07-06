@@ -24,11 +24,10 @@ function capitalize(str){
 class AjaxForm extends React.Component {
     constructor(props) {
       super(props);
-      console.log('Ajax form constructing')
       this.state = {
           sent: false,
           redirect: false,
-          initialValues: null,
+          initialValues: this.props.initialValues,
       }
     };
 
@@ -39,7 +38,7 @@ class AjaxForm extends React.Component {
         }
     }
 
-    handleSubmit = async (values) => {
+    handleSubmit = async (values, form, callback) => {
         console.log('Submitting form with values', values);
         this.setState({sent: true})
         const formKeys = Object.keys(values)
@@ -49,6 +48,7 @@ class AjaxForm extends React.Component {
             Object.assign(values, additionalValues);
         }
         if (this.props.submitModifiedValuesOnly) {
+            console.log('InitialValues', this.state.initialValues)
             values = Object.keys(values).reduce((obj, key) => {
                 if (values[key] !== this.state.initialValues[key]) {
                     obj[key] = values[key];
@@ -76,11 +76,10 @@ class AjaxForm extends React.Component {
             if (Object.keys(values).length !== 0 || request.method === 'GET') {
                 let response = await API(request);
                 data = response.data;
-                console.log(data);
             }else{
-                this.setState({sent: false});
-                return
+                data = {}
             }
+            console.log(data);
             let msgs;
             if (this.props.getSuccessMessages) {
                 msgs = {successMessages: this.props.getSuccessMessages(request, data)};
@@ -88,9 +87,9 @@ class AjaxForm extends React.Component {
                 msgs = {successMessages: [data[response_key]]};
             }
             if (this.props.onSuccess) {
-                this.props.onSuccess(data);
-                if (msgs) changeLocationState(this.props, msgs);
                 this.setState({sent: false})
+                this.props.onSuccess(data, form);
+                if (msgs) changeLocationState(this.props, msgs);
             }else if (this.props.successTo) {
                 if (msgs) this.props.successTo.state = msgs;
                 this.setState({redirect: true});
@@ -101,18 +100,29 @@ class AjaxForm extends React.Component {
                 if (msgs) changeLocationState(this.props, msgs);
                 this.setState({sent: false})
             }
+            console.log('Running callback')
+            callback();
+            console.log('Callback run, checking restart')
+            if (this.props.restartFormOnSuccess){
+                console.log('Restarting form')
+                form.restart();
+                console.log('Restarted form')
+            }else{
+                console.log('Not restarting form')
+            }
         }catch (e) {
             if (! e.response){
                 throw e
             }
             let data = e.response.data;
             this.setState({sent: false})
+            let errors
             if (data[response_key] && data[response_key].length > 0) {
-                return {[FORM_ERROR]: data[response_key]}
+                errors = {[FORM_ERROR]: data[response_key]}
             }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
-                return {[FORM_ERROR]: data[non_field_errors_key]}
+                errors = {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
-                return Object.keys(data).reduce(function(obj, k) {
+                errors = Object.keys(data).reduce(function(obj, k) {
                     let value = obj[k]
                     if (value && value.length > 0) {
                         if ( !formKeys.includes(k)){
@@ -125,8 +135,9 @@ class AjaxForm extends React.Component {
                         }
                     }
                     return obj;
-            }, data);
+                }, data);
             }
+            callback(errors);
         }
     }
 
@@ -137,7 +148,7 @@ class AjaxForm extends React.Component {
       const { classes, initialValues, ...formProps } = this.props;
       return (
         <React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues || initialValues} {...formProps}
+            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues} {...formProps}
               render={({ submitError, handleSubmit}) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                   <fieldset disabled={this.state.sent}>
