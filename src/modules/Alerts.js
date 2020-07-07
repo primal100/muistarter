@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import compose from "recompose/compose";
 import { makeStyles } from '@material-ui/core/styles';
 import {withStyles} from "@material-ui/core/styles";
-import withRoot from "./modules/withRoot";
+import withRoot from "./withRoot";
 
 
 const useStyles = makeStyles((theme) => ({
