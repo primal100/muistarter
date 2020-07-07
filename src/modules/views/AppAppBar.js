@@ -12,6 +12,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isLoggedIn } from "axios-jwt";
+import { UserContext} from "../contexts";
 
 
 const styles = (theme) => ({
@@ -122,6 +123,13 @@ class AppAppBar extends React.Component {
                 </IconButton>
                </Tooltip>
               </div>}
+              <UserContext.Consumer>
+                  {userDetails => {
+                    if (userDetails && userDetails.values){
+                      return userDetails.values.first_name
+                    }
+                  }}
+              </UserContext.Consumer>
             </Toolbar>
           </AppBar>
           <div className={classes.placeholder}/>

@@ -4,7 +4,7 @@ module.exports = {
     URL: "http://localhost:3000"
   },
   moduleDirectories: [
-    "node_modules", "..\\src"
+    "node_modules", "..\\src", "src"
   ],
   testMatch: ["**/specs/*.js"],
   transform: {

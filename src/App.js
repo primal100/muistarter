@@ -17,10 +17,13 @@ import UserProfile from "./modules/components/UserProfile";
 import mockBackend from "./modules/backend"
 import Alerts from "./modules/Alerts";
 import { isLoggedIn } from "axios-jwt";
+import {API} from "./modules/api";
+import { UserContext } from "./modules/contexts"
 
 
-const verify_registration_url = process.env.REACT_APP_VERIFY_REGISTRATION_URL
-const verify_email_url = process.env.REACT_APP_VERIFY_EMAIL_URL
+const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
+const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
+const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
 
 export class ProtectedRoute extends React.Component {
@@ -51,11 +54,11 @@ export class AppRoutes extends React.Component {
         <ProtectedRoute path="/sign-out" component={SignOut}/>
         <Route path="/sign-up" component={SignUp}/>
         <Route path="/sign-up-verify-email"
-               render={() => <SendParams url={verify_registration_url} redirectTo="/sign-in"/>}/>
+               render={() => <SendParams url={verifyRegistrationUrl} redirectTo="/sign-in"/>}/>
         <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
         <Route path="/reset-password" component={ResetPassword}/>
         <ProtectedRoute path="/profile" component={UserProfile}/>
-        <Route path="/verify-email" render={() => <SendParams url={verify_email_url} redirectTo="/"/>}/>
+        <Route path="/verify-email" render={() => <SendParams url={verifyEmailUrl} redirectTo="/"/>}/>
         <ProtectedRoute path="/change-password" component={ChangePassword}/>
         {this.props.children}
         <Route exact render={props => <Redirect to="/"/>}/>
@@ -66,21 +69,45 @@ export class AppRoutes extends React.Component {
 
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userDetails: {}
+        }
+    }
 
-  render() {
-    return (
-        <Router>
-          <ScrollToTop>
-            <AppAppBar/>
-            <Alerts/>
-            <div>
-              <AppRoutes/>
-            </div>
-            <AppFooter/>
-          </ScrollToTop>
-        </Router>
-    );
-  }
+    async componentDidMount(){
+        let values;
+        if (isLoggedIn()){
+            const response = await API.get(userProfileUrl);
+            values = response.data;
+        }else{
+            values = {};
+        }
+        //this.updateUserDetails(values)
+        this.setState({userDetails: {values: values, updater: this.updateUserDetails}})
+    }
+
+    updateUserDetails = (values) => {
+        //this.setState({userDetails: values})
+    }
+
+    render() {
+        console.log(UserContext)
+        console.log('userDetails', this.state.userDetails)
+        return (
+            <Router>
+              <ScrollToTop>
+                <AppAppBar/>
+                <Alerts/>
+                <div>
+                  <AppRoutes/>
+                </div>
+                <AppFooter/>
+              </ScrollToTop>
+            </Router>
+        );
+    }
 }
 
 
