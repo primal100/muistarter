@@ -17,11 +17,9 @@ import UserProfile from "./modules/components/UserProfile";
 import mockBackend from "./modules/backend"
 import Alerts from "./modules/Alerts";
 import { isLoggedIn } from "axios-jwt";
-import {API} from "./modules/api";
+import {getAndUpdateUserDetails} from "./modules/api";
 import { UserContext } from "./modules/contexts"
 
-
-const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
@@ -68,42 +66,48 @@ export class AppRoutes extends React.Component {
 }
 
 
-class App extends React.Component {
+export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userDetails: {}
+            userDetails: {values: null, updater: this.updateUserDetails}
         }
     }
 
-    async componentDidMount(){
-        let values;
-        if (isLoggedIn()){
-            const response = await API.get(userProfileUrl);
-            values = response.data;
-        }else{
-            values = {};
-        }
-        //this.updateUserDetails(values)
-        this.setState({userDetails: {values: values, updater: this.updateUserDetails}})
+    async componentDidMount() {
+        await getAndUpdateUserDetails(this.updateUserDetails);
     }
 
     updateUserDetails = (values) => {
-        //this.setState({userDetails: values})
+        if(values && values.email) {
+            this.setState({userDetails: {values: values, updater: this.updateUserDetails}})
+        }
     }
 
     render() {
-        console.log(UserContext)
-        console.log('userDetails', this.state.userDetails)
+        return (
+            <UserContext.Provider value={this.state.userDetails}>
+            {this.props.children}
+            </UserContext.Provider>
+        )
+    }
+}
+
+
+class App extends React.Component {
+
+    render() {
         return (
             <Router>
               <ScrollToTop>
-                <AppAppBar/>
+                <SetUserContext>
+                <AppAppBar showName/>
                 <Alerts/>
                 <div>
                   <AppRoutes/>
                 </div>
                 <AppFooter/>
+                </SetUserContext>
               </ScrollToTop>
             </Router>
         );

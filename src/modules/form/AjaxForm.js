@@ -86,36 +86,40 @@ class AjaxForm extends React.Component {
             }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
                 msgs = {successMessages: [data[response_key]]};
             }
-            if (this.props.onSuccess) {
-                this.setState({sent: false})
-                this.props.onSuccess(data, form);
-                if (msgs) changeLocationState(this.props, msgs);
-            }else if (this.props.successTo) {
+
+            let unRendered = false;
+
+            if (this.props.successTo) {
+                unRendered = true;
                 if (msgs) this.props.successTo.state = msgs;
                 this.setState({redirect: true});
-            }else if (this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)){
-                if (msgs) changeLocationState(this.props, msgs);
-                this.setState({initialValues: data, sent: false})
             }else{
-                if (msgs) changeLocationState(this.props, msgs);
+               if (msgs) changeLocationState(this.props, msgs);
+            }
+
+            if (this.props.onSuccess) {
+                unRendered = this.props.onSuccess(data, form);
+            }
+
+            if (!unRendered ){
+                if (this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
+                    this.setState({initialValues: data})
+                }
+
+                if (this.props.restartFormOnSuccess){
+                    form.restart();
+                }
+
                 this.setState({sent: false})
             }
-            console.log('Running callback')
+
             callback();
-            console.log('Callback run, checking restart')
-            if (this.props.restartFormOnSuccess){
-                console.log('Restarting form')
-                form.restart();
-                console.log('Restarted form')
-            }else{
-                console.log('Not restarting form')
-            }
+
         }catch (e) {
             if (! e.response){
                 throw e
             }
             let data = e.response.data;
-            this.setState({sent: false})
             let errors
             if (data[response_key] && data[response_key].length > 0) {
                 errors = {[FORM_ERROR]: data[response_key]}
@@ -137,6 +141,7 @@ class AjaxForm extends React.Component {
                     return obj;
                 }, data);
             }
+            this.setState({sent: false})
             callback(errors);
         }
     }

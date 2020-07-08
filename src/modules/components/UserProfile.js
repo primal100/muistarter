@@ -74,9 +74,12 @@ class UserProfile extends React.Component {
                   User Details
                 </Typography>
               </React.Fragment>
+              <React.Fragment>
+              <UserContext.Consumer>
+                {({values, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessages={this.getSuccessMessages} noSubmitButton={true}
-                        submitModifiedValuesOnly={true} classes={classes}>
+                        submitModifiedValuesOnly={true} onSuccess={updater} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField
@@ -110,11 +113,14 @@ class UserProfile extends React.Component {
                           required
                   />
               </AjaxForm>
+              )}
+              </UserContext.Consumer>
               <Typography variant="body2" align="center">
                 <Link id="change_password_link" underline="always" component={RouterLink} to="/change-password">
                     Click here to change your password
                 </Link>
             </Typography>
+            </React.Fragment>
             </AppForm>
           </React.Fragment>
       );

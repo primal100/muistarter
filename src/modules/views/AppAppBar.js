@@ -122,14 +122,13 @@ class AppAppBar extends React.Component {
                   <ExitToAppIcon/>
                 </IconButton>
                </Tooltip>
-              </div>}
-              <UserContext.Consumer>
-                  {userDetails => {
-                    if (userDetails && userDetails.values){
-                      return userDetails.values.first_name
+                {this.props.showName && <UserContext.Consumer>
+                  {({values, updater}) => {
+                    if (values){
+                      return <span id="username">{values.first_name} {values.last_name} {values.email}</span>
                     }
                   }}
-              </UserContext.Consumer>
+              </UserContext.Consumer>}</div>}
             </Toolbar>
           </AppBar>
           <div className={classes.placeholder}/>

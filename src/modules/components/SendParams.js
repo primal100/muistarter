@@ -1,8 +1,9 @@
 import React from 'react';
-import { API } from '../api';
+import {API, getAndUpdateUserDetails} from '../api';
 import {Redirect} from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import {paramsToObject} from "../utils";
+import {UserContext} from "../contexts";
 
 
 const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
@@ -30,6 +31,9 @@ class SendParams extends React.Component {
             const data = e.response.data;
             redirectState.errorMessages = Object.values(data);
         }
+        redirectState.refreshUserDetails = true;
+        let userContext = this.context;
+        await getAndUpdateUserDetails(userContext.updater);
         this.setState({redirectState: redirectState});
     }
 
@@ -40,8 +44,8 @@ class SendParams extends React.Component {
     render() {
         if (Object.keys(this.state.redirectState).length !== 0){
             const redirect = {
-            pathname: this.props.redirectTo,
-            state: this.state.redirectState
+                pathname: this.props.redirectTo,
+                state: this.state.redirectState
         }
         return (
             <Redirect to={redirect} />
@@ -52,4 +56,5 @@ class SendParams extends React.Component {
     }
 }
 
+SendParams.contextType = UserContext;
 export default withRouter(SendParams);

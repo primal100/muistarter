@@ -4,10 +4,11 @@ import {
     useAuthTokenInterceptor,
     setAuthTokens,
     clearAuthTokens,
-    getRefreshToken,
+    getRefreshToken, isLoggedIn,
 } from "axios-jwt";
 
 
+const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
 const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
 
@@ -89,3 +90,11 @@ export const logout = async () => {
     window.location = "/";
 }
 
+export const getAndUpdateUserDetails = async(updater) => {
+        let values;
+        if (isLoggedIn()){
+            const response = await API.get(userProfileUrl);
+            values = response.data;
+        }
+        updater(values);
+}

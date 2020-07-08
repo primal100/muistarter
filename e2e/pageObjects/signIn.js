@@ -9,7 +9,7 @@ export const tokens = {accessToken: access, refreshToken: refresh}
 
 export const goToSignIn = async () => {
   await page.waitForSelector('#sign-in',{
-        timeout: 1000
+        timeout: 5000
       });
   await clickAndWaitNavigation('#sign-in');
 }

@@ -1,5 +1,5 @@
-import { waitForNavigation, clearLocalStorage, url } from "../pageObjects/index"
-import { fillForm, submitFormEnter, clickSubmitButton, getSubmitErrorText, getFieldErrorText } from "../pageObjects/forms";
+import { waitForNavigation, clearLocalStorage, sleep, url } from "../pageObjects/index"
+import { fillForm, submitFormEnter, clickSubmitButton, getSubmitErrorText, getFieldErrorText, getTextContent } from "../pageObjects/forms";
 import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens } from "../pageObjects/signIn";
 
 
@@ -15,6 +15,7 @@ describe("test signin view", () => {
 
   it("should show the sign-in page", async () => {
     expect(await url()).toBe(URL + "/sign-in");
+    expect(await getTextContent("#username")).toEqual([]);
   });
 
   it("should show the sign-up page", async () => {
@@ -29,6 +30,8 @@ describe("test signin view", () => {
     await Promise.all([submitFormEnter(), waitForNavigation()])
     expect(await url()).toBe(URL + "/");
     expect(await getLocalStorageTokens()).toEqual(tokens);
+    await sleep(1);
+    expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
   });
 
   it("should login with submit button, store tokens and refresh to home", async () => {
@@ -37,7 +40,9 @@ describe("test signin view", () => {
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toBe(URL + "/");
-    expect(await getLocalStorageTokens()).toEqual(tokens);
+    expect(await getLocalStorageTokens()).toEqual(tokens)
+    await sleep(1);
+    expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
   });
 
   it("should show email validation error on signin", async () => {
