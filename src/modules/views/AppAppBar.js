@@ -15,6 +15,7 @@ import { isLoggedIn } from "axios-jwt";
 import { UserContext} from "../contexts";
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
+import { logout } from '../api';
 
 
 const styles = (theme) => ({
@@ -118,7 +119,8 @@ class AppAppBar extends React.Component {
                <Tooltip title="Sign out" aria-label="Sign out">
                 <IconButton
                     id="sign-out"
-                    component={RouterLink} to="/sign-out"
+                    component={Link}
+                    onClick={logout}
                     color="inherit"
                 >
                   <ExitToAppIcon/>
