@@ -26,16 +26,21 @@ const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
 export class ProtectedRoute extends React.Component {
   render() {
-    const authenticated = isLoggedIn();
     const { component: Component, ...props } = this.props;
 
     return (
       <Route
         {...props}
         render={props => (
-          authenticated ?
-            <Component {...props} /> :
-            <Redirect to='/sign-in' />
+          <UserContext.Consumer>
+               {({values, updater}) => {
+                   if (values) {
+                       return <Component {...props} />
+                   }else{
+                       return <Redirect to='/sign-in' />
+                   }
+               }}
+              </UserContext.Consumer>
         )}
       />
     )

@@ -13,6 +13,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isLoggedIn } from "axios-jwt";
 import { UserContext} from "../contexts";
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
 
 
 const styles = (theme) => ({
@@ -122,13 +124,22 @@ class AppAppBar extends React.Component {
                   <ExitToAppIcon/>
                 </IconButton>
                </Tooltip>
-                {this.props.showName && <UserContext.Consumer>
+                <UserContext.Consumer>
                   {({values, updater}) => {
+                    console.log(values);
                     if (values){
-                      return <span id="username">{values.first_name} {values.last_name} {values.email}</span>
+                      return <React.Fragment>
+                        {values.is_staff && <Chip id="is-staff"
+                          icon={<FaceIcon />}
+                          label="Staff Account"
+                          color="secondary"
+                        />}
+                        {this.props.showName && <span id="username">{values.first_name} {values.last_name} {values.email}</span>}
+                      </React.Fragment>
                     }
                   }}
-              </UserContext.Consumer>}</div>}
+                </UserContext.Consumer>
+              </div>}
             </Toolbar>
           </AppBar>
           <div className={classes.placeholder}/>

@@ -1,6 +1,6 @@
 import { waitForNavigation, clearLocalStorage, sleep, url } from "../pageObjects/index"
 import { fillForm, submitFormEnter, clickSubmitButton, getSubmitErrorText, getFieldErrorText, getTextContent } from "../pageObjects/forms";
-import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens } from "../pageObjects/signIn";
+import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens, staffTokens } from "../pageObjects/signIn";
 
 
 describe("test signin view", () => {
@@ -32,6 +32,7 @@ describe("test signin view", () => {
     expect(await getLocalStorageTokens()).toEqual(tokens);
     await sleep(1);
     expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
+    expect(await getTextContent("#is-staff")).toEqual([]);
   });
 
   it("should login with submit button, store tokens and refresh to home", async () => {
@@ -43,6 +44,18 @@ describe("test signin view", () => {
     expect(await getLocalStorageTokens()).toEqual(tokens)
     await sleep(1);
     expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
+    expect(await getTextContent("#is-staff")).toEqual([]);
+  });
+
+  it("should login as staff and show staff account chip", async () => {
+    expect(await getFieldErrorText()).toEqual([]);
+    await fillForm({email: 'a@staff.com', password: 'b'})
+    expect(await getFieldErrorText()).toEqual([]);
+    await Promise.all([submitFormEnter(), waitForNavigation()])
+    expect(await url()).toBe(URL + "/");
+    expect(await getLocalStorageTokens()).toEqual(staffTokens);
+    await sleep(1);
+    expect(await getTextContent("#is-staff")).toEqual(["Staff Account"]);
   });
 
   it("should show email validation error on signin", async () => {
