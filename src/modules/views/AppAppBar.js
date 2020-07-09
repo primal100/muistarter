@@ -127,16 +127,16 @@ class AppAppBar extends React.Component {
                 </IconButton>
                </Tooltip>
                 <UserContext.Consumer>
-                  {({values, updater}) => {
-                    console.log(values);
-                    if (values){
+                  {({user, updater}) => {
+                    console.log(user);
+                    if (user){
                       return <React.Fragment>
-                        {values.is_staff && <Chip id="is-staff"
+                        {user.is_staff && <Chip id="is-staff"
                           icon={<FaceIcon />}
                           label="Staff Account"
                           color="secondary"
                         />}
-                        {this.props.showName && <span id="username">{values.first_name} {values.last_name} {values.email}</span>}
+                        {this.props.showName && <span id="username">{user.first_name} {user.last_name} {user.email}</span>}
                       </React.Fragment>
                     }
                   }}

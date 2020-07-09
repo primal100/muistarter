@@ -27,20 +27,14 @@ const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 export class ProtectedRoute extends React.Component {
   render() {
     const { component: Component, ...props } = this.props;
-
+    const authenticated = isLoggedIn();
     return (
       <Route
         {...props}
         render={props => (
-          <UserContext.Consumer>
-               {({values, updater}) => {
-                   if (values) {
-                       return <Component {...props} />
-                   }else{
-                       return <Redirect to='/sign-in' />
-                   }
-               }}
-              </UserContext.Consumer>
+          authenticated ?
+            <Component {...props} /> :
+            <Redirect to='/sign-in' />
         )}
       />
     )
@@ -75,7 +69,7 @@ export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userDetails: {values: null, updater: this.updateUserDetails}
+            userDetails: {user: null, updater: this.updateUserDetails}
         }
     }
 
@@ -83,9 +77,9 @@ export class SetUserContext extends React.Component {
         await getAndUpdateUserDetails(this.updateUserDetails);
     }
 
-    updateUserDetails = (values) => {
-        if(values && values.email) {
-            this.setState({userDetails: {values: values, updater: this.updateUserDetails}})
+    updateUserDetails = (user) => {
+        if(user && user.email) {
+            this.setState({userDetails: {user: user, updater: this.updateUserDetails}})
         }
     }
 

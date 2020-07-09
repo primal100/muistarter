@@ -91,10 +91,12 @@ export const logout = async () => {
 }
 
 export const getAndUpdateUserDetails = async(updater) => {
-        let values;
+        let user;
         if (isLoggedIn()){
             const response = await API.get(userProfileUrl);
-            values = response.data;
+            user = response.data;
+        }else{
+            user = null;
         }
-        updater(values);
+        updater(user);
 }

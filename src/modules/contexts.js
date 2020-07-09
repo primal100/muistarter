@@ -1,4 +1,4 @@
 import React from "react";
 
-export const UserContext = React.createContext({values: null, updater: null});
+export const UserContext = React.createContext({user: null, updater: null});
 UserContext.displayName = "UserContext"

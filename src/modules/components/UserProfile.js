@@ -76,7 +76,7 @@ class UserProfile extends React.Component {
               </React.Fragment>
               <React.Fragment>
               <UserContext.Consumer>
-                {({values, updater}) => (
+                {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessages={this.getSuccessMessages} noSubmitButton={true}
                         submitModifiedValuesOnly={true} onSuccess={updater} classes={classes}>
