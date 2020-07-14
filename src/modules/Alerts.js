@@ -52,19 +52,46 @@ class SnackbarAlert extends React.Component {
 
 
 class Alerts extends React.Component {
+    state = {
+        successMessages: null,
+        errorMessages: null
+    }
+
+    setMessagesFromLocationState(){
+        console.log('Running setMessagesFromLocationState')
+        if (this.props.location.state && (this.props.location.state.successMessages || this.props.location.state.errorMessages)){
+            console.log('Getting messages state')
+            const successMessages = this.props.location.state.successMessages;
+            const errorMessages = this.props.location.state.errorMessages;
+            let newState = {...this.props.location.state}
+            delete newState.successMessages;
+            delete newState.errorMessages;
+            console.log('Setting state', successMessages, errorMessages)
+            this.setState({successMessages: successMessages, errorMessages: errorMessages})
+            console.log('Replacing history')
+            this.props.history.replace({
+                pathname: this.props.location.pathname,
+                state: newState
+            });
+            console.log('History replaced')
+        }
+    }
+
     render() {
+        console.log('Rendering Alerts')
+        this.setMessagesFromLocationState();
         const { classes } = this.props;
         if (this.props.location.state) {
             return (
                 <React.Fragment>
-                    {this.props.location.state.successMessages && this.props.location.state.successMessages.map((value, index) => {
+                    {this.state.successMessages && this.state.successMessages.map((value, index) => {
                          return (
                              <div key={index} className={classes.root + " success-message"}>
                                 <SnackbarAlert severity="success" message={value} autoHideDuration={autoHideDurationSeconds * 1000}/>
                             </div>
                         )
                     })}
-                   {this.props.location.state.errorMessages && this.props.location.state.errorMessages.map((value, index) => {
+                   {this.state.errorMessages && this.state.errorMessages.map((value, index) => {
                        return (
                            <div key={index} className={classes.root + " error-message"}>
                                <SnackbarAlert severity="error" message={value} autoHideDuration={autoHideDurationSeconds * 1000}/>

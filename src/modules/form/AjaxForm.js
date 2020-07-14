@@ -26,7 +26,7 @@ class AjaxForm extends React.Component {
       super(props);
       this.state = {
           sent: false,
-          redirect: false,
+          redirect: null,
           initialValues: this.props.initialValues,
       }
     };
@@ -79,7 +79,7 @@ class AjaxForm extends React.Component {
             }else{
                 data = {}
             }
-            console.log(data);
+            console.log("AjaxForm API Response", data);
             let msgs;
             if (this.props.getSuccessMessages) {
                 msgs = {successMessages: this.props.getSuccessMessages(request, data)};
@@ -88,29 +88,35 @@ class AjaxForm extends React.Component {
             }
 
             let unRendered = false;
-
-            if (this.props.successTo) {
+            let updatedState = {}
+            let redirect
+            if (this.props.successTo) redirect = { ...this.props.successTo}
+            if (redirect) {
                 unRendered = true;
-                if (msgs) this.props.successTo.state = msgs;
-                this.setState({redirect: true});
+                if (!redirect.state) redirect.state = {}
+                if (msgs) redirect.state = {...msgs, ...redirect.state};
+                if (this.props.addResponseToRedirectState) redirect.state.data = data;
+                this.setState({redirect: redirect});
             }else{
                if (msgs) changeLocationState(this.props, msgs);
             }
 
             if (this.props.onSuccess) {
-                unRendered = this.props.onSuccess(data, form);
+                unRendered = this.props.onSuccess(data, form, request);
             }
-
+            console.log('unRendered', unRendered);
             if (!unRendered ){
-                if (this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
-                    this.setState({initialValues: data})
+                if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
+                    console.log('Setting initialValues', data)
+                    updatedState.initialValues = data;
                 }
-
-                if (this.props.restartFormOnSuccess){
+                else if (this.props.restartFormOnSuccess){
+                    console.log('Restarting form')
                     form.restart();
                 }
-
-                this.setState({sent: false})
+                updatedState.sent = false;
+                this.setState(updatedState);
+                console.log('State sent to false');
             }
 
             callback();
@@ -148,7 +154,7 @@ class AjaxForm extends React.Component {
 
     render() {
       if (this.state.redirect){
-          return <Redirect to={this.successTo || this.props.successTo} />
+          return <Redirect to={this.state.redirect} />
       }
       const { classes, initialValues, ...formProps } = this.props;
       return (

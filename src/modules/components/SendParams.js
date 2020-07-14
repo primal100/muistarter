@@ -2,7 +2,7 @@ import React from 'react';
 import {API, getAndUpdateUserDetails} from '../api';
 import {Redirect} from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import {paramsToObject} from "../utils";
+import {propsParamsToObject} from "../utils";
 import {UserContext} from "../contexts";
 
 
@@ -18,7 +18,7 @@ class SendParams extends React.Component {
     };
     async sendParams() {
         console.log("Running sendParams component @ " + window.location.pathname);
-        const values = paramsToObject(this.props);
+        const values = propsParamsToObject(this.props);
         const redirectState = {};
         try {
             let response = await API({
