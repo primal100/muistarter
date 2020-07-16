@@ -106,13 +106,13 @@ class AjaxForm extends React.Component {
             }
             console.log('unRendered', unRendered);
             if (!unRendered ){
-                if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
+                if (this.props.restartFormOnSuccess){
+                    console.log('Scheduling form restart')
+                    setTimeout(form.restart, 0);
+                }
+                else if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
                     console.log('Setting initialValues', data)
                     updatedState.initialValues = data;
-                }
-                else if (this.props.restartFormOnSuccess){
-                    console.log('Restarting form')
-                    form.restart();
                 }
                 updatedState.sent = false;
                 this.setState(updatedState);
