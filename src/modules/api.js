@@ -59,7 +59,7 @@ const requestRefresh = async (refreshToken) => {
     const response = await APINoHeader({
                     method: 'POST',
                     url: refreshEndpoint,
-                    data: { token: refreshToken }});
+                    data: { refresh: refreshToken }});
     return response.data.access;
 };
 
@@ -85,7 +85,7 @@ export const onSignIn = (values) => {
 
 
 export const logout = async () => {
-    await API.post(logoutEndpoint, {'refresh': getRefreshToken()})
+    await API.post(logoutEndpoint, {refresh: getRefreshToken()})
     clearAuthTokens();
     window.location = "/";
 }

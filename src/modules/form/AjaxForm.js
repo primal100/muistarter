@@ -70,16 +70,17 @@ class AjaxForm extends React.Component {
                     url: this.props.url,
                     data: values
                 }
-        console.log(request);
+        console.log("AjaxForm request", request);
         try {
             let data;
             if (Object.keys(values).length !== 0 || request.method === 'GET') {
                 let response = await API(request);
+                console.log("AjaxForm API Response", response);
                 data = response.data;
             }else{
                 data = {}
             }
-            console.log("AjaxForm API Response", data);
+            console.log("AjaxForm API Response Data", data);
             let msgs;
             if (this.props.getSuccessMessages) {
                 msgs = {successMessages: this.props.getSuccessMessages(request, data)};
@@ -95,7 +96,9 @@ class AjaxForm extends React.Component {
                 unRendered = true;
                 if (!redirect.state) redirect.state = {}
                 if (msgs) redirect.state = {...msgs, ...redirect.state};
+                if (this.props.addFieldToRedirectPathname) redirect.pathname += data[this.props.addFieldToRedirectPathname]
                 if (this.props.addResponseToRedirectState) redirect.state.data = data;
+                console.log('redirectState', redirect)
                 this.setState({redirect: redirect});
             }else{
                if (msgs) changeLocationState(this.props, msgs);

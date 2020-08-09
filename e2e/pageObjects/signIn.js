@@ -28,7 +28,7 @@ export const loadSignUpViaSignIn = async () => {
 
 export const signedIn = async () => {
   await loadSignIn();
-  await fillForm({email: 'a@a.com', password: 'x1y@4f!21a'});
+  await fillForm({login: 'a@a.com', password: 'x1y@4f!21a'});
   await clickSubmitButton();
 };
 
