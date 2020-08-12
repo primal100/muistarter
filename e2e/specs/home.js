@@ -15,7 +15,7 @@ describe("test home", () => {
 });
 
 
-describe("test non-existing url", () => {
+describe("test home redirects from non-existing url", () => {
   beforeEach(async () => {
     await load('/x');
   });

@@ -75,10 +75,10 @@ describe("test signin view", () => {
     expect(await getSubmitErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-in");
-    expect(await getSubmitErrorText()).toEqual(["email or password invalid."]);
+    expect(await getSubmitErrorText()).toEqual(['No active account found with the given credentials']);
     expect(await getLocalStorageTokens()).toBeNull();
     await fillForm({password: 'x'})
-    expect(await getSubmitErrorText()).toEqual(["email or password invalid."]);
+    expect(await getSubmitErrorText()).toEqual(['No active account found with the given credentials']);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/");
     expect(await getLocalStorageTokens()).toEqual(tokens);

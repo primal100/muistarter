@@ -39,7 +39,7 @@ describe("test verify email view signed in", () => {
     expect(await getSuccessMessageText()).toEqual(successMessages);
   });
 
-  it("should sig in, fail to verify email with wrong signature", async () => {
+  it("should sign in, fail to verify email with wrong signature", async () => {
     expect(await getLocalStorageTokens()).toEqual(tokens);
     expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
     await Promise.all([goToVerifyEmailUrl("user_id=1&timestamp=1589819019&signature=1234&email=a@c.com"), waitForNavigation()])
