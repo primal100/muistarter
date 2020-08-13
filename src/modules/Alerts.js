@@ -54,6 +54,7 @@ class SnackbarAlert extends React.Component {
 class Alerts extends React.Component {
     state = {
         successMessages: null,
+        infoMessages: null,
         errorMessages: null
     }
 
@@ -62,12 +63,14 @@ class Alerts extends React.Component {
         if (this.props.location.state && (this.props.location.state.successMessages || this.props.location.state.errorMessages)){
             console.log('Getting messages state')
             const successMessages = this.props.location.state.successMessages;
+            const infoMessages = this.props.location.state.infoMessages;
             const errorMessages = this.props.location.state.errorMessages;
             let newState = {...this.props.location.state}
             delete newState.successMessages;
+            delete newState.infoMessages;
             delete newState.errorMessages;
-            console.log('Setting state', successMessages, errorMessages)
-            this.setState({successMessages: successMessages, errorMessages: errorMessages})
+            console.log('Setting state', successMessages, infoMessages, errorMessages)
+            this.setState({successMessages: successMessages, infoMessages: infoMessages, errorMessages: errorMessages})
             console.log('Replacing history')
             this.props.history.replace({
                 pathname: this.props.location.pathname,
@@ -88,6 +91,13 @@ class Alerts extends React.Component {
                          return (
                              <div key={index} className={classes.root + " success-message"}>
                                 <SnackbarAlert severity="success" message={value} autoHideDuration={autoHideDurationSeconds * 1000}/>
+                            </div>
+                        )
+                    })}
+                    {this.state.infoMessages && this.state.infoMessages.map((value, index) => {
+                         return (
+                             <div key={index} className={classes.root + " info-message"}>
+                                <SnackbarAlert severity="info" message={value} autoHideDuration={autoHideDurationSeconds * 1000}/>
                             </div>
                         )
                     })}
