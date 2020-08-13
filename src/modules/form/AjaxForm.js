@@ -8,9 +8,9 @@ import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
 import {withStyles} from '@material-ui/core/styles';
 import useStyles from '../form/styles';
-import {changeLocationState} from '../utils'
-import {API} from '../api';
 import {FORM_ERROR} from "final-form";
+import { API } from '../api';
+import { withAlerts } from "../contexts"
 
 
 const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
@@ -28,6 +28,7 @@ class AjaxForm extends React.Component {
           sent: false,
           redirect: null,
           initialValues: this.props.initialValues,
+          alerts: [],
       }
     };
 
@@ -81,11 +82,14 @@ class AjaxForm extends React.Component {
                 data = {}
             }
             console.log("AjaxForm API Response Data", data);
-            let msgs;
+
+            let msgs = [];
             if (this.props.getSuccessMessages) {
-                msgs = {successMessages: this.props.getSuccessMessages(request, data)};
+                msgs = this.props.getSuccessMessages(request, data);
+            }else if (this.props.successMessages) {
+                msgs = this.props.successMessages;
             }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
-                msgs = {successMessages: [data[response_key]]};
+                msgs = [data[response_key]];
             }
 
             let unRendered = false;
@@ -95,13 +99,12 @@ class AjaxForm extends React.Component {
             if (redirect) {
                 unRendered = true;
                 if (!redirect.state) redirect.state = {}
-                if (msgs) redirect.state = {...msgs, ...redirect.state};
                 if (this.props.addFieldToRedirectPathname) redirect.pathname += data[this.props.addFieldToRedirectPathname]
                 if (this.props.addResponseToRedirectState) redirect.state.data = data;
                 console.log('redirectState', redirect)
-                this.setState({redirect: redirect});
+                this.setState({redirect: redirect, alerts: msgs});
             }else{
-               if (msgs) changeLocationState(this.props, msgs);
+               if (msgs) this.setState({alerts: msgs});
             }
 
             if (this.props.onSuccess) {
@@ -156,48 +159,55 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-      if (this.state.redirect){
-          return <Redirect to={this.state.redirect} />
-      }
-      const { classes, initialValues, ...formProps } = this.props;
-      return (
-        <React.Fragment>
-            <Form onSubmit={this.handleSubmit} subscription={{ submitting: true }} validate={this.props.validate} initialValues={this.state.initialValues} {...formProps}
-              render={({ submitError, handleSubmit}) => (
-                <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                  <fieldset disabled={this.state.sent}>
-                  {this.props.children}
-                  </fieldset>
-                  <FormSpy subscription={{ submitError: true }}>
-                    {({ submitError }) =>
-                      submitError ? (
-                        <FormFeedback className={classes.feedback + " submit-error"} error>
-                          {submitError}
-                        </FormFeedback>
-                      ) : null
-                    }
-                  </FormSpy>
-                  {!this.props.noSubmitButton && <FormButton
-                    className={classes.button}
-                    disabled={this.state.sent}
-                    size="large"
-                    color="secondary"
-                    fullWidth
-                  >
-                    {this.state.sent ? 'In progress…' : this.props.buttonText}
-                  </FormButton>}
-                </form>
-              )}
-            >
-            </Form>
-        </React.Fragment>
-      );
+        this.state.alerts.forEach(alert => this.props.addAlert(alert, "success"));
+
+        if (this.state.redirect) {
+            return (
+                <Redirect to={this.state.redirect}/>
+            )
+        } else if (this.state.alerts.length > 0) {
+            this.setState({alerts: []})
+        } else {
+            const {classes, initialValues, ...formProps} = this.props;
+            return (
+                <React.Fragment>
+                    <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={this.props.validate}
+                          initialValues={this.state.initialValues} {...formProps}
+                          render={({submitError, handleSubmit}) => (
+                              <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                                  <fieldset disabled={this.state.sent}>
+                                      {this.props.children}
+                                  </fieldset>
+                                  <FormSpy subscription={{submitError: true}}>
+                                      {({submitError}) =>
+                                          submitError ? (
+                                              <FormFeedback className={classes.feedback + " submit-error"} error>
+                                                  {submitError}
+                                              </FormFeedback>
+                                          ) : null
+                                      }
+                                  </FormSpy>
+                                  {!this.props.noSubmitButton && <FormButton
+                                      className={classes.button}
+                                      disabled={this.state.sent}
+                                      size="large"
+                                      color="secondary"
+                                      fullWidth
+                                  >
+                                      {this.state.sent ? 'In progress…' : this.props.buttonText}
+                                  </FormButton>}
+                              </form>
+                          )}
+                    >
+                    </Form>
+                </React.Fragment>
+            );
+        }
     }
 }
-
 
 export default compose(
   withStyles(useStyles),
   withRoot,
-  withRouter
+  withAlerts
 )(AjaxForm);

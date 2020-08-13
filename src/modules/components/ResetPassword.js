@@ -13,7 +13,7 @@ import AjaxForm from '../form/AjaxForm';
 import {propsParamsToObject} from "../utils";
 
 
-const reset_password_url = process.env.REACT_APP_RESET_PASSWORD_URL
+const resetPasswordUrl = process.env.REACT_APP_RESET_PASSWORD_URL
 
 class ResetPassword extends React.Component {
 
@@ -45,8 +45,8 @@ class ResetPassword extends React.Component {
                   Reset Password
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={reset_password_url} method="POST" successTo={redirect} validate={this.validate}
-                        buttonText="Set New Password" showSuccessMessage={true} classes={classes}
+              <AjaxForm url={resetPasswordUrl} method="POST" successTo={redirect} validate={this.validate}
+                        buttonText="Set New Password" showSuccessMessage classes={classes}
                         additonalValues={this.additionalValues}>
                   <Field
                       autoFocus

@@ -12,7 +12,7 @@ import compose from "recompose/compose";
 import AjaxForm from "../form/AjaxForm";
 
 
-const send_reset_password_url = process.env.REACT_APP_SEND_RESET_PASSWORD_URL
+const sendResetPasswordUrl = process.env.REACT_APP_SEND_RESET_PASSWORD_URL
 
 
 class SendResetPasswordURL extends React.Component {
@@ -31,11 +31,9 @@ class SendResetPasswordURL extends React.Component {
   };
 
     render() {
-       //const successMessage = "We have sent you an email with a link to reset your password.\n"
        const { classes } = this.props
        const redirect = {
           pathname: "/",
-          //state: {successMessages: [successMessage]}
        }
        return (
         <React.Fragment>
@@ -49,7 +47,8 @@ class SendResetPasswordURL extends React.Component {
                   'send you a link to reset your password.'}
               </Typography>
             </React.Fragment>
-             <AjaxForm url={send_reset_password_url} method="POST" successTo={redirect} validate={this.validate} showSuccessMessage={true} buttonText="Send Reset Password E-mail" classes={classes}>
+             <AjaxForm url={sendResetPasswordUrl} method="POST" successTo={redirect} validate={this.validate}
+                       showSuccessMessage buttonText="Send Reset Password E-mail" classes={classes}>
                   <Field
                     autoFocus
                     autoComplete="email"

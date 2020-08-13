@@ -1,4 +1,4 @@
-import { waitForNavigation, url, getSuccessMessageText, getErrorMessageText } from "../pageObjects/index"
+import { waitForNavigation, url, getSuccessMessageText, getErrorMessageText, sleep } from "../pageObjects/index"
 import { loadVerifyRegistrationUrl } from "../pageObjects/verifyRegistration";
 
 

@@ -14,7 +14,6 @@ import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import SendParams from "./modules/components/SendParams"
 import UserProfile from "./modules/components/UserProfile";
-import mockBackend from "./modules/backend"
 import Alerts from "./modules/Alerts";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails} from "./modules/api";
@@ -23,6 +22,8 @@ import { UserContext } from "./modules/contexts"
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
+
+console.log('Alerts', Alerts)
 
 export class ProtectedRoute extends React.Component {
   render() {
@@ -101,9 +102,10 @@ class App extends React.Component {
               <ScrollToTop>
                 <SetUserContext>
                 <AppAppBar showName/>
-                <Alerts/>
                 <div>
-                  <AppRoutes/>
+                  <Alerts>
+                    <AppRoutes/>
+                  </Alerts>
                 </div>
                 <AppFooter/>
                 </SetUserContext>

@@ -7,6 +7,7 @@ import compose from "recompose/compose";
 import { makeStyles } from '@material-ui/core/styles';
 import {withStyles} from "@material-ui/core/styles";
 import withRoot from "./withRoot";
+import { AlertContext } from "./contexts"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const autoHideDurationSeconds = 10;
 const transitionExitDurationSeconds = 3;
+
 
 class SnackbarAlert extends React.Component {
     constructor(props) {
@@ -43,7 +45,8 @@ class SnackbarAlert extends React.Component {
         const anchorOrigin = {horizontal: 'center', vertical: 'top'}
         const transitionDuration = {enter: 0, exit: transitionExitDurationSeconds * 1000}
         return (
-            <Snackbar anchorOrigin={anchorOrigin} open={this.state.open} onClose={this.handleClose} transitionDuration={transitionDuration} {...snackbarProps}>
+            <Snackbar anchorOrigin={anchorOrigin} open={this.state.open} onClose={this.handleClose}
+                      transitionDuration={transitionDuration} {...snackbarProps}>
             <Alert onClose={this.handleClose} severity={severity}>{message}</Alert>
             </Snackbar>
         )
@@ -51,7 +54,7 @@ class SnackbarAlert extends React.Component {
 }
 
 
-class Alerts extends React.Component {
+class OldAlerts extends React.Component {
     state = {
         successMessages: null,
         infoMessages: null,
@@ -116,9 +119,80 @@ class Alerts extends React.Component {
     }
 }
 
+console.log('AlertContext', AlertContext)
+
+
+class Alerts extends React.Component {
+    state = {
+        messages: [],
+        lastId: 0
+    }
+
+    addMessage = (message, severity, keep) => {
+        console.log('adding new message', message, severity)
+        let newId = this.state.lastId + 1;
+        let messageDetails = {id: newId, text: message, severity: severity, keep: keep}
+        this.setState(state => {
+            const messages = state.messages.concat(messageDetails);
+            return {
+                messages: messages,
+                lastId: newId
+            }
+        })
+    }
+
+    removeMessage = (messageId) => {
+        this.setState(state => {
+            const messages = state.messages.filter(message => message.id !== messageId);
+            return {
+                messages: messages,
+            }
+        })
+    }
+
+    replaceMessage = (messageId, message, severity, keep) =>{
+        this.setState(state => {
+            const index = state.messages.findIndex(msg => msg.id === messageId);
+            const newMessages = { ...state.messages}
+            newMessages[index] = {id: messageId, text: message, severity: severity, keep}
+            return {
+                messages: newMessages,
+            }
+        })
+    }
+
+    clearMessages = () =>{
+        this.setState({messages: [], lastId: 0})
+    }
+
+    render() {
+        console.log('Rendering Alerts', this.state.messages);
+        const { classes } = this.props;
+        const alertContextValue = {
+            addAlert: this.addMessage,
+            removeAlert: this.removeMessage,
+            replaceAlert: this.replaceMessage
+        }
+        return (
+            <React.Fragment>
+                {this.state.messages.map((msg, index) => {
+                     return (
+                         <div key={msg.id} className={classes.root + ` ${msg.severity}-message`}>
+                            <SnackbarAlert severity={msg.severity} message={msg.text}
+                                           autoHideDuration={msg.keep ? null : autoHideDurationSeconds * 1000}/>
+                        </div>
+                    )
+                })}
+                <AlertContext.Provider value={alertContextValue}>
+                    {this.props.children}
+                </AlertContext.Provider>
+            </React.Fragment>
+        )
+    }
+}
+
 
 export default compose(
     withStyles(useStyles),
-    withRoot,
-    withRouter
+    withRoot
 )(Alerts);
