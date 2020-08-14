@@ -11,6 +11,7 @@ import useStyles from '../form/styles';
 import {FORM_ERROR} from "final-form";
 import { API } from '../api';
 import { withAlerts } from "../contexts"
+import AjaxRequest from "../components/AjaxRequest";
 
 
 const responseKey = process.env.REACT_APP_GENERAL_ERRORS_KEY
