@@ -77,9 +77,10 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, false, true]);
         await fillForm({last_name: 'Doe'}, true);
         await submitFormEnter();
-         expect(await getTextContent("#username")).toEqual(["Jane Doe a@a.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane Doe a@a.com"]);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'a@a.com']);
+        await sleep(10);
         expect(await getSuccessMessageText()).toEqual(successMessages);
         await clickEnableEditableFieldButton('email');
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, false]);

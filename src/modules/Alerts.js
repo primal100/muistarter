@@ -36,7 +36,6 @@ class SnackbarAlert extends React.Component {
         if (reason === 'clickaway') {
             return;
         }
-
         this.setState({open: false});
     }
 
@@ -123,66 +122,49 @@ console.log('AlertContext', AlertContext)
 
 
 class Alerts extends React.Component {
+    lastID = 0
+
     state = {
-        messages: [],
-        lastId: 0
+        id: 0,
+        text: null,
+        severity: 'success',
+        alertContent: null
     }
 
-    addMessage = (message, severity, keep) => {
-        console.log('adding new message', message, severity)
-        let newId = this.state.lastId + 1;
-        let messageDetails = {id: newId, text: message, severity: severity, keep: keep}
-        this.setState(state => {
-            const messages = state.messages.concat(messageDetails);
-            return {
-                messages: messages,
-                lastId: newId
-            }
-        })
+    setAlertContent = (content) =>{
+        this.setState({alertContent: content})
     }
 
-    removeMessage = (messageId) => {
-        this.setState(state => {
-            const messages = state.messages.filter(message => message.id !== messageId);
-            return {
-                messages: messages,
-            }
-        })
+    addToAlertText = (text, severity) =>{
+        this.lastID += 1;
+        if (this.state.text) {
+            this.setState({id: this.lastID, text: `${this.state.text}\n${text}`,
+                severity: severity || this.state.severity})
+        }else{
+            this.addAlert(text, severity)
+        }
     }
 
-    replaceMessage = (messageId, message, severity, keep) =>{
-        this.setState(state => {
-            const index = state.messages.findIndex(msg => msg.id === messageId);
-            const newMessages = { ...state.messages}
-            newMessages[index] = {id: messageId, text: message, severity: severity, keep}
-            return {
-                messages: newMessages,
-            }
-        })
-    }
-
-    clearMessages = () =>{
-        this.setState({messages: [], lastId: 0})
+    addAlert = (message, severity) => {
+        this.lastID += 1;
+        this.setState({id: this.lastID, text: message, severity: severity})
     }
 
     render() {
-        console.log('Rendering Alerts', this.state.messages);
+        console.log('Rendering Alerts', this.state.alert);
         const { classes } = this.props;
         const alertContextValue = {
-            addAlert: this.addMessage,
-            removeAlert: this.removeMessage,
-            replaceAlert: this.replaceMessage
+            addAlert: this.addAlert,
+            addToAlertText: this.addToAlertText,
+            setAlertContent: this.setAlertContent,
         }
         return (
             <React.Fragment>
-                {this.state.messages.map((msg, index) => {
-                     return (
-                         <div key={msg.id} className={classes.root + ` ${msg.severity}-message`}>
-                            <SnackbarAlert severity={msg.severity} message={msg.text}
-                                           autoHideDuration={msg.keep ? null : autoHideDurationSeconds * 1000}/>
-                        </div>
-                    )
-                })}
+                {this.state.text && <div key={this.state.id} className={classes.root + ` ${this.state.severity}-message`}>
+                    <SnackbarAlert severity={this.state.severity} message={this.state.text}
+                                   autoHideDuration={autoHideDurationSeconds * 1000}/>
+                </div>}
+                {this.state.alertContent}
                 <AlertContext.Provider value={alertContextValue}>
                     {this.props.children}
                 </AlertContext.Provider>

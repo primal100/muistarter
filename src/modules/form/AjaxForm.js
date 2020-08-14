@@ -1,7 +1,7 @@
 import withRoot from '../withRoot';
 // --- Post bootstrap -----
 import React from 'react';
-import {Redirect, withRouter} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 import compose from 'recompose/compose';
 import {Form, FormSpy} from 'react-final-form';
 import FormButton from '../form/FormButton';
@@ -13,7 +13,7 @@ import { API } from '../api';
 import { withAlerts } from "../contexts"
 
 
-const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
+const responseKey = process.env.REACT_APP_GENERAL_ERRORS_KEY
 const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 
 
@@ -22,15 +22,11 @@ function capitalize(str){
 }
 
 class AjaxForm extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          sent: false,
-          redirect: null,
-          initialValues: this.props.initialValues,
-          alerts: [],
-      }
-    };
+    state = {
+      sent: false,
+      redirect: null,
+      initialValues: this.props.initialValues,
+    }
 
     async componentDidMount(){
         if (this.props.loadInitialValuesFromURL){
@@ -83,14 +79,18 @@ class AjaxForm extends React.Component {
             }
             console.log("AjaxForm API Response Data", data);
 
-            let msgs = [];
-            if (this.props.getSuccessMessages) {
-                msgs = this.props.getSuccessMessages(request, data);
-            }else if (this.props.successMessages) {
-                msgs = this.props.successMessages;
-            }else if (this.props.showSuccessMessage && data[response_key] && data[response_key].length > 0){
-                msgs = [data[response_key]];
+            let msg;
+            if (this.props.getSuccessMessage) {
+                msg = this.props.getSuccessMessage(request, data);
+            }else if (this.props.successMessage) {
+                msg = this.props.successMessage;
+            }else if (this.props.showSuccessMessage && data[responseKey] && data[responseKey].length > 0){
+                msg = data[responseKey];
             }
+
+            console.log('AJAXForm adding alert', msg)
+
+            this.props.addAlert(msg, "success");
 
             let unRendered = false;
             let updatedState = {}
@@ -102,9 +102,7 @@ class AjaxForm extends React.Component {
                 if (this.props.addFieldToRedirectPathname) redirect.pathname += data[this.props.addFieldToRedirectPathname]
                 if (this.props.addResponseToRedirectState) redirect.state.data = data;
                 console.log('redirectState', redirect)
-                this.setState({redirect: redirect, alerts: msgs});
-            }else{
-               if (msgs) this.setState({alerts: msgs});
+                this.setState({redirect: redirect});
             }
 
             if (this.props.onSuccess) {
@@ -116,7 +114,7 @@ class AjaxForm extends React.Component {
                     console.log('Scheduling form restart')
                     setTimeout(form.restart, 0);
                 }
-                else if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[response_key] || data[response_key].length === 0)) {
+                else if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[responseKey] || data[responseKey].length === 0)) {
                     console.log('Setting initialValues', data)
                     updatedState.initialValues = data;
                 }
@@ -133,8 +131,8 @@ class AjaxForm extends React.Component {
             }
             let data = e.response.data;
             let errors
-            if (data[response_key] && data[response_key].length > 0) {
-                errors = {[FORM_ERROR]: data[response_key]}
+            if (data[responseKey] && data[responseKey].length > 0) {
+                errors = {[FORM_ERROR]: data[responseKey]}
             }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
                 errors = {[FORM_ERROR]: data[non_field_errors_key]}
             }else{
@@ -159,14 +157,11 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-        this.state.alerts.forEach(alert => this.props.addAlert(alert, "success"));
 
         if (this.state.redirect) {
             return (
                 <Redirect to={this.state.redirect}/>
             )
-        } else if (this.state.alerts.length > 0) {
-            this.setState({alerts: []})
         } else {
             const {classes, initialValues, ...formProps} = this.props;
             return (

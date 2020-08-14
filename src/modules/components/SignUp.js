@@ -61,7 +61,7 @@ class SignUp extends React.Component {
                   </Link>
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={signUpUrl} method="POST" successTo={redirect} successMessages={[successMessage]}
+              <AjaxForm url={signUpUrl} method="POST" successTo={redirect} successMessage={successMessage}
                         validate={this.validate} buttonText="Sign Up" classes={classes}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>

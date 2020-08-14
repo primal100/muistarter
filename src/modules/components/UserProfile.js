@@ -57,11 +57,11 @@ class UserProfile extends React.Component {
         }
     }
 
-    getSuccessMessages = (request, data) => {
+    getSuccessMessage = (request, data) => {
         if (data[responseKey] && data[responseKey].length > 0){
-            return [data[responseKey]];
+            return data[responseKey];
         }
-        return ['Your details have been updated'];
+        return 'Your details have been updated';
     }
 
     render() {
@@ -78,7 +78,7 @@ class UserProfile extends React.Component {
               <UserContext.Consumer>
                 {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
-                        getSuccessMessages={this.getSuccessMessages} noSubmitButton={true}
+                        getSuccessMessage={this.getSuccessMessage} noSubmitButton={true}
                         submitModifiedValuesOnly={true} onSuccess={updater} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>

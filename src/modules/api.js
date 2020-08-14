@@ -19,7 +19,7 @@ export const API = axios.create({
 });
 
 
-export const APINoHeader = axios.create({
+export const APINoAuthentication = axios.create({
 });
 
 
@@ -56,7 +56,7 @@ const requestRefresh = async (refreshToken) => {
     if (isTokenExpired(refreshToken)){
         onRefreshTokenExpired("sign-in/");
     }
-    const response = await APINoHeader({
+    const response = await APINoAuthentication({
                     method: 'POST',
                     url: refreshEndpoint,
                     data: { refresh: refreshToken }});
@@ -91,12 +91,12 @@ export const logout = async () => {
 }
 
 export const getAndUpdateUserDetails = async(updater) => {
-        let user;
-        if (isLoggedIn()){
-            const response = await API.get(userProfileUrl);
-            user = response.data;
-        }else{
-            user = null;
-        }
-        updater(user);
+    let user;
+    if (isLoggedIn()){
+        const response = await API.get(userProfileUrl);
+        user = response.data;
+    }else{
+        user = null;
+    }
+    updater(user);
 }
