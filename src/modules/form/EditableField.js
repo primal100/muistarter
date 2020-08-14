@@ -10,11 +10,8 @@ import withRoot from "../withRoot";
 
 
 class EditableField extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            disabled: true
-        }
+    state = {
+        disabled: true
     }
 
     handleClick = async (event) => {

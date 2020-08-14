@@ -119,7 +119,7 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-        const {classes, initialValues, validate, onSuccess, ...ajaxRequestProps} = this.props;
+        const {classes, formID, initialValues, validate, onSuccess, ...ajaxRequestProps} = this.props;
         return (
             <React.Fragment>
                 {this.state.values &&
@@ -129,7 +129,7 @@ class AjaxForm extends React.Component {
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit}) => (
-                          <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                          <form id={formID || ""} onSubmit={handleSubmit} className={classes.form} noValidate>
                               <fieldset disabled={this.state.sent}>
                                   {this.props.children}
                               </fieldset>
