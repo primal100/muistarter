@@ -79,7 +79,7 @@ class UserProfile extends React.Component {
                 {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true}
-                        submitModifiedValuesOnly={true} onSuccess={updater} classes={classes}>
+                        submitModifiedValuesOnly onSuccess={updater} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField

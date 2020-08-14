@@ -50,7 +50,7 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'a@a.com']);
         expect(await getSuccessMessageText()).toEqual(successMessages);
-         expect(await getTextContent("#username")).toEqual(["Jane Doe a@a.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane Doe a@a.com"]);
     });
 
     it("should enable the email form field, edit and submit, disable the form field, and show success message", async () => {

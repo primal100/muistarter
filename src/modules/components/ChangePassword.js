@@ -43,7 +43,7 @@ class ChangePassword extends React.Component {
                   Change Password
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={change_password_url} method="POST" successTo={redirect} showSuccessMessage
+              <AjaxForm url={change_password_url} method="POST" redirectTo={redirect} showSuccessMessage
                       validate={this.validate} buttonText="Change Password" classes={classes}>
                       <Field
                           autoFocus
