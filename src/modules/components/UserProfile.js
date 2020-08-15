@@ -16,7 +16,7 @@ import {Link as RouterLink} from "react-router-dom";
 import { UserContext } from "../contexts";
 
 
-const responseKey = process.env.REACT_APP_GENERAL_ERRORS_KEY
+const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 

@@ -13,7 +13,7 @@ import { withAlerts } from "../contexts"
 import AjaxRequest from "../components/AjaxRequest";
 
 
-const responseKey = process.env.REACT_APP_GENERAL_ERRORS_KEY
+const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 
 
