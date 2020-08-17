@@ -8,6 +8,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
     console.log(`Running in ${process.env.NODE_ENV} mode`)
     mock = new MockAdapter(API);
     mockRaw = new MockAdapter(APINoAuthentication);
+    mock.onNoMatch = "passthrough";
+    mockRaw.onNoMatch = "passthrough";
 }else {
     console.log(`Running in ${process.env.NODE_ENV} mode`)
     mock = null
@@ -116,6 +118,7 @@ export default function mockBackend(errorOnNoMatch) {
                 return [404, []]
             })
         }else{
+            console.log('Unmatched mock api requests will be passed through')
             mock.onAny().passThrough()
         }
     }

@@ -3,9 +3,10 @@ import {Redirect, withRouter} from "react-router-dom";
 import {API, getAndUpdateUserDetails} from '../api';
 import {UserContext, withAlerts} from "../contexts";
 import compose from "recompose/compose";
-
+import { isEmptyObject, nullOrEmptyObject } from "../utils"
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
+
 
 
 class AjaxRequest extends React.Component {
@@ -40,6 +41,7 @@ class AjaxRequest extends React.Component {
             config: this.props.config
         }
         if (this.props.adaptRequest) request = this.props.adaptRequest(request);
+
         console.log("AJAXRequest", request);
 
 
@@ -48,7 +50,7 @@ class AjaxRequest extends React.Component {
             let msg;
 
             if (this.props.checkLocationState && this.props.location.state && this.props.location.state.data){
-                console.log("AjaxRequest Retrieving data from location.state,data");
+                console.log("AjaxRequest Retrieving data from location.state.data");
                 data = this.props.location.state.data;
                 let newState = {...this.props.location.state}
                 delete newState.data;
@@ -67,7 +69,7 @@ class AjaxRequest extends React.Component {
                 msg = this.props.getSuccessMessage(request, data);
             }else if (this.props.successMessage) {
                 msg = this.props.successMessage;
-            }else if (this.props.showSuccessMessage && data[responseKey] && data[responseKey].length > 0){
+            }else if (this.props.showSuccessMessage && !isEmptyObject(data[responseKey])){
                 msg = data[responseKey];
             }
 
@@ -93,13 +95,13 @@ class AjaxRequest extends React.Component {
             }
 
         }catch (e) {
-            if (! e.response){
-                throw e
+            if (e.response) {
+                let data = e.response.data;
+                if (this.props.onError) this.props.onError(data, request);
+                if (!this.props.hideAlertsOnError && data) this.props.addAlert(Object.values(data).join('\n'), "error");
             }
-            let data = e.response.data;
-            if (this.props.onError) this.props.onError(data, request);
-            if (!this.props.hideAlertsOnError) this.props.addAlert(Object.values(data).join('\n'), "error");
             if (!this.props.reDirectOnError) redirect = null;
+            console.error(e)
         }
 
         console.log('AJAXRequest redirectState', redirect);

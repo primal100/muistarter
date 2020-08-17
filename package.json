@@ -1,16 +1,17 @@
 {
-  "name": "react_authentication",
+  "name": "react-authentication",
   "main": "lib/index.js",
   "module": "lib",
   "version": "1.0.0",
   "description": "A skeleton for an app with ajax authentication and registration",
   "private": false,
   "files": [
-    "dist",
+    "lib",
     "README.md"
   ],
   "scripts": {
     "build": "nwb build-react-component --copy-files",
+    "buildpublish": "nwb build-react-component --copy-files && yalc publish",
     "clean": "nwb clean-app",
     "start": "nwb serve-react-app",
     "test": "nwb test-react",
@@ -20,9 +21,14 @@
     "e2ep": "cd e2e && jest"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "axios-jwt": "^1.2.0",
+    "axios-mock-adapter": "^1.18.2",
+    "clsx": "^1.1.1",
     "dotenv-webpack": "^1.8.0",
     "react-router-scroll-top": "^0.2.1",
-    "validator": "^13.1.1"
+    "validator": "^13.1.1",
+    "yalc": "^1.0.0-pre.42"
   },
   "peerDependencies": {
     "react": "^16.13.1",
@@ -32,34 +38,30 @@
     "react-final-form": "^6.5.0",
     "recompose": "^0.30.0",
     "mui-rff": "^2.1.15",
-    "axios": "^0.19.2",
-    "axios-jwt": "^1.2.0",
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56"
   },
   "devDependencies": {
-    "@material-ui/core": "^4.10.2",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
     "@types/expect-puppeteer": "^4.4.3",
     "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/puppeteer": "^3.0.0",
     "@types/react": "^16.9.38",
-    "axios": "^0.19.2",
-    "axios-jwt": "^1.2.0",
-    "axios-mock-adapter": "^1.18.1",
-    "final-form": "^4.20.0",
     "jest": "^26.1.0",
     "jest-puppeteer": "^4.4.0",
     "nwb": "0.25.x",
     "puppeteer": "^4.0.0",
+    "react-scripts": "^3.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-final-form": "^6.5.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.1",
-    "recompose": "^0.30.0"
+    "final-form": "^4.20.0",
+    "react-final-form": "^6.5.0",
+    "recompose": "^0.30.0",
+    "mui-rff": "^2.1.15",
+    "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56"
   },
   "author": "",
   "license": "MIT",

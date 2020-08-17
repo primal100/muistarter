@@ -11,6 +11,7 @@ import {FORM_ERROR} from "final-form";
 import { API } from '../api';
 import { withAlerts } from "../contexts"
 import AjaxRequest from "../components/AjaxRequest";
+import { isEmptyObject, nullOrEmptyObject } from "../utils"
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
@@ -53,12 +54,14 @@ class AjaxForm extends React.Component {
         unRendered = reDirected || unRendered;
 
         console.log('unRendered', unRendered);
+        console.log(this.state.initialValues, "initialValues", !nullOrEmptyObject(this.state.initialValues))
+        console.log(data[responseKey], "data[responseKey]", nullOrEmptyObject(data[responseKey]))
         if (!unRendered ){
             if (this.props.restartFormOnSuccess && this.form){
                 console.log('Scheduling form restart')
                 setTimeout(this.form.restart, 0);
             }
-            else if (request.method !== "GET" && this.state.initialValues && Object.keys(this.state.initialValues).length !== 0 && (!data[responseKey] || data[responseKey].length === 0)) {
+            else if (request.method !== "GET" && !nullOrEmptyObject(this.state.initialValues) && nullOrEmptyObject(data[responseKey])) {
                 console.log('Setting initialValues', data)
                 updatedState.initialValues = data;
             }
@@ -70,12 +73,17 @@ class AjaxForm extends React.Component {
     }
 
     onSubmitError = (data, request) => {
+        console.log('Running onSubmitError')
+        console.log(!nullOrEmptyObject(data[responseKey]))
+        console.log(!nullOrEmptyObject(data[non_field_errors_key]))
+        console.log("Data", data)
         let errors;
-        if (data[responseKey] && data[responseKey].length > 0) {
+        if (!nullOrEmptyObject(data[responseKey])) {
             errors = {[FORM_ERROR]: data[responseKey]}
-        }else if (data[non_field_errors_key] && data[non_field_errors_key].length > 0){
+        }else if (!nullOrEmptyObject(data[non_field_errors_key])){
             errors = {[FORM_ERROR]: data[non_field_errors_key]}
         }else{
+            console.log('Getting field errors');
             errors = Object.keys(data).reduce((obj, k) => {
                 let value = obj[k]
                 if (value && value.length > 0) {
