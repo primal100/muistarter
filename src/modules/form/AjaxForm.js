@@ -67,7 +67,7 @@ class AjaxForm extends React.Component {
             }
             updatedState.sent = false;
             this.setState(updatedState);
-            console.log('State sent to false');
+            console.log('State set to false');
         }
         this.callback();
     }

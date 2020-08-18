@@ -16,104 +16,146 @@ class AjaxRequest extends React.Component {
         redirect: null,
     }
 
-    send = async() => {
+    onSuccess = (responseData, request) => {
+        let msg;
+
+        if (this.props.onSuccess) {
+           console.log('Calling onSuccess with', responseData)
+           this.props.onSuccess(responseData, request, Boolean(this.props.redirectTo));
+        }
+
+        if (this.props.getSuccessMessage) {
+            msg = this.props.getSuccessMessage(request, responseData);
+        }else if (this.props.successMessage) {
+            msg = this.props.successMessage;
+        }else if (this.props.showSuccessMessage && !isEmptyObject(responseData[responseKey])){
+            msg = responseData[responseKey];
+        }
+
+        if (msg) {
+            console.log('AJAXRequest adding alert', msg)
+            this.props.addAlert(msg, "success");
+        }
+
+    }
+
+    sendOneRequest = async(values) => {
+        let request = {}
+        let responseData;
+        let msg;
+
+        try {
+            if (this.props.request) request = this.props.request;
+            else if (this.props.createRequest) request = this.props.createRequest(values);
+            else if (this.props.method === 'GET'){
+                request = {
+                    method: 'GET',
+                    url: this.props.url,
+                    params: values,
+                    config: this.props.config
+                }
+            }
+            else request = {
+                method: this.props.method || 'POST',
+                url: this.props.url,
+                data: values,
+                config: this.props.config
+            }
+
+            if (this.props.adaptRequest) request = this.props.adaptRequest(request);
+
+            console.log("AJAXRequest", request);
+
+            let response = await API(request);
+            console.log("AjaxRequest Response", response);
+            responseData = response.data;
+
+            this.onSuccess(responseData, request);
+
+            return [true, responseData];
+
+        }catch (e) {
+            if (e.response) {
+                responseData = e.response.data;
+                if (this.props.onError) this.props.onError(responseData, request);
+                if (!this.props.hideAlertsOnError && responseData) this.props.addAlert(
+                    Object.values(responseData).join('\n'), "error");
+            }
+            console.error(e)
+            return [false, responseData];
+        }
+    }
+
+    sendRequests = async() => {
         console.log('runAtInterval', this.props.interval);
-        let request;
         let redirect;
-        let reDirected;
+        let result;
+        let allResponseData;
 
         if (this.props.redirectTo) redirect = { ...this.props.redirectTo }
 
-        if (this.props.request) request = this.props.request;
-        else if (this.props.createRequest) request = this.props.createRequest(this.props.values);
-        else if (this.props.method === 'GET'){
-            request = {
-                method: 'GET',
-                url: this.props.url,
-                params: this.props.values,
-                config: this.props.config
-            }
-        }
-        else request = {
-            method: this.props.method || 'POST',
-            url: this.props.url,
-            data: this.props.values,
-            config: this.props.config
-        }
-        if (this.props.adaptRequest) request = this.props.adaptRequest(request);
+        if (this.props.checkLocationState && this.props.location.state && this.props.location.state.data) {
+            console.log("AjaxRequest retrieving from location.state.data");
+            result = "success";
+            allResponseData = this.props.location.state.data;
+            let newState = {...this.props.location.state}
+            delete newState.data;
+            this.props.history.replace({
+                pathname: this.props.location.pathname,
+                state: newState
+            });
+            allResponseData.forEach(data => this.onSuccess(data, {}))
 
-        console.log("AJAXRequest", request);
-
-
-        try {
-            let data;
-            let msg;
-
-            if (this.props.checkLocationState && this.props.location.state && this.props.location.state.data){
-                console.log("AjaxRequest Retrieving data from location.state.data");
-                data = this.props.location.state.data;
-                let newState = {...this.props.location.state}
-                delete newState.data;
-                this.props.history.replace({
-                    pathname: this.props.location.pathname,
-                    state: newState
-                });
-
+        }else {
+            let valuesList;
+            if (this.props.valuesList) {
+                valuesList = this.props.valuesList;
             } else {
-                let response = await API(request);
-                console.log("AjaxRequest Response", response);
-                data = response.data;
+                valuesList = [this.props.values];
             }
+            const responses = await Promise.all(valuesList.map(values => this.sendOneRequest(values)));
+            if (responses.every(response => response[0])) result = "success";
+            else if (responses.some(response => response[0])) result = "info";
+            else result = "error";
+            allResponseData = responses.map(response => response[1]);
+        }
 
-            if (this.props.getSuccessMessage) {
-                msg = this.props.getSuccessMessage(request, data);
-            }else if (this.props.successMessage) {
-                msg = this.props.successMessage;
-            }else if (this.props.showSuccessMessage && !isEmptyObject(data[responseKey])){
-                msg = data[responseKey];
-            }
+        if (this.props.onAllComplete) {
+            console.log('Calling onAllComplete with', allResponseData, result)
+            this.props.onAllComplete(allResponseData, result);
+        }
 
-            console.log('AJAXRequest adding alert', msg)
+        if (result === "success") {
 
-            this.props.addAlert(msg, "success");
-
-            if (this.updateUserDetails){
+            if (this.updateUserDetails) {
                 let userContext = this.context;
                 await getAndUpdateUserDetails(userContext.updater);
             }
 
             if (redirect) {
-                reDirected = true;
                 if (!redirect.state) redirect.state = {}
-                if (this.props.addFieldToRedirectPathname) redirect.pathname += data[this.props.addFieldToRedirectPathname]
-                if (this.props.addResponseToRedirectState) redirect.state.data = data;
+                if (this.props.addFieldToRedirectPathname) redirect.pathname += allResponseData[0][this.props.addFieldToRedirectPathname]
+                if (this.props.addResponseToRedirectState) redirect.state.data = allResponseData;
             }
-
-            if (this.props.onSuccess) {
-                console.log('Calling onSuccess with', data)
-                this.props.onSuccess(data, request, reDirected);
-            }
-
-        }catch (e) {
-            if (e.response) {
-                let data = e.response.data;
-                if (this.props.onError) this.props.onError(data, request);
-                if (!this.props.hideAlertsOnError && data) this.props.addAlert(Object.values(data).join('\n'), "error");
-            }
+        } else {
             if (!this.props.reDirectOnError) redirect = null;
-            console.error(e)
+        }
+
+        if (this.props.getAllCompleteMessage) {
+            let msg = this.props.getAllCompleteMessage(result, allResponseData);
+            console.log('AJAXRequest adding alert', msg)
+            this.props.addAlert(msg, result);
         }
 
         console.log('AJAXRequest redirectState', redirect);
-
         if (redirect) this.setState({redirect: redirect});
     }
 
     async componentDidMount(){
         console.log('Mounting AJAXRequest')
-        await this.send();
+        await this.sendRequests();
         console.log('runAtInterval', this.props.runAtInterval);
-        if (this.props.runAtInterval) this.intervalTask = setInterval(this.send, this.props.runAtInterval);
+        if (this.props.runAtInterval) this.intervalTask = setInterval(this.sendRequests, this.props.runAtInterval);
     }
 
     async componentWillUnmount(){
