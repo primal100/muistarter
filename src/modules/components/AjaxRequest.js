@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect, withRouter} from "react-router-dom";
-import {API, getAndUpdateUserDetails} from '../api';
+import {API, APINoAuthentication, getAndUpdateUserDetails} from '../api';
 import {UserContext, withAlerts} from "../contexts";
 import compose from "recompose/compose";
 import { isEmptyObject, nullOrEmptyObject } from "../utils"
@@ -52,21 +52,26 @@ class AjaxRequest extends React.Component {
                     method: 'GET',
                     url: this.props.url,
                     params: values,
-                    config: this.props.config
                 }
             }
             else request = {
                 method: this.props.method || 'POST',
                 url: this.props.url,
                 data: values,
-                config: this.props.config
+            }
+            if (this.props.config){
+                Object.assign(request, this.props.config)
             }
 
             if (this.props.adaptRequest) request = this.props.adaptRequest(request);
 
             console.log("AJAXRequest", request);
-
-            let response = await API(request);
+            let response
+            if (this.props.noAuth) {
+                response = await APINoAuthentication(request);
+            } else {
+                response = await API(request);
+            }
             console.log("AjaxRequest Response", response);
             responseData = response.data;
 
