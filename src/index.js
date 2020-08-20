@@ -13,7 +13,7 @@ if (document.querySelector(selector)) {
 
 
 export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext } from './App'
-export { UserContext, AlertContext, withAlerts } from './modules/contexts'
+export { UserContext, AlertContext } from './modules/contexts'
 export { default as mockAuthenticationBackend, mock, mockRaw } from './modules/backend';
 export { API, APINoAuthentication } from './modules/api'
 export { default as AjaxForm } from './modules/form/AjaxForm'

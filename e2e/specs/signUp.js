@@ -1,4 +1,4 @@
-import { url, getSuccessMessageText } from "../pageObjects/index"
+import { url, getSuccessMessageText, sleep } from "../pageObjects/index"
 import { fillForm, clickSubmitButton, getFieldErrorText } from "../pageObjects/forms";
 import { loadSignup } from "../pageObjects/signUp";
 
@@ -17,7 +17,7 @@ describe("test signup view", () => {
     expect(await url()).toBe(URL + "/sign-up");
   });
 
-  it("should sign_up with all values, submit, go home and show success message", async () => {
+  it("should sign up with all values, submit, go home and show success message", async () => {
     expect(await getFieldErrorText()).toEqual([]);
     await fillForm({email: 'a@a.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual([]);

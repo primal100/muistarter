@@ -1,12 +1,12 @@
 import React from 'react';
 import {Redirect, withRouter} from "react-router-dom";
 import {API, APINoAuthentication, getAndUpdateUserDetails} from '../api';
-import {UserContext, withAlerts} from "../contexts";
+import {UserContext} from "../contexts";
 import compose from "recompose/compose";
-import { isEmptyObject, nullOrEmptyObject } from "../utils"
+import { withSnackbar } from 'notistack';
+import { isEmptyObject } from "../utils"
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
-
 
 
 class AjaxRequest extends React.Component {
@@ -33,8 +33,8 @@ class AjaxRequest extends React.Component {
         }
 
         if (msg) {
-            console.log('AJAXRequest adding alert', msg)
-            this.props.addAlert(msg, "success");
+            console.log('AJAXRequest adding snackbar', msg)
+            this.props.enqueueSnackbar(msg, {variant: "success"});
         }
 
     }
@@ -83,8 +83,8 @@ class AjaxRequest extends React.Component {
             if (e.response) {
                 responseData = e.response.data;
                 if (this.props.onError) this.props.onError(responseData, request);
-                if (!this.props.hideAlertsOnError && responseData) this.props.addAlert(
-                    Object.values(responseData).join('\n'), "error");
+                if (!this.props.hideAlertsOnError && responseData) this.props.enqueueSnackbar(
+                    Object.values(responseData).join('\n'), {variant: "error"});
             }
             console.error(e)
             return [false, responseData];
@@ -149,7 +149,7 @@ class AjaxRequest extends React.Component {
         if (this.props.getAllCompleteMessage) {
             let msg = this.props.getAllCompleteMessage(result, allResponseData);
             console.log('AJAXRequest adding alert', msg)
-            this.props.addAlert(msg, result);
+            this.props.enqueueSnackbar(msg, {variant: result});
         }
 
         console.log('AJAXRequest redirectState', redirect);
@@ -188,5 +188,5 @@ AjaxRequest.contextType = UserContext;
 
 export default compose(
   withRouter,
-  withAlerts
+  withSnackbar
 )(AjaxRequest);

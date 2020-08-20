@@ -1,6 +1,8 @@
 import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
 import React from 'react';
+import { SnackbarProvider } from 'notistack';
+import Fade from '@material-ui/core/Fade';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
 import {BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
@@ -23,7 +25,12 @@ const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
 
-console.log('Alerts', Alerts)
+const autoHideDurationSeconds = 10;
+const transitionExitDurationSeconds = 3;
+const anchorOrigin = {horizontal: 'center', vertical: 'top'}
+const maxAlertsMobile = 3
+const maxAlerts = 5
+
 
 export class ProtectedRoute extends React.Component {
   render() {
@@ -95,9 +102,19 @@ export class SetUserContext extends React.Component {
 
 
 class App extends React.Component {
-
-    render() {
+    render(){
+        const isMobile = this.props.isMobile;
+        const snackbarClasses = {
+            variantSuccess: 'success-message',
+            variantError: 'error-message',
+            variantWarning: 'warning-message',
+            variantInfo: 'info-message'
+        }
         return (
+            <SnackbarProvider maxSnack={isMobile ? maxAlertsMobile : maxAlerts} dense={isMobile}
+                autoHideDuration={autoHideDurationSeconds * 1000} anchorOrigin={anchorOrigin}
+                              transitionDuration = {{enter: 0, exit: transitionExitDurationSeconds * 1000}}
+                                TransitionComponent={Fade} classes={snackbarClasses}>
             <Router>
               <ScrollToTop>
                 <SetUserContext>
@@ -111,7 +128,8 @@ class App extends React.Component {
                 </SetUserContext>
               </ScrollToTop>
             </Router>
-        );
+            </SnackbarProvider>
+        )
     }
 }
 

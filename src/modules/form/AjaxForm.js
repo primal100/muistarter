@@ -9,7 +9,6 @@ import {withStyles} from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {FORM_ERROR} from "final-form";
 import { API } from '../api';
-import { withAlerts } from "../contexts"
 import AjaxRequest from "../components/AjaxRequest";
 import { isEmptyObject, nullOrEmptyObject } from "../utils"
 
@@ -171,5 +170,4 @@ class AjaxForm extends React.Component {
 export default compose(
   withStyles(useStyles),
   withRoot,
-  withAlerts
 )(AjaxForm);
