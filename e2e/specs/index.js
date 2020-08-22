@@ -1,6 +1,5 @@
 import {load, getTitle, getSuccessMessageText, url} from "../pageObjects/index";
 
-
 describe("test index", () => {
   it("should be titled 'React App'", async () => {
     await load();

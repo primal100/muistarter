@@ -1,4 +1,5 @@
 const Dotenv = require('dotenv-webpack');
+const DotenvExpand = require('dotenv-expand');
 const path = require('path');
 
 module.exports = {
@@ -6,7 +7,9 @@ module.exports = {
   webpack: {
     extra: {
       plugins: [
-        new Dotenv()
+        new Dotenv({
+          expand: true
+        }),
       ]
     }
   }

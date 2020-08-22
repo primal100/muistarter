@@ -8,7 +8,6 @@ import { isEmptyObject } from "../utils"
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 
-
 class AjaxRequest extends React.Component {
     intervalTask = null;
 
@@ -16,7 +15,7 @@ class AjaxRequest extends React.Component {
         redirect: null,
     }
 
-    onSuccess = (responseData, request) => {
+    onSuccess = (responseData, request, snackbarOptions) => {
         let msg;
 
         if (this.props.onSuccess) {
@@ -34,7 +33,8 @@ class AjaxRequest extends React.Component {
 
         if (msg) {
             console.log('AJAXRequest adding snackbar', msg)
-            this.props.enqueueSnackbar(msg, {variant: "success"});
+            snackbarOptions = { variant: "success",  ...snackbarOptions}
+            this.props.enqueueSnackbar(msg, snackbarOptions);
         }
 
     }
@@ -43,6 +43,9 @@ class AjaxRequest extends React.Component {
         let request = {}
         let responseData;
         let msg;
+        let snackbarOptions = {};
+        if (this.props.getSnackbarOptions) snackbarOptions = this.props.getSnackbarOptions(values);
+        else if (this.props.snackbarOptions) snackbarOptions = this.props.snackbarOptions;
 
         try {
             if (this.props.request) request = this.props.request;
@@ -75,16 +78,19 @@ class AjaxRequest extends React.Component {
             console.log("AjaxRequest Response", response);
             responseData = response.data;
 
-            this.onSuccess(responseData, request);
+            this.onSuccess(responseData, request, snackbarOptions);
 
             return [true, responseData];
 
         }catch (e) {
             if (e.response) {
                 responseData = e.response.data;
-                if (this.props.onError) this.props.onError(responseData, request);
-                if (!this.props.hideAlertsOnError && responseData) this.props.enqueueSnackbar(
-                    Object.values(responseData).join('\n'), {variant: "error"});
+                snackbarOptions = {variant: "error", ...snackbarOptions}
+                if (this.props.onError) this.props.onError(responseData, request, snackbarOptions);
+                if (!this.props.hideAlertsOnError && responseData) {
+                    this.props.enqueueSnackbar(
+                        Object.values(responseData).join('\n'), snackbarOptions);
+                }
             }
             console.error(e)
             return [false, responseData];
@@ -148,8 +154,10 @@ class AjaxRequest extends React.Component {
 
         if (this.props.getAllCompleteMessage) {
             let msg = this.props.getAllCompleteMessage(result, allResponseData);
-            console.log('AJAXRequest adding alert', msg)
-            this.props.enqueueSnackbar(msg, {variant: result});
+            if (msg) {
+                console.log('AJAXRequest adding alert', msg)
+                this.props.enqueueSnackbar(msg, {variant: result});
+            }
         }
 
         console.log('AJAXRequest redirectState', redirect);

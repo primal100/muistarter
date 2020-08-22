@@ -87,7 +87,7 @@ describe("test user profile view", () => {
         await submitFieldTab();
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'a@c.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
-        expect(await getSuccessMessageText()).toEqual(changeEmailSuccessMessages);
+        expect(await getSuccessMessageText()).toEqual(successMessages.concat(changeEmailSuccessMessages));
         await sleep(1)
         expect(await getTextContent("#username")).toEqual(["Jane Doe a@a.com"]);
     });

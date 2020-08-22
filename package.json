@@ -26,7 +26,7 @@
     "axios-mock-adapter": "^1.18.2",
     "clsx": "^1.1.1",
     "dotenv-webpack": "^1.8.0",
-    "notistack": "^0.9.17",
+    "notistack": "file:.yalc/notistack",
     "react-router-scroll-top": "^0.2.1",
     "validator": "^13.1.1",
     "yalc": "^1.0.0-pre.42"
@@ -51,7 +51,6 @@
     "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/puppeteer": "^3.0.0",
     "@types/react": "^16.9.38",
-    "css-mediaquery": "^0.1.2",
     "final-form": "^4.20.0",
     "jest": "^26.1.0",
     "jest-puppeteer": "^4.4.0",
