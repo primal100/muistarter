@@ -1,14 +1,14 @@
 import { setShortLivedAccessToken, setShortLivedRefreshToken} from "../pageObjects/tokenRefresh";
 import {clearLocalStorage, url, sleep, load_once } from "../pageObjects";
 import {getFormIsDisabled, getFormValues} from "../pageObjects/forms";
-import { goToUserProfile} from "../pageObjects/userProfile";
-import { getLocalStorageTokens } from "../pageObjects/signIn";
+import {clickUserProfile, goToUserProfile} from "../pageObjects/userProfile";
+import {getLocalStorageTokens, signedIn} from "../pageObjects/signIn";
 
 
 describe("test refresh access token ok", () => {
     beforeEach(async () => {
+        await signedIn();
         await setShortLivedAccessToken(2);
-        await load_once();
         await sleep(4);
         await goToUserProfile();
     });
@@ -27,9 +27,10 @@ describe("test refresh access token ok", () => {
 
 describe("test refresh token expired", () => {
     beforeEach(async () => {
+        await signedIn();
         await setShortLivedRefreshToken(2);
         await sleep(4);
-        await load_once("/profile/");
+        await clickUserProfile();
     });
 
     afterEach(async () => {

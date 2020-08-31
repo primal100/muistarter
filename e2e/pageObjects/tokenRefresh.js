@@ -10,7 +10,6 @@ export const generateToken = (expire_seconds) => {
 
 
 const setTokens = async (accessToken, refreshToken) => {
-    await load_once();
     const tokens = JSON.stringify({accessToken: accessToken, refreshToken: refreshToken});
     await page.evaluate((tokens) => localStorage.setItem('auth-tokens-development', tokens), tokens);
 }
@@ -26,7 +25,3 @@ export const setShortLivedRefreshToken = async (expire_seconds) => {
     const refreshToken = generateToken(expire_seconds);
     await setTokens(accessToken, refreshToken);
 }
-
-
-
-

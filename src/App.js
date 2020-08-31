@@ -29,6 +29,12 @@ const transitionExitDurationSeconds = 3;
 const anchorOrigin = {horizontal: 'center', vertical: 'top'}
 const maxAlertsMobile = 3
 const maxAlerts = 5
+const snackbarClasses = {
+            variantSuccess: 'success-message',
+            variantError: 'error-message',
+            variantWarning: 'warning-message',
+            variantInfo: 'info-message'
+}
 
 
 export class ProtectedRoute extends React.Component {
@@ -76,7 +82,8 @@ export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userDetails: {user: null, updater: this.updateUserDetails}
+            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails},
+            key: 0
         }
     }
 
@@ -85,15 +92,25 @@ export class SetUserContext extends React.Component {
     }
 
     updateUserDetails = (user) => {
+        console.log('Updating user details', user);
         if(user && user.email) {
-            this.setState({userDetails: {user: user, updater: this.updateUserDetails}})
+            this.setState({userDetails: {user: user, updater: this.updateUserDetails,
+                    reset: this.resetUserDetails}, key: this.state.key + 1});
         }
+    }
+
+    resetUserDetails = () => {
+        console.log('Resetting user details')
+        this.setState({userDetails: {user: null, updater: this.updateUserDetails,
+                reset: this.resetUserDetails}, key: this.state.key + 1});
     }
 
     render() {
         return (
             <UserContext.Provider value={this.state.userDetails}>
-            {this.props.children}
+                <React.Fragment>
+                    {this.props.children}
+                 </React.Fragment>
             </UserContext.Provider>
         )
     }
@@ -103,12 +120,6 @@ export class SetUserContext extends React.Component {
 class App extends React.Component {
     render(){
         const isMobile = this.props.isMobile;
-        const snackbarClasses = {
-            variantSuccess: 'success-message',
-            variantError: 'error-message',
-            variantWarning: 'warning-message',
-            variantInfo: 'info-message'
-        }
         return (
             <SnackbarProvider maxSnack={isMobile ? maxAlertsMobile : maxAlerts} dense={isMobile}
                 autoHideDuration={autoHideDurationSeconds * 1000} anchorOrigin={anchorOrigin}

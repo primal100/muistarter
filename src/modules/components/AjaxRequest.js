@@ -84,7 +84,19 @@ class AjaxRequest extends React.Component {
 
         }catch (e) {
             if (e.response) {
-                responseData = e.response.data;
+                let responseData;
+                if (e.response.data === Object(e.response.data)) {
+                    responseData = e.response.data;
+                }else{
+                    console.log("response", e.response);
+                    console.log('responsedata', e.response.data);
+                    console.log('errormessage', e.message);
+                    responseData = {[responseKey]: e.message};
+                    let newWindow = window.open();
+                    newWindow.document.write(e.response.data);
+                    newWindow.document.close();
+                }
+                console.log('error response object received');
                 snackbarOptions = {variant: "error", ...snackbarOptions}
                 if (this.props.onError) this.props.onError(responseData, request, snackbarOptions);
                 if (!this.props.hideAlertsOnError && responseData) {
@@ -93,6 +105,7 @@ class AjaxRequest extends React.Component {
                 }
             }
             console.error(e)
+            console.log("Error message", e.message);
             return [false, responseData];
         }
     }
@@ -138,9 +151,12 @@ class AjaxRequest extends React.Component {
 
         if (result === "success") {
 
-            if (this.updateUserDetails) {
+            if (this.props.updateUserDetails) {
                 let userContext = this.context;
-                await getAndUpdateUserDetails(userContext.updater);
+                setTimeout(getAndUpdateUserDetails, 0, userContext.updater);
+            } else if (this.props.resetUserDetails){
+               let userContext = this.context;
+               setTimeout(userContext.reset, 0);
             }
 
             if (redirect) {

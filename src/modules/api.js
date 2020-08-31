@@ -54,7 +54,7 @@ const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
 
 const requestRefresh = async (refreshToken) => {
     if (isTokenExpired(refreshToken)){
-        onRefreshTokenExpired("sign-in/");
+        onRefreshTokenExpired("sign-in");
     }
     const response = await APINoAuthentication({
                     method: 'POST',
@@ -77,18 +77,6 @@ export const authResponseToAuthTokens = (values) => ({
   refreshToken: values.refresh
 });
 
-
-export const onSignIn = (values) => {
-    setAuthTokens(authResponseToAuthTokens(values));
-    window.location = "/";
-}
-
-
-export const logout = async () => {
-    await API.post(logoutEndpoint, {refresh: getRefreshToken()})
-    clearAuthTokens();
-    window.location = "/";
-}
 
 export const getAndUpdateUserDetails = async(updater) => {
     let user;

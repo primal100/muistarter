@@ -12,7 +12,9 @@ import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import AjaxForm from '../form/AjaxForm';
-import { onSignIn } from '../api';
+import {authResponseToAuthTokens, onSignIn} from '../api';
+import AjaxRequest from "./AjaxRequest";
+import {setAuthTokens} from "axios-jwt";
 
 
 const signInUrl = process.env.REACT_APP_SIGN_IN_URL
@@ -32,8 +34,16 @@ class SignIn extends React.Component {
       return errors;
     };
 
+    onSuccess = (values) => {
+        console.log('setting auth tokens')
+        setAuthTokens(authResponseToAuthTokens(values));
+    }
+
     render() {
-      const { classes } = this.props
+      const { classes } = this.props;
+      const redirect = {
+              pathname: "/",
+        }
       return (
         <React.Fragment>
           <AppForm>
@@ -48,7 +58,8 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={signInUrl} method="POST" onSuccess={onSignIn} validate={this.validate} buttonText="sign in" classes={classes}>
+            <AjaxForm url={signInUrl} method="POST" onSuccess={this.onSuccess} validate={this.validate}
+                      redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}>
                   <Field
                     autoComplete="email"
                     autoFocus

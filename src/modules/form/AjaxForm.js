@@ -10,7 +10,7 @@ import useStyles from '../form/styles';
 import {FORM_ERROR} from "final-form";
 import { API } from '../api';
 import AjaxRequest from "../components/AjaxRequest";
-import { isEmptyObject, nullOrEmptyObject } from "../utils"
+import { nullOrEmptyObject } from "../utils"
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY

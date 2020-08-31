@@ -30,7 +30,7 @@ class EditableField extends React.Component {
     }
 
     render() {
-        const { classes, ...fieldProps } = this.props;
+        const { classes, isMobile, ...fieldProps } = this.props;
         return (
             <Field
                  onBlur={this.handleChange}

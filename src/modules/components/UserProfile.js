@@ -22,12 +22,8 @@ const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 
 
 class UserProfile extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            enabled: null
-        }
+    state = {
+        enabled: null
     }
 
     validate = (values) => {
