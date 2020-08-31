@@ -12,7 +12,7 @@ if (document.querySelector(selector)) {
 }
 
 
-export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext } from './App'
+export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext, CustomSnackbarProvider } from './App'
 export { UserContext, AlertContext } from './modules/contexts'
 export { default as mockAuthenticationBackend, mock, mockRaw } from './modules/backend';
 export { API, APINoAuthentication } from './modules/api'

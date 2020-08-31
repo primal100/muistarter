@@ -78,7 +78,7 @@ class AppAppBar extends React.Component {
                <Tooltip title="Home" aria-label="Go Home">
                 <IconButton
                     id="home"
-                    href="/"
+                    component={RouterLink} to="/"
                     color="inherit"
                 >
                   <HomeIcon/>

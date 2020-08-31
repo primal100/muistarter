@@ -3,6 +3,8 @@ import withRoot from './modules/withRoot';
 import React from 'react';
 import { SnackbarProvider } from 'notistack';
 import Fade from '@material-ui/core/Fade';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
 import {BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
@@ -24,11 +26,12 @@ import { UserContext } from "./modules/contexts"
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
-const autoHideDurationSeconds = 10;
-const transitionExitDurationSeconds = 3;
-const anchorOrigin = {horizontal: 'center', vertical: 'top'}
-const maxAlertsMobile = 3
-const maxAlerts = 5
+const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS || 10;
+const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 3;
+const anchorOrigin = {horizontal: process.env.REACT_APP_ANCHOR_ORIGIN_HORIZONTAL || 'center',
+    vertical: process.env.REACT_APP_ANCHOR_ORIGIN_VERTICAL || 'top'}
+const maxAlertsMobile = process.env.REACT_APP_MAX_ALERTS_MOBILE || 3
+const maxAlerts = process.env.REACT_APP_MAX_ALERTS_MOBILE || 5
 const snackbarClasses = {
             variantSuccess: 'success-message',
             variantError: 'error-message',
@@ -82,8 +85,7 @@ export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails},
-            key: 0
+            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails}
         }
     }
 
@@ -95,23 +97,47 @@ export class SetUserContext extends React.Component {
         console.log('Updating user details', user);
         if(user && user.email) {
             this.setState({userDetails: {user: user, updater: this.updateUserDetails,
-                    reset: this.resetUserDetails}, key: this.state.key + 1});
+                    reset: this.resetUserDetails}});
         }
     }
 
     resetUserDetails = () => {
         console.log('Resetting user details')
         this.setState({userDetails: {user: null, updater: this.updateUserDetails,
-                reset: this.resetUserDetails}, key: this.state.key + 1});
+                reset: this.resetUserDetails}});
     }
 
     render() {
         return (
             <UserContext.Provider value={this.state.userDetails}>
-                <React.Fragment>
-                    {this.props.children}
-                 </React.Fragment>
+                {this.props.children}
             </UserContext.Provider>
+        )
+    }
+}
+
+
+export class CustomSnackbarProvider extends React.Component {
+    snackbarRef = React.createRef();
+
+    onClickDismiss = key => () => {
+        this.snackbarRef.current.closeSnackbar(key);
+    }
+
+    render(){
+        const isMobile = this.props.isMobile;
+        return (
+            <SnackbarProvider maxSnack={isMobile ? maxAlertsMobile : maxAlerts} dense={isMobile}
+                autoHideDuration={autoHideDurationSeconds * 1000} anchorOrigin={anchorOrigin}
+                transitionDuration = {{enter: 0, exit: transitionExitDurationSeconds * 1000}}
+                TransitionComponent={Fade} classes={snackbarClasses} ref={this.snackbarRef}
+                action={(key) => (
+                    <IconButton onClick={this.onClickDismiss(key)}>
+                        <CloseIcon/>
+                    </IconButton>
+                )}>
+                {this.props.children}
+            </SnackbarProvider>
         )
     }
 }
@@ -119,12 +145,8 @@ export class SetUserContext extends React.Component {
 
 class App extends React.Component {
     render(){
-        const isMobile = this.props.isMobile;
         return (
-            <SnackbarProvider maxSnack={isMobile ? maxAlertsMobile : maxAlerts} dense={isMobile}
-                autoHideDuration={autoHideDurationSeconds * 1000} anchorOrigin={anchorOrigin}
-                              transitionDuration = {{enter: 0, exit: transitionExitDurationSeconds * 1000}}
-                                TransitionComponent={Fade} classes={snackbarClasses}>
+            <CustomSnackbarProvider isMobile={this.props.isMobile}>
             <Router>
               <ScrollToTop>
                 <SetUserContext>
@@ -138,7 +160,7 @@ class App extends React.Component {
                 </SetUserContext>
               </ScrollToTop>
             </Router>
-            </SnackbarProvider>
+            </CustomSnackbarProvider>
         )
     }
 }
