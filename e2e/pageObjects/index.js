@@ -18,6 +18,7 @@ export const load = async (url='') => {
         let store = {};
 
         return {
+            isMock: true,
             getItem: function(key) {
                 return store[key] || null;
             },
@@ -34,7 +35,8 @@ export const load = async (url='') => {
 
     })();
     Object.defineProperty(window, 'localStorage', {
-        value: localStorageMock
+        value: localStorageMock,
+        writable: true
     })
 })
 };

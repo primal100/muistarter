@@ -130,7 +130,6 @@ class AppAppBar extends React.Component {
                <Tooltip title="Sign out" aria-label="Sign out">
                 <IconButton
                     id="sign-out"
-                    component={Link}
                     onClick={this.changeSignOutState}
                     color="inherit"
                 >
