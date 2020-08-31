@@ -4,10 +4,11 @@ import {
     useAuthTokenInterceptor,
     setAuthTokens,
     clearAuthTokens,
-    getRefreshToken,
+    getRefreshToken, isLoggedIn,
 } from "axios-jwt";
 
 
+const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
 const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
 
@@ -18,7 +19,7 @@ export const API = axios.create({
 });
 
 
-export const APINoHeader = axios.create({
+export const APINoAuthentication = axios.create({
 });
 
 
@@ -53,12 +54,12 @@ const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
 
 const requestRefresh = async (refreshToken) => {
     if (isTokenExpired(refreshToken)){
-        onRefreshTokenExpired("sign-in/");
+        onRefreshTokenExpired("sign-in");
     }
-    const response = await APINoHeader({
+    const response = await APINoAuthentication({
                     method: 'POST',
                     url: refreshEndpoint,
-                    data: { token: refreshToken }});
+                    data: { refresh: refreshToken }});
     return response.data.access;
 };
 
@@ -77,15 +78,13 @@ export const authResponseToAuthTokens = (values) => ({
 });
 
 
-export const onSignIn = (values) => {
-    setAuthTokens(authResponseToAuthTokens(values));
-    window.location = "/";
+export const getAndUpdateUserDetails = async(updater) => {
+    let user;
+    if (isLoggedIn()){
+        const response = await API.get(userProfileUrl);
+        user = response.data;
+    }else{
+        user = null;
+    }
+    updater(user);
 }
-
-
-export const logout = async () => {
-    await API.post(logoutEndpoint, {'refresh': getRefreshToken()})
-    clearAuthTokens();
-    window.location = "/";
-}
-

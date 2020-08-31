@@ -1,55 +1,28 @@
 import React from 'react';
-import { API } from '../api';
-import {Redirect} from "react-router-dom";
+import compose from 'recompose/compose';
 import { withRouter } from "react-router-dom";
-import {paramsToObject} from "../utils";
-
-
-const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
+import {propsParamsToObject} from "../utils";
+import AjaxRequest from "./AjaxRequest"
 
 
 class SendParams extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          redirectState: {},
-      }
-    };
-    async sendParams() {
-        console.log("Running sendParams component @ " + window.location.pathname);
-        const values = paramsToObject(this.props);
-        const redirectState = {};
-        try {
-            let response = await API({
-                method: this.props.method || 'POST',
-                url: this.props.url,
-                data: values
-            })
-            redirectState.successMessages = [response.data[response_key]];
-        }catch (e) {
-            const data = e.response.data;
-            redirectState.errorMessages = Object.values(data);
-        }
-        this.setState({redirectState: redirectState});
-    }
-
-    async componentDidMount() {
-        await this.sendParams();
-    }
 
     render() {
-        if (Object.keys(this.state.redirectState).length !== 0){
-            const redirect = {
-            pathname: this.props.redirectTo,
-            state: this.state.redirectState
+        console.log("Running sendParams component @ " + window.location.pathname);
+        const values = propsParamsToObject(this.props);
+
+        const redirect = {
+              pathname: this.props.redirectTo,
         }
+
         return (
-            <Redirect to={redirect} />
-            );
-        }else{
-          return (<div/>)
-      }
+           <AjaxRequest url={this.props.url} method={this.props.method} showSuccessMessage
+                   values={values} updateUserDetails redirectTo={redirect} reDirectOnError/>
+        )
     }
 }
 
-export default withRouter(SendParams);
+
+export default compose(
+  withRouter,
+)(SendParams);

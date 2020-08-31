@@ -10,11 +10,8 @@ import withRoot from "../withRoot";
 
 
 class EditableField extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            disabled: true
-        }
+    state = {
+        disabled: true
     }
 
     handleClick = async (event) => {
@@ -33,7 +30,7 @@ class EditableField extends React.Component {
     }
 
     render() {
-        const { classes, ...fieldProps } = this.props;
+        const { classes, isMobile, ...fieldProps } = this.props;
         return (
             <Field
                  onBlur={this.handleChange}

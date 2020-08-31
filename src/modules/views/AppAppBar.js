@@ -11,7 +11,10 @@ import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Tooltip from '@material-ui/core/Tooltip';
-import { isLoggedIn } from "axios-jwt";
+import { UserContext } from "../contexts";
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+import SignOut from "../components/SignOut";
 
 
 const styles = (theme) => ({
@@ -50,20 +53,32 @@ const styles = (theme) => ({
 
 
 class AppAppBar extends React.Component {
+  state = {
+    signOut: false
+  }
+
+  changeSignOutState = () => {
+    this.setState({signOut: !this.state.signOut})
+  }
 
   render() {
-    const authenticated = isLoggedIn();
     const {classes} = this.props;
 
     return (
         <div>
+          <UserContext.Consumer>
+              {({user, updater}) => {
+                console.log(user);
+                return (
+                  <React.Fragment>
+          {user && this.state.signOut && <SignOut onSuccess={this.changeSignOutState}/>}
           <AppBar position="fixed">
             <Toolbar className={classes.toolbar}>
               <div className={classes.left}>
                <Tooltip title="Home" aria-label="Go Home">
                 <IconButton
                     id="home"
-                    href="/"
+                    component={RouterLink} to="/"
                     color="inherit"
                 >
                   <HomeIcon/>
@@ -80,7 +95,7 @@ class AppAppBar extends React.Component {
               >
                 {'onepirate'}
               </Link>
-              {!authenticated && <div className={classes.right}>
+              {!user && <div className={classes.right}>
                 <Link
                     id="sign-in"
                     color="inherit"
@@ -101,11 +116,12 @@ class AppAppBar extends React.Component {
                   {'Sign Up'}
                 </Link>
               </div>}
-              {authenticated && <div className={classes.right}>
+              {user && <div className={classes.right}>
+               {this.props.children}
                <Tooltip title="Profile" aria-label="Account of current user">
                 <IconButton
                     id="profile"
-                    href="/profile"
+                    component={RouterLink} to="/profile"
                     color="inherit"
                 >
                   <AccountCircle/>
@@ -114,16 +130,25 @@ class AppAppBar extends React.Component {
                <Tooltip title="Sign out" aria-label="Sign out">
                 <IconButton
                     id="sign-out"
-                    href="/sign-out"
+                    onClick={this.changeSignOutState}
                     color="inherit"
                 >
                   <ExitToAppIcon/>
                 </IconButton>
                </Tooltip>
+                {user.is_staff && <Chip id="is-staff"
+                  icon={<FaceIcon />}
+                  label="Staff Account"
+                  color="secondary"
+                />}
+                {this.props.showName && <span id="username">{user.first_name} {user.last_name} {user.email}</span>}
               </div>}
             </Toolbar>
           </AppBar>
           <div className={classes.placeholder}/>
+          </React.Fragment>
+          )}}
+        </UserContext.Consumer>
         </div>
     );
   }

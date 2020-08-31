@@ -1,16 +1,33 @@
 import React from 'react';
-import { logout } from '../api';
-import { withRouter } from "react-router-dom";
+import AjaxRequest from "../components/AjaxRequest";
+import { UserContext } from "../contexts";
+import {clearAuthTokens, getRefreshToken} from "axios-jwt";
+
+
+const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
 
 
 class SignOut extends React.Component {
-    async componentDidMount() {
-        await logout();
+
+    onSuccess= () => {
+        console.log('Clearing auth tokens')
+        clearAuthTokens();
+        console.log('Running props.onSuccess')
+        if (this.props.onSuccess) setTimeout(this.props.onSuccess, 0);
+        console.log('SignOut onSuccess finished')
     }
 
     render(){
-        return (<div/>)
+        const signOutData = {refresh: getRefreshToken()};
+        const redirect = {
+              pathname: "/",
+        }
+        return (
+            <AjaxRequest url={logoutEndpoint} method="POST" values={signOutData} resetUserDetails
+                                 redirectTo={redirect} reDirectOnError onSuccess={this.onSuccess}>
+            </AjaxRequest>
+        )
     }
 }
 
-export default withRouter(SignOut);
+export default SignOut;

@@ -10,9 +10,10 @@ import RFTextField from '../form/RFTextField';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
+import {propsParamsToObject} from "../utils";
 
 
-const reset_password_url = process.env.REACT_APP_RESET_PASSWORD_URL
+const resetPasswordUrl = process.env.REACT_APP_RESET_PASSWORD_URL
 
 class ResetPassword extends React.Component {
 
@@ -31,12 +32,7 @@ class ResetPassword extends React.Component {
     };
 
     render() {
-      const params = new URLSearchParams(this.props.location.search);
-      this.additionalValues = {
-          user_id: params.get('user_id'),
-          timestamp: params.get('timestamp'),
-          signature: params.get('signature')
-      }
+      this.additionalValues = propsParamsToObject(this.props);
       const { classes } = this.props;
       const redirect = {
           pathname: "/sign-in",
@@ -49,8 +45,8 @@ class ResetPassword extends React.Component {
                   Reset Password
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={reset_password_url} method="POST" successTo={redirect} validate={this.validate}
-                        buttonText="Set New Password" showSuccessMessage={true} classes={classes}
+              <AjaxForm url={resetPasswordUrl} method="POST" redirectTo={redirect} validate={this.validate}
+                        buttonText="Set New Password" showSuccessMessage classes={classes}
                         additonalValues={this.additionalValues}>
                   <Field
                       autoFocus

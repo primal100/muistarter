@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import AjaxForm from '../form/AjaxForm';
 
 
-const sign_up_url = process.env.REACT_APP_SIGN_UP_URL
+const signUpUrl = process.env.REACT_APP_SIGN_UP_URL
 
 
 class SignUp extends React.Component {
@@ -47,7 +47,6 @@ class SignUp extends React.Component {
           "If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form."
       const redirect = {
           pathname: "/",
-          state: {successMessages: [successMessage]}
       }
       return (
           <React.Fragment>
@@ -62,7 +61,8 @@ class SignUp extends React.Component {
                   </Link>
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={sign_up_url} method="POST" successTo={redirect} showSuccessMessage={true} validate={this.validate} buttonText="Sign Up" classes={classes}>
+              <AjaxForm url={signUpUrl} method="POST" redirectTo={redirect} successMessage={successMessage}
+                        validate={this.validate} buttonText="Sign Up" classes={classes}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                           <Field

@@ -46,6 +46,20 @@ const styles = (theme) => ({
     padding: 25,
     width: `calc(100% - ${25 * 2}px)`,
   },
+  inputSizeDescription: {
+    fontSize: 16,
+    padding: theme.spacing(2),
+    width: `calc(100% - ${25 * 2}px)`,
+    height: 'auto'
+    //"padding-bottom": "50%"
+  },
+  inputSizeComment: {
+    fontSize: 16,
+    padding: theme.spacing(2),
+    width: `calc(100% - ${25 * 2}px)`,
+    height: 'auto'
+    //"padding-bottom": "10%"
+  },
   formLabel: {
     fontSize: 18,
   },
@@ -74,7 +88,6 @@ function TextField(props) {
     classes: { input: InputPropsClassesInput, ...InputPropsClassesOther } = {},
     ...InputPropsOther
   } = InputProps;
-
   return (
     <MuiTextField
       InputProps={{
@@ -117,7 +130,7 @@ TextField.propTypes = {
   InputProps: PropTypes.object,
   noBorder: PropTypes.bool,
   SelectProps: PropTypes.object,
-  size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge']),
+  size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge', 'comment', 'description']),
 };
 
 export default withStyles(styles)(TextField);

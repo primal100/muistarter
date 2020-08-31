@@ -15,7 +15,6 @@ describe("test sign out", () => {
   });
 
   it("should sign out from home page, remove access tokens and go to home page", async () => {
-    console.log('starting test');
     expect(await url()).toBe(URL + "/");
     await clickSignOut();
     expect(await url()).toBe(URL + "/");

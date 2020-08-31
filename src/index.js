@@ -1,24 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import {render} from 'react-dom'
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import mockBackend from "./modules/backend";
+import App from "./App";
 
 
-//ReactDOM.render(
-//  <React.StrictMode>
-//      <App/>
-//  </React.StrictMode>,
-//  document.getElementById('root')
-//);
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const selector = "#react-authentication-app"
+if (document.querySelector(selector)) {
+    mockBackend();
+    render(<App/>, document.querySelector(selector))
+}
 
 
-
-export { default as App } from './App';
-export { default as mockBackend } from './modules/backend';
-export { default as withRoot } from './modules/withRoot';
+export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext, CustomSnackbarProvider } from './App'
+export { UserContext, AlertContext } from './modules/contexts'
+export { default as mockAuthenticationBackend, mock, mockRaw } from './modules/backend';
+export { API, APINoAuthentication } from './modules/api'
+export { default as AjaxForm } from './modules/form/AjaxForm'
+export { default as AjaxRequest } from './modules/components/AjaxRequest'
+export { default as Typography } from './modules/components/Typography'
+export { default as AppForm } from './modules/views/AppForm'
+export { default as Alerts } from './modules/Alerts'
+export { default as RFTextField } from './modules/form/RFTextField'
+export { default as AppBar} from './modules/views/AppAppBar';
+export { default as AppFooter } from './modules/views/AppFooter';
+export { default as useStyles } from './modules/form/styles'
+export { default as withRoot } from './modules/withRoot'
+export { default as FormButton } from './modules/form/FormButton'
+export { default as FormFeedback } from './modules/form/FormFeedback'
+export { email as emailValidator, required } from './modules/form/validation'
+export { changeLocationState, paramsToObject, propsParamsToObject } from './modules/utils'

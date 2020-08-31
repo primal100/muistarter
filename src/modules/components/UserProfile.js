@@ -13,20 +13,17 @@ import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import {Link as RouterLink} from "react-router-dom";
+import { UserContext } from "../contexts";
 
 
-const response_key = process.env.REACT_APP_GENERAL_ERRORS_KEY
+const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 
 
 class UserProfile extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            enabled: null
-        }
+    state = {
+        enabled: null
     }
 
     validate = (values) => {
@@ -56,11 +53,11 @@ class UserProfile extends React.Component {
         }
     }
 
-    getSuccessMessages = (request, data) => {
-        if (data[response_key] && data[response_key].length > 0){
-            return [data[response_key]];
+    getSuccessMessage = (request, data) => {
+        if (data[responseKey] && data[responseKey].length > 0){
+            return data[responseKey];
         }
-        return ['Your details have been updated'];
+        return 'Your details have been updated';
     }
 
     render() {
@@ -73,9 +70,12 @@ class UserProfile extends React.Component {
                   User Details
                 </Typography>
               </React.Fragment>
+              <React.Fragment>
+              <UserContext.Consumer>
+                {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
-                        getSuccessMessages={this.getSuccessMessages} noSubmitButton={true}
-                        submitModifiedValuesOnly={true} classes={classes}>
+                        getSuccessMessage={this.getSuccessMessage} noSubmitButton={true}
+                        submitModifiedValuesOnly onSuccess={updater} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField
@@ -109,11 +109,14 @@ class UserProfile extends React.Component {
                           required
                   />
               </AjaxForm>
+              )}
+              </UserContext.Consumer>
               <Typography variant="body2" align="center">
                 <Link id="change_password_link" underline="always" component={RouterLink} to="/change-password">
                     Click here to change your password
                 </Link>
             </Typography>
+            </React.Fragment>
             </AppForm>
           </React.Fragment>
       );

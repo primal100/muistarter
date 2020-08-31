@@ -5,8 +5,8 @@ export const changeLocationState = (props, newState) => {
 }
 
 
-export const paramsToObject = (props) => {
-      const entries = new URLSearchParams(props.location.search).entries();
+export const paramsToObject = (url) => {
+      const entries = new URLSearchParams(url).entries();
       let values = {}
       for (let entry of entries) {
          const [key, value] = entry;
@@ -16,8 +16,16 @@ export const paramsToObject = (props) => {
 }
 
 
-export const isPageRefreshed = () => {
-    console.log(window.performance)
-    console.log(performance.navigation.type);
-    return window.performance && performance.navigation.type === 1;
+export const propsParamsToObject = (props) => {
+    return paramsToObject(props.location.search);
+}
+
+
+export const isEmptyObject = (obj) => {
+    return (obj.constructor === Object && Object.keys(obj).length === 0) || (Array.isArray(obj) && obj.length === 0)
+}
+
+
+export const nullOrEmptyObject = (obj) => {
+    return (!obj || isEmptyObject(obj))
 }

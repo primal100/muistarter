@@ -1,13 +1,16 @@
 import { signedIn } from "./signIn";
 import { click, load } from "./index";
-import { sleep} from "./index";
 
 
-export const goToUserProfile = async () => {
-  await page.waitForSelector('#profile', {
+export const clickUserProfile = async () => {
+   await page.waitForSelector('#profile', {
         timeout: 5000
       });
   await click('#profile');
+}
+
+export const goToUserProfile = async () => {
+  await clickUserProfile();
   await page.waitForSelector('#enable-first_name',{
         timeout: 5000
   })

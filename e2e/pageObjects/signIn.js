@@ -2,14 +2,17 @@ import {load, clickAndWaitNavigation} from './index'
 import { fillForm, clickSubmitButton } from "./forms";
 
 
-const access = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.p2LvatOtvnZ42WBsSP0jb2OXtX_5gkbbzqyRMZMUE8k'
-const refresh = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTA5NTk1NTcsImV4cCI6MTYyMjQ5NTU1NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.3J6JVkEL8Sv0MJlV4bkKtmHZ7WNjz5-F8h_VvOwRHng'
+const access = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTk1MzQxNzQ3LCJqdGkiOiI5NGEyZTBiZWRkZjI0NjZiOTdiOGI3YzEwMjk0NTU1ZCIsInVzZXJfaWQiOjF9.l29e1XOpGTtE7aLIG0uLFnUBOu7sEXR6VGhUOwG7qE0'
+const refresh = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk5NjgzMDE0NywianRpIjoiMDIzYTJiZjE3YTIyNDVjZWJiZjFiNjNhN2E2MmNmZGUiLCJ1c2VyX2lkIjoxfQ.Y-TFsZfIT28FtCLmzLhtE0eZrduZ6ImEFu1Dd9k0Dfg'
 export const tokens = {accessToken: access, refreshToken: refresh}
+const staffAccess = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTk1MzQxNzQ3LCJqdGkiOiI5NGEyZTBiZWRkZjI0NjZiOTdiOGI3YzEwMjk0NTU1ZCIsInVzZXJfaWQiOjJ9.Hqr8HHXNYgShkWNiQ6dkbtGyl7o-RPjYszWxxz3-tQs'
+const staffRefresh = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk5NjgzMDE0NywianRpIjoiMDIzYTJiZjE3YTIyNDVjZWJiZjFiNjNhN2E2MmNmZGUiLCJ1c2VyX2lkIjoyfQ.9kwlRLSYN2qVf5BWZWJFQYiSanE_DDc4RxKvf8x6iac'
+export const staffTokens = {accessToken: staffAccess, refreshToken: staffRefresh}
 
 
 export const goToSignIn = async () => {
   await page.waitForSelector('#sign-in',{
-        timeout: 1000
+        timeout: 5000
       });
   await clickAndWaitNavigation('#sign-in');
 }
