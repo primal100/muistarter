@@ -26,7 +26,7 @@ import { UserContext } from "./modules/contexts"
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 
-const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS || 10;
+const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS || 5;
 const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 3;
 const anchorOrigin = {horizontal: process.env.REACT_APP_ANCHOR_ORIGIN_HORIZONTAL || 'center',
     vertical: process.env.REACT_APP_ANCHOR_ORIGIN_VERTICAL || 'top'}
