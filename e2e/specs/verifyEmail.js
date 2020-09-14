@@ -32,7 +32,7 @@ describe("test verify email view signed in", () => {
 
    it("should sign in, verify email, redirect to home and show success message", async () => {
         expect(await getLocalStorageTokens()).toEqual(tokens);
-        expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
+        expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
         await Promise.all([goToVerifyEmailUrl("user_id=1&timestamp=1589819019&signature=1235&email=a@c.com"), waitForNavigation()])
         expect(await url()).toBe(URL + "/");
         expect(await getSuccessMessageText()).toEqual(successMessages);
@@ -40,7 +40,7 @@ describe("test verify email view signed in", () => {
 
   it("should sign in, fail to verify email with wrong signature", async () => {
     expect(await getLocalStorageTokens()).toEqual(tokens);
-    expect(await getTextContent("#username")).toEqual(["test user a@a.com"]);
+    expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
     await Promise.all([goToVerifyEmailUrl("user_id=1&timestamp=1589819019&signature=1234&email=a@c.com"), waitForNavigation()])
     expect(await url()).toBe(URL + "/");
     expect(await getErrorMessageText()).toEqual(errorMessages);

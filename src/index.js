@@ -14,7 +14,8 @@ if (document.querySelector(selector)) {
 
 export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext, CustomSnackbarProvider } from './App'
 export { UserContext, AlertContext } from './modules/contexts'
-export { default as mockAuthenticationBackend, mock, mockRaw } from './modules/backend';
+export { default as mockAuthenticationBackend, mock, mockRaw, mockBackendCheckIsStaff,
+    mockBackendDecodeAccessTokenFromAxiosConfig, mockBackendRefreshTokenMock } from './modules/backend';
 export { API, APINoAuthentication } from './modules/api'
 export { default as AjaxForm } from './modules/form/AjaxForm'
 export { default as AjaxRequest } from './modules/components/AjaxRequest'

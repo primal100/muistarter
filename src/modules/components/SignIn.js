@@ -34,11 +34,6 @@ class SignIn extends React.Component {
       return errors;
     };
 
-    onSuccess = (values) => {
-        console.log('setting auth tokens')
-        setAuthTokens(authResponseToAuthTokens(values));
-    }
-
     render() {
       const { classes } = this.props;
       const redirect = {
@@ -58,7 +53,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={signInUrl} method="POST" onSuccess={this.onSuccess} validate={this.validate}
+            <AjaxForm url={signInUrl} method="POST" validate={this.validate}
                       redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}>
                   <Field
                     autoComplete="email"

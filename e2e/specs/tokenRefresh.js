@@ -1,4 +1,4 @@
-import { setShortLivedAccessToken, setShortLivedRefreshToken} from "../pageObjects/tokenRefresh";
+import { setShortLivedAccessToken, setShortLivedRefreshToken, newTokens } from "../pageObjects/tokenRefresh";
 import {clearLocalStorage, url, sleep, load_once } from "../pageObjects";
 import {getFormIsDisabled, getFormValues} from "../pageObjects/forms";
 import {clickUserProfile, goToUserProfile} from "../pageObjects/userProfile";
@@ -19,8 +19,9 @@ describe("test refresh access token ok", () => {
 
     it("should show the user profile page after refreshing the expired access token", async () => {
         expect(await url()).toBe(URL + "/profile");
-        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'a@a.com']);
+        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'testuser@example.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
+        expect(await getLocalStorageTokens()).toMatchObject(newTokens);
     });
 })
 

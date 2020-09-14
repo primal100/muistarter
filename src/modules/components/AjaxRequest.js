@@ -150,12 +150,10 @@ class AjaxRequest extends React.Component {
         }
 
         if (result === "success") {
-
+            let userContext = this.context;
             if (this.props.updateUserDetails) {
-                let userContext = this.context;
-                setTimeout(getAndUpdateUserDetails, 0, userContext.updater);
+                setTimeout(getAndUpdateUserDetails, 0, userContext.updater, allResponseData[0]);
             } else if (this.props.resetUserDetails){
-               let userContext = this.context;
                setTimeout(userContext.reset, 0);
             }
 

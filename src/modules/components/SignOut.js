@@ -12,7 +12,6 @@ class SignOut extends React.Component {
     onSuccess= () => {
         console.log('Clearing auth tokens')
         clearAuthTokens();
-        console.log('Running props.onSuccess')
         if (this.props.onSuccess) setTimeout(this.props.onSuccess, 0);
         console.log('SignOut onSuccess finished')
     }
