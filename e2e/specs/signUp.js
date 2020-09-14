@@ -19,7 +19,7 @@ describe("test signup view", () => {
 
   it("should sign up with all values, submit, go home and show success message", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({email: 'a@a.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton()
     expect(await url()).toBe(URL + "/");
@@ -28,7 +28,7 @@ describe("test signup view", () => {
 
   it("should show email validation error", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({email: 'a@a', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
+    await fillForm({email: 'testuser@example', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual(["Invalid email"]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");
@@ -39,7 +39,7 @@ describe("test signup view", () => {
 
   it("should show password not match", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({email: 'a@a.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21', first_name: 'test', last_name: 'user'})
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual(['Passwords do not match']);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");
@@ -64,7 +64,7 @@ describe("test signup view", () => {
 
   it("signup view should say password is not strong enough", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({email: 'a@a.com', password: 'x', password_confirm: 'x', first_name: 'test', last_name: 'user'})
+    await fillForm({email: 'testuser@example.com', password: 'x', password_confirm: 'x', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");

@@ -2,9 +2,12 @@ import axios from 'axios';
 import * as jwt from 'jsonwebtoken'
 import {
     useAuthTokenInterceptor,
-    setAuthTokens,
     clearAuthTokens,
-    getRefreshToken, isLoggedIn,
+    getRefreshToken,
+    getAccessToken,
+    isLoggedIn,
+    setAccessToken,
+    refreshTokenIfNeeded, setAuthTokens
 } from "axios-jwt";
 
 
@@ -52,20 +55,30 @@ const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
 }
 
 
+const setRefreshToken = (token) => {
+    const accessToken = getAccessToken();
+    const tokens = {accessToken: accessToken, refreshToken: token};
+    setAuthTokens(tokens);
+}
+
+
 const requestRefresh = async (refreshToken) => {
     if (isTokenExpired(refreshToken)){
         onRefreshTokenExpired("sign-in");
     }
     const response = await APINoAuthentication({
-                    method: 'POST',
-                    url: refreshEndpoint,
-                    data: { refresh: refreshToken }});
-    return response.data.access;
+                        method: 'POST',
+                        url: refreshEndpoint,
+                        data: { refresh: refreshToken }
+    } );
+    const data = response.data;
+    if (data.refresh) setRefreshToken(data.refresh);
+    return data.access;
 };
 
 
-const refreshToken = getRefreshToken();
-if (refreshToken && isTokenExpired(refreshToken, REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS)){
+const currentRefreshToken = getRefreshToken();
+if (currentRefreshToken && isTokenExpired(currentRefreshToken, REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS)){
     onRefreshTokenExpired();
 }
 
@@ -78,13 +91,39 @@ export const authResponseToAuthTokens = (values) => ({
 });
 
 
-export const getAndUpdateUserDetails = async(updater) => {
+const expectedAttrs = ['id', 'email', 'is_staff', 'exp', 'first_name', 'last_name']
+
+
+function AttributeMissingFromTokenError(message) {
+  return  new Error(message);
+}
+
+
+export const verifyTokenAttrs = (decodedToken) => {
+    expectedAttrs.forEach((attr) => {
+        if (! attr in decodedToken) {
+            throw new AttributeMissingFromTokenError(`${attr} value is missing from decoded jwt token:`, decodedToken);
+        }
+    })
+}
+
+
+export const getAndUpdateUserDetails = async(updater, data) => {
     let user;
-    if (isLoggedIn()){
-        const response = await API.get(userProfileUrl);
-        user = response.data;
+
+    if (data && data.access && data.refresh){
+        user = jwt.decode(data.access);
+        setAuthTokens(authResponseToAuthTokens(data));
+    }
+    else if (isLoggedIn()){
+        setAccessToken(null);
+        const accessToken = await refreshTokenIfNeeded(requestRefresh);
+        console.log('AccessToken:', accessToken)
+        user = jwt.decode(accessToken);
     }else{
         user = null;
     }
+    if (user && !user.id) user.id = user.user_id;
     updater(user);
+    if (user) verifyTokenAttrs(user);
 }

@@ -19,7 +19,7 @@ describe("test send reset password url view", () => {
 
   it("should submit send password reset url form successfully and redirect to home with success message", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({login: 'a@a.com'})
+    await fillForm({login: 'testuser@example.com'})
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toBe(URL + "/");

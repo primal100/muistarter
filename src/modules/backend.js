@@ -1,4 +1,5 @@
 import { API, APINoAuthentication } from './api'
+import * as jwt from 'jsonwebtoken'
 import MockAdapter from 'axios-mock-adapter'
 
 let mock;
@@ -18,8 +19,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 const nonFieldErrorsKey = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
-const email_address = 'a@a.com'
-const staffEmailAddress = 'a@staff.com'
+const email_address = 'testuser@example.com'
+const staffEmailAddress = 'staff@admin.com'
 const password = 'x1y@4f!21a'
 const first_name = 'test'
 const last_name = 'user'
@@ -28,19 +29,26 @@ const non_existing_email_details = {login: 'b@a.com'}
 const staffLoginDetails = {email: staffEmailAddress, password: 'b'}
 const wrong_login_details = {email: email_address, password: 'b'}
 const user_inactive_details = {email: 'c@a.com', password: 'b'}
-const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTk1MzQxNzQ3LCJqdGkiOiI5NGEyZTBiZWRkZjI0NjZiOTdiOGI3YzEwMjk0NTU1ZCIsInVzZXJfaWQiOjF9.l29e1XOpGTtE7aLIG0uLFnUBOu7sEXR6VGhUOwG7qE0';
-const refreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk5NjgzMDE0NywianRpIjoiMDIzYTJiZjE3YTIyNDVjZWJiZjFiNjNhN2E2MmNmZGUiLCJ1c2VyX2lkIjoxfQ.Y-TFsZfIT28FtCLmzLhtE0eZrduZ6ImEFu1Dd9k0Dfg';
-const login_response_ok = {'access': accessToken, refresh: refreshToken}
-const accessTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTk1MzQxNzQ3LCJqdGkiOiI5NGEyZTBiZWRkZjI0NjZiOTdiOGI3YzEwMjk0NTU1ZCIsInVzZXJfaWQiOjJ9.Hqr8HHXNYgShkWNiQ6dkbtGyl7o-RPjYszWxxz3-tQs';
-const refreshTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk5NjgzMDE0NywianRpIjoiMDIzYTJiZjE3YTIyNDVjZWJiZjFiNjNhN2E2MmNmZGUiLCJ1c2VyX2lkIjoyfQ.9kwlRLSYN2qVf5BWZWJFQYiSanE_DDc4RxKvf8x6iac';
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTE1NDUyOTYzLCJqdGkiOiJiYTQxZWJkZGMwMGQ0ODhhOTQ1NWM4NzhkNmI1NjJiNiIsInVzZXJfaWQiOjEsImVtYWlsIjoidGVzdHVzZXJAZXhhbXBsZS5jb20iLCJmaXJzdF9uYW1lIjoidGVzdCIsImxhc3RfbmFtZSI6InVzZXIiLCJpc19zdGFmZiI6ZmFsc2UsImlzX3N1cGVydXNlciI6ZmFsc2V9.RF8h_R2KYjV7-0-BYpu7xaWXKei9i99SVHGTEHeUAE0';
+const refreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk0Njk4ODk2MywianRpIjoiODg0ZmVhYWFkN2FjNGM5Mjg2ZDIxOTllMDljNjI4MzEiLCJ1c2VyX2lkIjoxLCJlbWFpbCI6InRlc3R1c2VyQGV4YW1wbGUuY29tIiwiZmlyc3RfbmFtZSI6InRlc3QiLCJsYXN0X25hbWUiOiJ1c2VyIiwiaXNfc3RhZmYiOmZhbHNlLCJpc19zdXBlcnVzZXIiOmZhbHNlfQ.mYEs7Swy-7rJ9iWd1l3xNkIcE-2KO9KKR5ZZR-OHNc0';
+const loginResponseOk = {access: accessToken, refresh: refreshToken}
+const refreshedAccessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTE1NDUzNDkzLCJqdGkiOiIwYjVkYjlmN2ZiNjg0YWRlOGJiOWYzYmUyODc0YzM2MCIsInVzZXJfaWQiOjEsImVtYWlsIjoidGVzdHVzZXJAZXhhbXBsZS5jb20iLCJmaXJzdF9uYW1lIjoidGVzdCIsImxhc3RfbmFtZSI6InVzZXIiLCJpc19zdGFmZiI6ZmFsc2UsImlzX3N1cGVydXNlciI6ZmFsc2V9.-Bp-HQffYV-mmVV0x_UMNnmJVGvhZ1YRtlxyqtRslUE';
+const refreshRefreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk0Njk4OTQ5MywianRpIjoiZGU2YmRiYzMyOGQ2NDc3Njk4NTZiNjIzYzFkODQ1NDciLCJ1c2VyX2lkIjoxLCJlbWFpbCI6InRlc3R1c2VyQGV4YW1wbGUuY29tIiwiZmlyc3RfbmFtZSI6InRlc3QiLCJsYXN0X25hbWUiOiJ1c2VyIiwiaXNfc3RhZmYiOmZhbHNlLCJpc19zdXBlcnVzZXIiOmZhbHNlfQ.aPpzbtjVUcXS3jmdySOjGkI4KASpKyQWemwQB4cUjs8';
+const refreshResponseOK = {access: refreshedAccessToken, refresh: refreshRefreshToken}
+const accessTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTE1NDUzMTIzLCJqdGkiOiJlYzdjMTFkMGE0OWY0NjBhYWVkNDg4NmE1YWEzZDU2MyIsInVzZXJfaWQiOjIsImVtYWlsIjoic3RhZmZAYWRtaW4uY29tIiwiZmlyc3RfbmFtZSI6IkFkbWluIiwibGFzdF9uYW1lIjoiU3RhZmYiLCJpc19zdGFmZiI6dHJ1ZSwiaXNfc3VwZXJ1c2VyIjpmYWxzZX0.JL1y_0SUL1EW6A_neJH2MRc6BLLGaszgQJH5cgIvCKc';
+const refreshTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk0Njk4OTEyMywianRpIjoiZDQ1OGY4NzM0MTY0NDVjMGI4YWY0NTJkNTQ4Mzc2YzciLCJ1c2VyX2lkIjoyLCJlbWFpbCI6InN0YWZmQGFkbWluLmNvbSIsImZpcnN0X25hbWUiOiJBZG1pbiIsImxhc3RfbmFtZSI6IlN0YWZmIiwiaXNfc3RhZmYiOnRydWUsImlzX3N1cGVydXNlciI6ZmFsc2V9.5vkDMA_7lRMZoY0kJeoHbEKcp6tQibhzfQsSkbIiae0';
 const staffLoginResponse = {access: accessTokenStaff, refresh: refreshTokenStaff}
-const logout_response_ok = {[responseKey]: 'Logout successful'}
+const refreshedAccessTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxOTE1NDU0OTcxLCJqdGkiOiI3ZjcyM2I3MDUyYTY0ZDFlODY1M2U4NjEzYTIzZjllZiIsInVzZXJfaWQiOjIsImVtYWlsIjoic3RhZmZAYWRtaW4uY29tIiwiZmlyc3RfbmFtZSI6IkFkbWluIiwibGFzdF9uYW1lIjoiU3RhZmYiLCJpc19zdGFmZiI6dHJ1ZSwiaXNfc3VwZXJ1c2VyIjpmYWxzZX0.oktdAsfIeTVq5uHS860-1_KzxUVJTUFZdKgKvV9xPxI';
+const refreshedRefreshTokenStaff = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTk0Njk5MDk3MSwianRpIjoiMjBmOTI4NmZiNGNjNGIyMzkxNTUxYzI2NjliNTE2NDgiLCJ1c2VyX2lkIjoyLCJlbWFpbCI6InN0YWZmQGFkbWluLmNvbSIsImZpcnN0X25hbWUiOiJBZG1pbiIsImxhc3RfbmFtZSI6IlN0YWZmIiwiaXNfc3RhZmYiOnRydWUsImlzX3N1cGVydXNlciI6ZmFsc2V9.W8GHw6Ue8hjg9nzsRnbd2Pa5p7hgRNyu1-UbYwhoUA0';
+const staffTokenRefreshResponseOK = {access: refreshedAccessTokenStaff, refresh: refreshedRefreshTokenStaff}
+
+const logoutResponseOK = {[responseKey]: 'Logout successful'}
 const loginFailedResponse = {[responseKey]: 'No active account found with the given credentials'}
-const header = 'Authorization';
+const authorizationHeader = 'Authorization';
 const userDetailsResponse = {id: 1, first_name: first_name, last_name: last_name,
-                              email: email_address, is_staff: false}
-const userDetailsStaffResponse = {id: 2, first_name: "Staff", last_name: "Admin",
-                              email: staffEmailAddress, is_staff: true}
+                              email: email_address, is_staff: false, is_superuser: false}
+const userDetailsStaffResponse = {id: 2, first_name: "Admin", last_name: "Staff",
+                              email: staffEmailAddress, is_staff: true, is_superuser: false}
 const new_first_name = 'Jane'
 const new_last_name = 'Doe'
 const change_first_name_data = {first_name: new_first_name}
@@ -73,14 +81,39 @@ const change_password_request_wrong_old_password = {old_password: 'a', password:
 const change_password_response_wrong_old_password = {old_password: ['Old password is not correct']}
 
 
-function checkHeaders(config, normalReply, staffReply){
+export const mockBackendDecodeAccessTokenFromAxiosConfig = (config) => {
+    if (config.headers[authorizationHeader]){
+        const accessToken = config.headers[authorizationHeader].split(' ')[1]
+        console.log('found accessToken', accessToken)
+        return jwt.decode(accessToken);
+    }
+    return null;
+}
+
+
+export const mockBackendCheckIsStaff = (config, normalReply, staffReply) => {
     console.log('Received request', config);
-    if (config.headers[header] && config.headers[header] === `Bearer ${accessToken}`){
-        return normalReply;
-    }else if (config.headers[header] && config.headers[header] === `Bearer ${accessTokenStaff}`){
-        return staffReply;
+    const userData = mockBackendDecodeAccessTokenFromAxiosConfig(config);
+    console.log('userData', userData)
+    if (userData) {
+        if (userData.is_staff) {
+            console.log('returning', staffReply)
+            return staffReply;
+        } else {
+            console.log('returning', normalReply)
+            return normalReply;
+        }
     }
     return [401, {[responseKey]: 'Authentication credentials were not provided.'}]
+}
+
+
+export const mockBackendRefreshTokenMock = (config) => {
+    const refreshToken = JSON.parse(config.data).refresh;
+    const userData = jwt.decode(refreshToken);
+    console.log('userData', userData)
+    if (userData.is_staff) return [200, staffTokenRefreshResponseOK];
+    else return [200, refreshResponseOK];
 }
 
 
@@ -89,7 +122,7 @@ export default function mockBackend(errorOnNoMatch) {
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, loginFailedResponse);
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL, user_inactive_details).reply(401, loginFailedResponse);
         mock.onPost(process.env.REACT_APP_SIGN_IN_URL, staffLoginDetails).reply(200, staffLoginResponse);
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, login_response_ok);
+        mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, loginResponseOk);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
         mock.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, userDetailsResponse);
@@ -100,17 +133,17 @@ export default function mockBackend(errorOnNoMatch) {
         mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
-        mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(200, login_response_ok);
-        mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logout_response_ok);
-        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => checkHeaders(config, [200, userDetailsResponse], [200, userDetailsStaffResponse]));
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => checkHeaders(config, [200, user_details_first_name_changed_response]));
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => checkHeaders(config, [200, user_details_both_names_changed_response]));
-        mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => checkHeaders(config, [200, change_email_response]));
+        mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(mockBackendRefreshTokenMock);
+        mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logoutResponseOK);
+        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => mockBackendCheckIsStaff(config, [200, userDetailsResponse], [200, userDetailsStaffResponse]));
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_first_name_changed_response]));
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_both_names_changed_response]));
+        mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_email_response]));
         mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
-        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => checkHeaders(config, [400, change_password_response_wrong_old_password]));
-        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_password_too_short).reply((config) => checkHeaders(config, [400, register_too_short_password_response]));
-        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => checkHeaders(config, [200, change_password_response]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => mockBackendCheckIsStaff(config, [400, change_password_response_wrong_old_password]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_password_too_short).reply((config) => mockBackendCheckIsStaff(config, [400, register_too_short_password_response]));
+        mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_password_response]));
         if (errorOnNoMatch || process.env.REACT_APP_MOCK_BACKEND_ERROR_ON_NO_MATCH) {
             console.log('Error will be raised if API request cannot be matched')
             mock.onAny().reply((config) => {
