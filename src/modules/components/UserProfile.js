@@ -74,7 +74,7 @@ class UserProfile extends React.Component {
               <UserContext.Consumer>
                 {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
-                        getSuccessMessage={this.getSuccessMessage} noSubmitButton={true}
+                        getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
                         submitModifiedValuesOnly onSuccess={updater} classes={classes}>
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>

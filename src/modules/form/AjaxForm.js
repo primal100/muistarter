@@ -60,9 +60,10 @@ class AjaxForm extends React.Component {
                 console.log('Scheduling form restart')
                 setTimeout(this.form.restart, 0);
             }
-            else if (request.method !== "GET" && !nullOrEmptyObject(this.state.initialValues) && nullOrEmptyObject(data[responseKey])) {
-                console.log('Setting initialValues', data)
-                updatedState.initialValues = data;
+            else if (this.props.updateInitialValuesOnResponse && nullOrEmptyObject(data[responseKey])) {
+                const updatedInitialValues = {...this.state.initialValues, ...data};
+                console.log('Setting initialValues', updatedInitialValues)
+                updatedState.initialValues = updatedInitialValues;
             }
             updatedState.sent = false;
             this.setState(updatedState);
