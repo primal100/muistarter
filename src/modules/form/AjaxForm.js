@@ -127,7 +127,7 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-        const {classes, formID, initialValues, validate, onSuccess, ...ajaxRequestProps} = this.props;
+        const {classes, formID, initialValues, validate, onSuccess, onValuesChange, ...ajaxRequestProps} = this.props;
         return (
             <React.Fragment>
                 {this.state.values &&
@@ -136,7 +136,7 @@ class AjaxForm extends React.Component {
                              hideAlertsOnError {...ajaxRequestProps}/>}
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
-                      render={({submitError, handleSubmit}) => (
+                      render={({submitError, handleSubmit, form}) => (
                           <form id={formID || ""} onSubmit={handleSubmit} className={classes.form} noValidate>
                               <fieldset disabled={this.state.sent}>
                                   {this.props.children}
@@ -150,6 +150,12 @@ class AjaxForm extends React.Component {
                                       ) : null
                                   }
                               </FormSpy>
+                              {this.props.onValuesChange && <FormSpy subscription={{values: true}}>
+                                  {({values}) => {
+                                      this.props.onValuesChange(values, form);
+                                      return (<React.Fragment/>)
+                                  }}
+                              </FormSpy>}
                               {!this.props.noSubmitButton && <FormButton
                                   className={classes.button}
                                   disabled={this.state.sent}
