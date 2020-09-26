@@ -42,14 +42,19 @@ class AjaxRequest extends React.Component {
 
     }
 
+    getSnackbarOptions = () => {
+        let snackbarOptions;
+        if (this.props.getSnackbarOptions) snackbarOptions = this.props.getSnackbarOptions(this.props.values);
+        else if (this.props.snackbarOptions) snackbarOptions = this.props.snackbarOptions;
+        return snackbarOptions;
+    }
+
     sendRequest = async() => {
         let request = {}
         let responseData;
         let msg;
-        let snackbarOptions = {};
         const values = this.props.values;
-        if (this.props.getSnackbarOptions) snackbarOptions = this.props.getSnackbarOptions(values);
-        else if (this.props.snackbarOptions) snackbarOptions = this.props.snackbarOptions;
+        let snackbarOptions = this.getSnackbarOptions();
 
         try {
             if (this.props.request) request = this.props.request;
@@ -87,6 +92,15 @@ class AjaxRequest extends React.Component {
             return [true, responseData];
 
         }catch (e) {
+            console.log(e, typeof e);
+            if (typeof e === "string" && (e.includes("Got 401 on token refresh") || e.includes('Resetting auth token:'))){
+                // Failed to refresh token
+                console.log('Failed to refresh token', e);
+                let snackbarOptions = {variant: "error", ...snackbarOptions};
+                this.props.enqueueSnackbar('Authentication issue encountered. Please login again.',
+                    snackbarOptions);
+                return [false, "Token Refresh Failed"];
+            }
             if (e.response) {
                 let responseData;
                 if (e.response.data === Object(e.response.data)) {
@@ -143,6 +157,7 @@ class AjaxRequest extends React.Component {
         }
 
         let userContext = this.context;
+        let resetUserDetails = this.props.resetUserDetails;
 
         if (success) {
             if (this.props.updateUserDetails) {
@@ -154,11 +169,19 @@ class AjaxRequest extends React.Component {
                 if (this.props.addResponseToRedirectState) redirect.state.data = responseData;
             }
         } else {
-            if (!this.props.reDirectOnError) redirect = null;
+            if (responseData === "Token Refresh Failed"){
+                // Redirect to sign-in page if there was an issue refreshing access token
+                console.log('Resetting user details and redirecting to login');
+                resetUserDetails = true;
+                redirect = {
+                    pathname: "/sign-in"
+                }
+            }
+            else if (!this.props.reDirectOnError) redirect = null;
         }
 
         console.log('resetUserDetails', this.props.resetUserDetails);
-        if (this.props.resetUserDetails){
+        if (resetUserDetails){
                setTimeout(userContext.reset, 0);
         }
 

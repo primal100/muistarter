@@ -68,7 +68,7 @@ class AppAppBar extends React.Component {
         <div>
           <UserContext.Consumer>
               {({user, updater}) => {
-                console.log(user);
+                console.log("USER", user);
                 return (
                   <React.Fragment>
           {user && this.state.signOut && <SignOut onSuccess={this.changeSignOutState}/>}
