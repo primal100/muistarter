@@ -28,17 +28,12 @@ class AjaxForm extends React.Component {
     state = {
         sent: false,
         values: null,
-        initialValues: null,
+        initialValues: this.props.initialValues,
         submitKey: 0
     }
 
-    async componentDidMount(){
-        if (this.props.loadInitialValuesFromURL){
-            const response = await API.get(this.props.loadInitialValuesFromURL);
-            this.setState({initialValues: response.data})
-        }else if (this.props.initialValues){
-            this.setState({initialValues: this.props.initialValues})
-        }
+    onGetInitialValues = (responseData) => {
+        this.setState({initialValues: responseData})
     }
 
     onSubmitSuccess = (data, request, reDirected) => {
@@ -138,8 +133,11 @@ class AjaxForm extends React.Component {
 
         return (
             <React.Fragment>
+                {this.props.loadInitialValuesFromURL &&
+                    <AjaxRequest url={this.props.loadInitialValuesFromURL} method="GET"
+                                 onSuccess={this.onGetInitialValues} showBackdrop/>}
                 {this.state.values &&
-                <AjaxRequest key={this.state.submitKey} onSuccess={this.onSubmitSuccess}
+                    <AjaxRequest key={this.state.submitKey} onSuccess={this.onSubmitSuccess}
                              onError={this.onSubmitError} values={this.state.values}
                              hideAlertsOnError {...ajaxRequestProps}/>}
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}

@@ -5,10 +5,13 @@ import MockAdapter from 'axios-mock-adapter'
 let mock;
 let mockRaw;
 
+
 if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
+    const adaptorConfig = { delayResponse: parseInt(process.env.REACT_APP_MOCK_DELAY || 0) }
     console.log(`Running in ${process.env.NODE_ENV} mode`)
-    mock = new MockAdapter(API);
-    mockRaw = new MockAdapter(APINoAuthentication);
+    console.log('AdaptorConfig', adaptorConfig);
+    mock = new MockAdapter(API, adaptorConfig);
+    mockRaw = new MockAdapter(APINoAuthentication, adaptorConfig);
     mock.onNoMatch = "passthrough";
     mockRaw.onNoMatch = "passthrough";
 }else {

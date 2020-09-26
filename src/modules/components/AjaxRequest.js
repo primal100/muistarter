@@ -5,6 +5,8 @@ import {UserContext} from "../contexts";
 import compose from "recompose/compose";
 import { withSnackbar } from 'notistack';
 import { isEmptyObject } from "../utils"
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 
@@ -13,6 +15,7 @@ class AjaxRequest extends React.Component {
 
     state = {
         redirect: null,
+        showBackdrop: false
     }
 
     onSuccess = (responseData, request, snackbarOptions) => {
@@ -112,6 +115,8 @@ class AjaxRequest extends React.Component {
     }
 
     send = async() => {
+        if (this.props.showBackdrop) this.setState({showBackdrop: true});
+
         console.log('runAtInterval', this.props.interval);
         let redirect;
         let success;
@@ -137,14 +142,12 @@ class AjaxRequest extends React.Component {
             responseData = response[1];
         }
 
+        let userContext = this.context;
+
         if (success) {
-            let userContext = this.context;
             if (this.props.updateUserDetails) {
                 setTimeout(getAndUpdateUserDetails, 0, userContext.updater, responseData);
-            } else if (this.props.resetUserDetails){
-               setTimeout(userContext.reset, 0);
             }
-
             if (redirect) {
                 if (!redirect.state) redirect.state = {}
                 if (this.props.addFieldToRedirectPathname) redirect.pathname += responseData[this.props.addFieldToRedirectPathname]
@@ -154,8 +157,14 @@ class AjaxRequest extends React.Component {
             if (!this.props.reDirectOnError) redirect = null;
         }
 
+        console.log('resetUserDetails', this.props.resetUserDetails);
+        if (this.props.resetUserDetails){
+               setTimeout(userContext.reset, 0);
+        }
+
         console.log('AJAXRequest redirectState', redirect);
         if (redirect) this.setState({redirect: redirect});
+        else if (this.props.showBackdrop) this.setState({showBackdrop: false});
     }
 
     async componentDidMount(){
@@ -179,6 +188,9 @@ class AjaxRequest extends React.Component {
                 {this.state.redirect &&
                     <Redirect to={this.state.redirect}/>
                 }
+                <Backdrop open={this.state.showBackdrop}>
+                        <CircularProgress color="inherit" />
+                </Backdrop>
             </React.Fragment>
         )
     }
