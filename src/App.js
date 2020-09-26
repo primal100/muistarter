@@ -18,7 +18,6 @@ import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import SendParams from "./modules/components/SendParams"
 import UserProfile from "./modules/components/UserProfile";
-import Alerts from "./modules/Alerts";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails} from "./modules/api";
 import { UserContext } from "./modules/contexts"
@@ -152,9 +151,7 @@ class App extends React.Component {
                 <SetUserContext>
                 <AppAppBar showName/>
                 <div>
-                  <Alerts>
                     <AppRoutes/>
-                  </Alerts>
                 </div>
                 <AppFooter/>
                 </SetUserContext>
