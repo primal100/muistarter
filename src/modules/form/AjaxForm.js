@@ -128,6 +128,14 @@ class AjaxForm extends React.Component {
 
     render() {
         const {classes, formID, initialValues, validate, onSuccess, onValuesChange, ...ajaxRequestProps} = this.props;
+        let formProps = {};
+        let buttonProps = {};
+
+        if (formID){
+            formProps.id = formID;
+            buttonProps.id = `${formID}-button`;
+        }
+
         return (
             <React.Fragment>
                 {this.state.values &&
@@ -137,7 +145,7 @@ class AjaxForm extends React.Component {
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit, form}) => (
-                          <form id={formID || ""} onSubmit={handleSubmit} className={classes.form} noValidate>
+                          <form {...formProps} onSubmit={handleSubmit} className={classes.form} noValidate>
                               <fieldset disabled={this.state.sent}>
                                   {this.props.children}
                               </fieldset>
@@ -157,6 +165,7 @@ class AjaxForm extends React.Component {
                                   }}
                               </FormSpy>}
                               {!this.props.noSubmitButton && <FormButton
+                                  {...buttonProps}
                                   className={classes.button}
                                   disabled={this.state.sent}
                                   size="large"

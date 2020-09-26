@@ -10,8 +10,6 @@ function RFTextField(props) {
     meta: { touched, error, submitError },
     ...other
   } = props;
-  console.log('RFTextField input', input)
-  console.log('RFTextField inputProps', InputProps)
   return (
     <TextField
       error={Boolean(touched && (error || submitError))}
