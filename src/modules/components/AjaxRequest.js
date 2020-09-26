@@ -39,11 +39,12 @@ class AjaxRequest extends React.Component {
 
     }
 
-    sendOneRequest = async(values) => {
+    sendRequest = async() => {
         let request = {}
         let responseData;
         let msg;
         let snackbarOptions = {};
+        const values = this.props.values;
         if (this.props.getSnackbarOptions) snackbarOptions = this.props.getSnackbarOptions(values);
         else if (this.props.snackbarOptions) snackbarOptions = this.props.snackbarOptions;
 
@@ -110,68 +111,47 @@ class AjaxRequest extends React.Component {
         }
     }
 
-    sendRequests = async() => {
+    send = async() => {
         console.log('runAtInterval', this.props.interval);
         let redirect;
-        let result;
-        let allResponseData;
+        let success;
+        let responseData;
 
         if (this.props.redirectTo) redirect = { ...this.props.redirectTo }
 
         if (this.props.checkLocationState && this.props.location.state && this.props.location.state.data) {
             console.log("AjaxRequest retrieving from location.state.data");
-            result = "success";
-            allResponseData = this.props.location.state.data;
+            success = true;
+            responseData = this.props.location.state.data;
             let newState = {...this.props.location.state}
             delete newState.data;
             this.props.history.replace({
                 pathname: this.props.location.pathname,
                 state: newState
             });
-            allResponseData.forEach(data => this.onSuccess(data, {}))
+            this.onSuccess(responseData, {});
 
-        }else {
-            let valuesList;
-            if (this.props.valuesList) {
-                valuesList = this.props.valuesList;
-            } else {
-                valuesList = [this.props.values];
-            }
-            const responses = await Promise.all(valuesList.map(values => this.sendOneRequest(values)));
-            if (responses.every(response => response[0])) result = "success";
-            else if (responses.some(response => response[0])) result = "info";
-            else result = "error";
-            allResponseData = responses.map(response => response[1]);
+        } else {
+            const response = await this.sendRequest();
+            success = response[0];
+            responseData = response[1];
         }
 
-        if (this.props.onAllComplete) {
-            console.log('Calling onAllComplete with', allResponseData, result)
-            this.props.onAllComplete(allResponseData, result);
-        }
-
-        if (result === "success") {
+        if (success) {
             let userContext = this.context;
             if (this.props.updateUserDetails) {
-                setTimeout(getAndUpdateUserDetails, 0, userContext.updater, allResponseData[0]);
+                setTimeout(getAndUpdateUserDetails, 0, userContext.updater, responseData);
             } else if (this.props.resetUserDetails){
                setTimeout(userContext.reset, 0);
             }
 
             if (redirect) {
                 if (!redirect.state) redirect.state = {}
-                if (this.props.addFieldToRedirectPathname) redirect.pathname += allResponseData[0][this.props.addFieldToRedirectPathname]
-                if (this.props.addResponseToRedirectState) redirect.state.data = allResponseData;
+                if (this.props.addFieldToRedirectPathname) redirect.pathname += responseData[this.props.addFieldToRedirectPathname]
+                if (this.props.addResponseToRedirectState) redirect.state.data = responseData;
             }
         } else {
             if (!this.props.reDirectOnError) redirect = null;
-        }
-
-        if (this.props.getAllCompleteMessage) {
-            let msg = this.props.getAllCompleteMessage(result, allResponseData);
-            if (msg) {
-                console.log('AJAXRequest adding alert', msg)
-                this.props.enqueueSnackbar(msg, {variant: result});
-            }
         }
 
         console.log('AJAXRequest redirectState', redirect);
@@ -179,10 +159,10 @@ class AjaxRequest extends React.Component {
     }
 
     async componentDidMount(){
-        console.log('Mounting AJAXRequest')
-        await this.sendRequests();
+        console.log('Mounting AJAXRequest');
+        if (!this.props.noImmediateRequest) await this.send();
         console.log('runAtInterval', this.props.runAtInterval);
-        if (this.props.runAtInterval) this.intervalTask = setInterval(this.sendRequests, this.props.runAtInterval);
+        if (this.props.runAtInterval) this.intervalTask = setInterval(this.sendRequest, this.props.runAtInterval);
     }
 
     async componentWillUnmount(){
