@@ -62,7 +62,6 @@ export class AppRoutes extends React.Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={Home}/>
         <Route path="/sign-in" component={SignIn}/>
         <ProtectedRoute path="/sign-out" component={SignOut}/>
         <Route path="/sign-up" component={SignUp}/>
@@ -74,6 +73,7 @@ export class AppRoutes extends React.Component {
         <Route path="/verify-email" render={() => <SendParams url={verifyEmailUrl} redirectTo="/"/>}/>
         <ProtectedRoute path="/change-password" component={ChangePassword}/>
         {this.props.children}
+        <Route exact path="/" component={Home}/>
         <Route exact render={props => <Redirect to="/"/>}/>
       </Switch>
     )
