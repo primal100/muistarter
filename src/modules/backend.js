@@ -122,18 +122,18 @@ export const mockBackendRefreshTokenMock = (config) => {
 
 export default function mockBackend(errorOnNoMatch) {
     if (mock) {
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, loginFailedResponse);
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, user_inactive_details).reply(401, loginFailedResponse);
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL, staffLoginDetails).reply(200, staffLoginResponse);
-        mock.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, loginResponseOk);
-        mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
-        mock.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
-        mock.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, userDetailsResponse);
-        mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
-        mock.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
-        mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
-        mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_invalid_signature).reply(400, verify_response_invalid_signature);
-        mock.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, loginFailedResponse);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL, user_inactive_details).reply(401, loginFailedResponse);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL, staffLoginDetails).reply(200, staffLoginResponse);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, loginResponseOk);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, userDetailsResponse);
+        mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
+        mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
+        mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
+        mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_invalid_signature).reply(400, verify_response_invalid_signature);
+        mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(mockBackendRefreshTokenMock);

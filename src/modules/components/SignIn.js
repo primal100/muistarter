@@ -53,7 +53,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={signInUrl} method="POST" validate={this.validate}
+            <AjaxForm url={signInUrl} method="POST" validate={this.validate} noAuth
                       redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}>
                   <Field
                     autoComplete="email"

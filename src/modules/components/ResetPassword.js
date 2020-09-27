@@ -47,7 +47,7 @@ class ResetPassword extends React.Component {
               </React.Fragment>
               <AjaxForm url={resetPasswordUrl} method="POST" redirectTo={redirect} validate={this.validate}
                         buttonText="Set New Password" showSuccessMessage classes={classes}
-                        additonalValues={this.additionalValues}>
+                        additonalValues={this.additionalValues} noAuth>
                   <Field
                       autoFocus
                       fullWidth
