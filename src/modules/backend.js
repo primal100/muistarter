@@ -94,20 +94,23 @@ export const mockBackendDecodeAccessTokenFromAxiosConfig = (config) => {
 }
 
 
-export const mockBackendCheckIsStaff = (config, normalReply, staffReply) => {
+export const mockBackendCheckIsStaff = (config, normalReply, staffReply, notLoggedIn) => {
     console.log('Received request', config);
     const userData = mockBackendDecodeAccessTokenFromAxiosConfig(config);
     console.log('userData', userData)
     if (userData) {
         if (userData.is_staff) {
             console.log('returning', staffReply)
-            return staffReply;
+            if (staffReply instanceof Function) return staffReply();
+            else return staffReply;
         } else {
             console.log('returning', normalReply)
-            return normalReply;
+            if (normalReply instanceof Function) return normalReply();
+            else return normalReply;
         }
     }
-    return [401, {[responseKey]: 'Authentication credentials were not provided.'}]
+    if (notLoggedIn instanceof Function) return notLoggedIn();
+    return notLoggedIn || [401, {[responseKey]: 'Authentication credentials were not provided.'}]
 }
 
 
