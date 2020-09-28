@@ -13,7 +13,7 @@ if (document.querySelector(selector)) {
 
 
 export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext, CustomSnackbarProvider } from './App'
-export { UserContext, AlertContext } from './modules/contexts'
+export { UserContext } from './modules/contexts'
 export { default as mockAuthenticationBackend, mock, mockRaw, mockBackendCheckIsStaff,
     mockBackendDecodeAccessTokenFromAxiosConfig, mockBackendRefreshTokenMock } from './modules/backend';
 export { API, APINoAuthentication } from './modules/api'
