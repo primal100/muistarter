@@ -62,17 +62,33 @@ const setRefreshToken = (token) => {
 }
 
 
+let tokenRefreshPromise;
+
+
+const unsetTokenPromise = () =>{
+    console.log('Unsetting token promise');
+    tokenRefreshPromise = null;
+}
+
 const requestRefresh = async (refreshToken) => {
+    console.log('Getting token')
     if (isTokenExpired(refreshToken)){
+        console.log('Refresh refresh token')
         onRefreshTokenExpired("sign-in");
     }
-    const response = await APINoAuthentication({
-                        method: 'POST',
-                        url: refreshEndpoint,
-                        data: { refresh: refreshToken }
-    } );
-    const data = response.data;
-    if (data.refresh) setRefreshToken(data.refresh);
+    if (!tokenRefreshPromise){
+        console.log('Getting token, creating promise')
+        tokenRefreshPromise = APINoAuthentication({
+            method: 'POST',
+            url: refreshEndpoint,
+            data: {refresh: refreshToken}
+        });
+    }
+    const response = await tokenRefreshPromise;
+    console.log('Promise result', response);
+    const data = await response.data;
+    if (data.refresh) setRefreshToken(data.refresh)
+    setTimeout(unsetTokenPromise, 10);
     return data.access;
 };
 
@@ -117,6 +133,7 @@ export const getAndUpdateUserDetails = async(updater, data) => {
     }
     else if (isLoggedIn()){
         setAccessToken(null);
+        console.log('Refreshing token if needed');
         const accessToken = await refreshTokenIfNeeded(requestRefresh);
         console.log('AccessToken:', accessToken)
         user = jwt.decode(accessToken);
@@ -126,4 +143,10 @@ export const getAndUpdateUserDetails = async(updater, data) => {
     if (user && !user.id) user.id = user.user_id;
     updater(user);
     if (user) verifyTokenAttrs(user);
+}
+
+
+export const signOut = () => {
+    clearAuthTokens();
+    unsetTokenPromise();
 }
