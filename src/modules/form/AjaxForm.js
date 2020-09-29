@@ -8,7 +8,7 @@ import FormFeedback from '../form/FormFeedback';
 import {withStyles} from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {FORM_ERROR} from "final-form";
-import { API } from '../api';
+import { capitalize } from '@material-ui/core/utils';
 import AjaxRequest from "../components/AjaxRequest";
 import { nullOrEmptyObject } from "../utils"
 
@@ -16,10 +16,6 @@ import { nullOrEmptyObject } from "../utils"
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 
-
-function capitalize(str){
-    return  `${str[0].toUpperCase()}${str.slice(1)}`
-}
 
 class AjaxForm extends React.Component {
     form = null;

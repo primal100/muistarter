@@ -59,9 +59,10 @@ export class ProtectedRoute extends React.Component {
 
 export class AppRoutes extends React.Component {
   render() {
+      console.log('AppRoutes', this.props.redirectOnSignIn);
     return (
       <Switch>
-        <Route path="/sign-in" component={SignIn}/>
+        <Route path="/sign-in" render={() => <SignIn redirectTo={this.props.redirectOnSignIn}/>}/>
         <ProtectedRoute path="/sign-out" component={SignOut}/>
         <Route path="/sign-up" component={SignUp}/>
         <Route path="/sign-up-verify-email"

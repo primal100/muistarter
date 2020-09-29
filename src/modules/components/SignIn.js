@@ -37,8 +37,9 @@ class SignIn extends React.Component {
     render() {
       const { classes } = this.props;
       const redirect = {
-              pathname: "/",
+              pathname: this.props.redirectTo || "/",
         }
+      console.log('Signin Redirect', redirect);
       return (
         <React.Fragment>
           <AppForm>
@@ -53,7 +54,7 @@ class SignIn extends React.Component {
                 </Link>
               </Typography>
             </React.Fragment>
-            <AjaxForm url={signInUrl} method="POST" validate={this.validate}
+            <AjaxForm url={signInUrl} method="POST" validate={this.validate} noAuth
                       redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}>
                   <Field
                     autoComplete="email"
