@@ -37,8 +37,9 @@ class SignIn extends React.Component {
     render() {
       const { classes } = this.props;
       const redirect = {
-              pathname: "/",
+              pathname: this.props.redirectTo || "/",
         }
+      console.log('Signin Redirect', redirect);
       return (
         <React.Fragment>
           <AppForm>
