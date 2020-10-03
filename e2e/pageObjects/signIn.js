@@ -15,6 +15,9 @@ export const goToSignIn = async () => {
         timeout: 5000
       });
   await clickAndWaitNavigation('#sign-in');
+  await page.waitForSelector('#sign-in-form',{
+       timeout: 5000
+  });
 }
 
 export const loadSignIn = async () => {
@@ -32,4 +35,5 @@ export const signedIn = async () => {
   await clickSubmitButton();
 };
 
-export const getLocalStorageTokens = async () => await page.evaluate(() => JSON.parse(localStorage.getItem('auth-tokens-development')))
+
+export const getLocalStorageTokens = async () => await page.evaluate(() => JSON.parse(localStorage.getItem('auth-tokens-development')));

@@ -5,6 +5,7 @@ import { SnackbarProvider } from 'notistack';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Announcement from "./modules/components/Announcement";
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
 import {BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
@@ -150,6 +151,7 @@ class App extends React.Component {
             <Router>
               <ScrollToTop>
                 <SetUserContext>
+                <Announcement/>
                 <AppAppBar showName/>
                 <div>
                     <AppRoutes/>

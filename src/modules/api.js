@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken'
+import { parseBool} from "./utils";
 import {
     useAuthTokenInterceptor,
     clearAuthTokens,
@@ -14,6 +15,10 @@ import {
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
 const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
+const clearLocalStorageOnSignOut = parseBool(process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
+
+console.log('process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT', process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
+console.log('clearLocalStorageOnSignOut', clearLocalStorageOnSignOut);
 
 const REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS = 300;
 
@@ -88,7 +93,7 @@ const requestRefresh = async (refreshToken) => {
     console.log('Promise result', response);
     const data = await response.data;
     if (data.refresh) setRefreshToken(data.refresh)
-    setTimeout(unsetTokenPromise, 10);
+    setTimeout(unsetTokenPromise, 3000);
     return data.access;
 };
 
@@ -149,4 +154,5 @@ export const getAndUpdateUserDetails = async(updater, data) => {
 export const signOut = () => {
     clearAuthTokens();
     unsetTokenPromise();
+    if (clearLocalStorageOnSignOut) localStorage.clear();
 }

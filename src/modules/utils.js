@@ -29,3 +29,8 @@ export const isEmptyObject = (obj) => {
 export const nullOrEmptyObject = (obj) => {
     return (!obj || isEmptyObject(obj))
 }
+
+export const parseBool = (str) =>{
+    if (str) return JSON.parse(str.toLowerCase());
+    return false;
+}

@@ -1,7 +1,7 @@
 import { setShortLivedAccessToken, setShortLivedRefreshToken, newTokens } from "../pageObjects/tokenRefresh";
 import {clearLocalStorage, url, sleep, load_once } from "../pageObjects";
 import {getFormIsDisabled, getFormValues} from "../pageObjects/forms";
-import {clickUserProfile, goToUserProfile} from "../pageObjects/userProfile";
+import {clickUserProfileIfExists, goToUserProfile} from "../pageObjects/userProfile";
 import {getLocalStorageTokens, signedIn} from "../pageObjects/signIn";
 
 
@@ -31,7 +31,7 @@ describe("test refresh token expired", () => {
         await signedIn();
         await setShortLivedRefreshToken(2);
         await sleep(4);
-        await clickUserProfile();
+        await clickUserProfileIfExists();
     });
 
     afterEach(async () => {

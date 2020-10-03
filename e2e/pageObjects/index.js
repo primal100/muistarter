@@ -7,7 +7,7 @@ export const root = async () => await page.$(rootSelector);
 export const load_once = async (url='') => {
   await page.goto(URL + url, {
     waitUntil: "networkidle0",
-    timeout: 60000
+    timeout: 100000
   });
 }
 
@@ -44,20 +44,20 @@ export const load = async (url='') => {
 export const waitForNavigation = async () => {
   await page.waitForNavigation({
     waitUntil: "networkidle0",
-    timeout: 10000
+    timeout: 100000
   });
 };
 
 export const click = async (selector) => {
   await page.click(selector, {
     waitUntil: "networkidle0",
-    timeout: 10000
+    timeout: 100000
   });
 }
 
 
 export const clickAndWaitNavigation = async (selector) => {
-  await Promise.all([click(selector), waitForNavigation()])
+  await Promise.all([waitForNavigation(), click(selector)])
 }
 
 
@@ -70,4 +70,5 @@ export const sleep = async (seconds) => await page.waitFor(seconds * 1000);
 export const url = async () => await page.url();
 
 export const getSuccessMessageText = async () => await page.$$eval('.success-message', els => els.map((el) => el.textContent))
+export const getInfoMessageText = async () => await page.$$eval('.info-message', els => els.map((el) => el.textContent))
 export const getErrorMessageText = async () => await page.$$eval('.error-message', els => els.map((el) => el.textContent))
