@@ -115,6 +115,7 @@ export const mockBackendCheckIsStaff = (config, normalReply, staffReply, notLogg
 
 
 export const mockBackendRefreshTokenMock = (config) => {
+    console.log('REFRESHING TOKEN ON BACKEND');
     const refreshToken = JSON.parse(config.data).refresh;
     const userData = jwt.decode(refreshToken);
     console.log('userData', userData)
