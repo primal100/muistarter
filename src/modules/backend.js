@@ -124,6 +124,19 @@ export const mockBackendRefreshTokenMock = (config) => {
 }
 
 
+let announcements = [];
+
+
+export const getAnnouncements = () => {
+    return [200, announcements];
+}
+
+
+const addAnnouncement = () => {
+    announcements.push({id: 1, text: "This is a test announcement"})
+}
+
+
 export default function mockBackend(errorOnNoMatch) {
     if (mock) {
         mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, loginFailedResponse);
@@ -138,19 +151,21 @@ export default function mockBackend(errorOnNoMatch) {
         mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
         mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_invalid_signature).reply(400, verify_response_invalid_signature);
         mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL).reply(200, reset_password_response);
-        mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
-        mock.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
+        mockRaw.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
+        mockRaw.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(mockBackendRefreshTokenMock);
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logoutResponseOK);
         mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => mockBackendCheckIsStaff(config, [200, userDetailsResponse], [200, userDetailsStaffResponse]));
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_first_name_changed_response]));
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_both_names_changed_response]));
         mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_email_response]));
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
-        mock.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
+        mockRaw.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
+        mockRaw.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_wrong_old_password).reply((config) => mockBackendCheckIsStaff(config, [400, change_password_response_wrong_old_password]));
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_password_too_short).reply((config) => mockBackendCheckIsStaff(config, [400, register_too_short_password_response]));
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_password_response]));
+        mock.onGet(process.env.REACT_APP_ANNOUNCEMENT_URL).reply(getAnnouncements);
+        window.addAnnouncement = addAnnouncement;
         if (errorOnNoMatch || process.env.REACT_APP_MOCK_BACKEND_ERROR_ON_NO_MATCH) {
             console.log('Error will be raised if API request cannot be matched')
             mock.onAny().reply((config) => {

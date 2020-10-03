@@ -16,7 +16,7 @@ class SendParams extends React.Component {
         }
 
         return (
-           <AjaxRequest url={this.props.url} method={this.props.method} showSuccessMessage
+           <AjaxRequest url={this.props.url} method={this.props.method} showSuccessMessage noAuth
                    values={values} updateUserDetails redirectTo={redirect} reDirectOnError/>
         )
     }

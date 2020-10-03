@@ -55,7 +55,7 @@
     "jest-puppeteer": "^4.4.0",
     "mui-rff": "^2.4.2",
     "nwb": "0.25.x",
-    "puppeteer": "^5.2.1",
+    "puppeteer": "^5.3.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-final-form": "^6.5.1",

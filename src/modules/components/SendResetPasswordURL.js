@@ -47,8 +47,9 @@ class SendResetPasswordURL extends React.Component {
                   'send you a link to reset your password.'}
               </Typography>
             </React.Fragment>
-             <AjaxForm url={sendResetPasswordUrl} method="POST" redirectTo={redirect} validate={this.validate}
-                       showSuccessMessage buttonText="Send Reset Password E-mail" classes={classes} noAuth>
+             <AjaxForm formID="send-reset-password-url-form" url={sendResetPasswordUrl} method="POST" redirectTo={redirect}
+                       validate={this.validate} showSuccessMessage buttonText="Send Reset Password E-mail"
+                       classes={classes} noAuth>
                   <Field
                     autoFocus
                     autoComplete="email"
