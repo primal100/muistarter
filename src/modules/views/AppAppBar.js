@@ -15,6 +15,10 @@ import { UserContext } from "../contexts";
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import SignOut from "../components/SignOut";
+import SupervisorAccount from '@material-ui/icons/SupervisorAccount';
+
+
+const adminUrl = process.env.REACT_APP_ADMIN_URL
 
 
 const styles = (theme) => ({
@@ -118,6 +122,15 @@ class AppAppBar extends React.Component {
               </div>}
               {user && <div className={classes.right}>
                {this.props.children}
+                {user.is_staff && adminUrl && <Tooltip title="Admin" aria-label="Go to admin page">
+                <IconButton
+                    id="admin"
+                    href={adminUrl}
+                    color="inherit"
+                >
+                  <SupervisorAccount/>
+                </IconButton>
+               </Tooltip>}
                <Tooltip title="Profile" aria-label="Account of current user">
                 <IconButton
                     id="profile"

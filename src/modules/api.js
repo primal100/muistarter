@@ -49,13 +49,20 @@ const getTokenExpiresTimeStamp = (token) => {
 
 const isTokenExpired = (token, expire_fudge=0) => {
     if (!token) return true
+    console.log('Checking if token is expired:', token);
+    console.log("expire_fudge", expire_fudge)
     const expin = getExpiresInFromJWT(token) - expire_fudge
-    return !expin || expin < 0
+    console.log('expin', expin)
+    const isExpired = !expin || expin < 0;
+    console.log('isExpired', isExpired);
+    return isExpired;
 }
 
 
 const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
+   //redirectPath = redirectPath || window.location.pathname;
    clearAuthTokens();
+   console.log('Refresh token expired, redirecting to', redirectPath)
    window.location = redirectPath;
 }
 
@@ -128,6 +135,10 @@ export const verifyTokenAttrs = (decodedToken) => {
     })
 }
 
+export const updateUserFromCurrentAccessToken = (updater) => {
+    const accessToken = getAccessToken();
+    if (accessToken) updater(jwt.decode(accessToken));
+}
 
 export const getAndUpdateUserDetails = async(updater, data) => {
     let user;
