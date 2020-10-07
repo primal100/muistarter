@@ -37,3 +37,5 @@ export const signedIn = async () => {
 
 
 export const getLocalStorageTokens = async () => await page.evaluate(() => JSON.parse(localStorage.getItem('auth-tokens-development')));
+
+export const adminLinkExists = async () => await page.$('#admin');

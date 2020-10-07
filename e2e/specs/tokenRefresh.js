@@ -30,7 +30,8 @@ describe("test refresh token expired", () => {
     beforeEach(async () => {
         await signedIn();
         await setShortLivedRefreshToken(2);
-        await sleep(4);
+        await sleep(5);
+        console.log(new Date(), "Clicking profile")
         await clickUserProfileIfExists();
     });
 

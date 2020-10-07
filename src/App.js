@@ -20,7 +20,7 @@ import ResetPassword from "./modules/components/ResetPassword";
 import SendParams from "./modules/components/SendParams"
 import UserProfile from "./modules/components/UserProfile";
 import { isLoggedIn } from "axios-jwt";
-import {getAndUpdateUserDetails} from "./modules/api";
+import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./modules/api";
 import { UserContext } from "./modules/contexts"
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
@@ -91,6 +91,7 @@ export class SetUserContext extends React.Component {
     }
 
     async componentDidMount() {
+        updateUserFromCurrentAccessToken(this.updateUserDetails);
         await getAndUpdateUserDetails(this.updateUserDetails);
     }
 

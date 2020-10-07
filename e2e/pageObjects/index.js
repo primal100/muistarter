@@ -1,5 +1,6 @@
 const rootSelector = '#root';
 
+const logConsole = false;
 export const root = async () => await page.$(rootSelector);
 
 
@@ -72,3 +73,11 @@ export const url = async () => await page.url();
 export const getSuccessMessageText = async () => await page.$$eval('.success-message', els => els.map((el) => el.textContent))
 export const getInfoMessageText = async () => await page.$$eval('.info-message', els => els.map((el) => el.textContent))
 export const getErrorMessageText = async () => await page.$$eval('.error-message', els => els.map((el) => el.textContent))
+
+
+if (logConsole) {
+    page.on('console', msg => {
+        for (let i = 0; i < msg.args().length; ++i)
+            console.log(`${i}: ${msg.args()[i]}`);
+    });
+}

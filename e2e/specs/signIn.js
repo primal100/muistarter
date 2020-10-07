@@ -1,6 +1,6 @@
 import { waitForNavigation, clearLocalStorage, sleep, url } from "../pageObjects/index"
 import { fillForm, submitFormEnter, clickSubmitButton, getSubmitErrorText, getFieldErrorText, getTextContent } from "../pageObjects/forms";
-import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens, staffTokens } from "../pageObjects/signIn";
+import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens, staffTokens, adminLinkExists } from "../pageObjects/signIn";
 import * as jwt from 'jsonwebtoken'
 
 
@@ -17,6 +17,7 @@ describe("test signin view", () => {
   it("should show the sign-in page", async () => {
     expect(await url()).toBe(URL + "/sign-in");
     expect(await getTextContent("#username")).toEqual([]);
+    expect(await adminLinkExists()).toBeFalsy();
   });
 
   it("should show the sign-up page", async () => {
@@ -90,6 +91,7 @@ describe("test signin view", () => {
     await sleep(1);
     expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
     expect(await getTextContent("#is-staff")).toEqual([]);
+    expect(await adminLinkExists()).toBeFalsy();
   });
 
   it("should login with submit button, store tokens and refresh to home", async () => {
@@ -102,6 +104,7 @@ describe("test signin view", () => {
     await sleep(1);
     expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
     expect(await getTextContent("#is-staff")).toEqual([]);
+    expect(await adminLinkExists()).toBeFalsy();
   });
 
   it("should login as staff and show staff account chip", async () => {
@@ -113,6 +116,7 @@ describe("test signin view", () => {
     expect(await getLocalStorageTokens()).toEqual(staffTokens);
     await sleep(1);
     expect(await getTextContent("#is-staff")).toEqual(["Staff Account"]);
+    expect(await adminLinkExists()).toBeTruthy();
   });
 
   it("should show email validation error on signin", async () => {
