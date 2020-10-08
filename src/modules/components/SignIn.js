@@ -55,7 +55,8 @@ class SignIn extends React.Component {
               </Typography>
             </React.Fragment>
             <AjaxForm formID="sign-in-form" url={signInUrl} method="POST" validate={this.validate} noAuth
-                      redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}>
+                      redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}
+            gaEventArgs={{category: 'User', action: 'Sign in'}}>
                   <Field
                     autoComplete="email"
                     autoFocus

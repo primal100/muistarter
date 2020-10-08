@@ -7,7 +7,7 @@ import { withSnackbar } from 'notistack';
 import { isEmptyObject } from "../utils"
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { sendGAException, sendGAError } from '../analytics'
+import {sendGAEventForAjaxRequest, sendGAException, sendGAError, sendGAErrorsFromObject} from '../analytics'
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 
@@ -50,7 +50,7 @@ class AjaxRequest extends React.Component {
         return snackbarOptions;
     }
 
-    sendRequest = async() => {
+    sendRequest = async(nonInteraction=true) => {
         let request = {}
         let responseData;
         let msg;
@@ -79,6 +79,10 @@ class AjaxRequest extends React.Component {
             if (this.props.adaptRequest) request = this.props.adaptRequest(request);
 
             console.log("AJAXRequest", request);
+
+            sendGAEventForAjaxRequest(request.url, request.method, nonInteraction,
+                this.props.gaEventArgs);
+
             let response
             if (this.props.noAuth) {
                 response = await APINoAuthentication(request);
@@ -106,7 +110,7 @@ class AjaxRequest extends React.Component {
                 let responseData;
                 if (e.response.data === Object(e.response.data)) {
                     responseData = e.response.data;
-                    sendGAError(JSON.stringify(responseData));
+                    sendGAErrorsFromObject(responseData, this.props.gaEventArgs);
                 }else{
                     console.log("response", e.response);
                     console.log('errormessage', e.message);
@@ -156,7 +160,8 @@ class AjaxRequest extends React.Component {
             this.onSuccess(responseData, {});
 
         } else {
-            const response = await this.sendRequest();
+            console.log('Sending request to', this.props.url, this.props.method)
+            const response = await this.sendRequest(false);
             success = response[0];
             responseData = response[1];
         }

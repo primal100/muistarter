@@ -20,8 +20,7 @@ export const initializeGATracker = () => {
 
 export const setGAUserDetails = (user) =>{
     if (gaEnabled) ReactGA.set({
-        userId: user.id,
-        is_staff: user.is_staff
+        userId: user.id
     })
 }
 
@@ -47,6 +46,29 @@ export const sendGAError = (msg) => {
 });
 }
 
+
+const sendGAErrorFromFieldValue = (baseMsg, field, value) => {
+    const msg = `${baseMsg}${field}: ${value}`;
+    sendGAError(msg);
+}
+
+
+export const sendGAErrorsFromObject = (errorsObj, eventArgs) => {
+    let baseMsg = '';
+    if (eventArgs && eventArgs.action) baseMsg = `${eventArgs.action}: `
+       Object.keys(errorsObj).forEach(field => {
+           let value = errorsObj[field];
+           if (Array.isArray(value)){
+               value.forEach(v => {
+                   sendGAErrorFromFieldValue(baseMsg, field, v);
+               })
+           }else{
+               sendGAErrorFromFieldValue(baseMsg, field, value);
+           }
+
+       })
+}
+
 export const sendGAException = (error) => {
     if (gaEnabled) sendGAError(error.message);
 }
@@ -57,8 +79,25 @@ export const sendGAModalView = (name) => {
 
 
 export const sendGAOutboundLink = (label) => {
-    if (gaEnabled) ReactGA.outboundLink(label);
+    if (gaEnabled) ReactGA.outboundLink({label: label});
 }
 
+export const sendGAEvent = (EventArgs) => {
+    if (gaEnabled) ReactGA.event(EventArgs);
+}
+
+export const sendGAEventForAjaxRequest = (url, method, nonInteraction, EventArgs) =>{
+    EventArgs = EventArgs || {};
+    const eventObj = {
+        category: url,
+        action: method,
+        nonInteraction: nonInteraction,
+        ...EventArgs,
+    }
+    if (! eventObj.nonInteraction) delete eventObj.nonInteraction;
+    sendGAEvent(eventObj);
+}
+
+
 export const gaEnabled = initializeGATracker();
-if (gaEnabled) pageViewGA();
+pageViewGA();

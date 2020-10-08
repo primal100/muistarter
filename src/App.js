@@ -22,7 +22,7 @@ import UserProfile from "./modules/components/UserProfile";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./modules/api";
 import { UserContext } from "./modules/contexts"
-import {initializeGATracker, setGAUserDetails} from "./modules/analytics";
+import {initializeGATracker, sendGAEvent, setGAUserDetails, sendGAError} from "./modules/analytics";
 import compose from "recompose/compose";
 import {pageViewGA} from "./modules/analytics"
 
@@ -47,6 +47,13 @@ export class ProtectedRoute extends React.Component {
   render() {
     const { component: Component, ...props } = this.props;
     const authenticated = isLoggedIn();
+    if (!authenticated)
+        sendGAEvent({
+            category: 'User',
+            action: `Redirect to sign-in as attempt was made to access ProtectedRoute by non-authenticated user: ${window.location.pathname}`,
+            label: 'RedirectToSignIn',
+            nonInteraction: true
+        });
     return (
       <Route
         {...props}
@@ -74,11 +81,11 @@ export class _AppRoutes extends React.Component {
         <ProtectedRoute path="/sign-out" component={SignOut}/>
         <Route path="/sign-up" component={SignUp}/>
         <Route path="/sign-up-verify-email"
-               render={() => <SendParams url={verifyRegistrationUrl} redirectTo="/sign-in"/>}/>
+               render={() => <SendParams url={verifyRegistrationUrl} action="Verify registration" redirectTo="/sign-in"/>}/>
         <Route path="/send-reset-password-url" component={SendResetPasswordURL}/>
         <Route path="/reset-password" component={ResetPassword}/>
         <ProtectedRoute path="/profile" component={UserProfile}/>
-        <Route path="/verify-email" render={() => <SendParams url={verifyEmailUrl} redirectTo="/"/>}/>
+        <Route path="/verify-email" render={() => <SendParams url={verifyEmailUrl} action="Verify new e-mail address" redirectTo="/"/>}/>
         <ProtectedRoute path="/change-password" component={ChangePassword}/>
         {this.props.children}
         <Route exact path="/" component={Home}/>

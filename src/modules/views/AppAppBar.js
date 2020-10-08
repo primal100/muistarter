@@ -16,6 +16,7 @@ import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import SignOut from "../components/SignOut";
 import SupervisorAccount from '@material-ui/icons/SupervisorAccount';
+import { sendGAOutboundLink } from "../analytics";
 
 
 const adminUrl = process.env.REACT_APP_ADMIN_URL
