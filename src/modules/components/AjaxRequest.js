@@ -7,6 +7,7 @@ import { withSnackbar } from 'notistack';
 import { isEmptyObject } from "../utils"
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { sendGAException, sendGAError } from '../analytics'
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 
@@ -105,10 +106,11 @@ class AjaxRequest extends React.Component {
                 let responseData;
                 if (e.response.data === Object(e.response.data)) {
                     responseData = e.response.data;
+                    sendGAError(JSON.stringify(responseData));
                 }else{
                     console.log("response", e.response);
-                    console.log('responsedata', e.response.data);
                     console.log('errormessage', e.message);
+                    sendGAException(e);
                     responseData = {[responseKey]: e.message};
                     let newWindow = window.open();
                     newWindow.document.write(e.response.data);
@@ -116,11 +118,14 @@ class AjaxRequest extends React.Component {
                 }
                 console.log('error response object received');
                 snackbarOptions = {variant: "error", ...snackbarOptions}
+                const errorMessage = Object.values(responseData).join('\n');
                 if (this.props.onError) this.props.onError(responseData, request, snackbarOptions);
                 if (!this.props.hideAlertsOnError && responseData) {
                     this.props.enqueueSnackbar(
-                        Object.values(responseData).join('\n'), snackbarOptions);
+                        errorMessage, snackbarOptions);
                 }
+            }else {
+                sendGAException(e);
             }
             console.error(e)
             console.log("Error message", e.message);

@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Announcement from "./modules/components/Announcement";
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
-import {BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import {BrowserRouter as Router, Route, Redirect, Switch, withRouter } from "react-router-dom";
 import ScrollToTop from 'react-router-scroll-top'
 import Home from "./modules/components/Home";
 import ChangePassword from "./modules/components/ChangePassword";
@@ -22,6 +22,9 @@ import UserProfile from "./modules/components/UserProfile";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./modules/api";
 import { UserContext } from "./modules/contexts"
+import {initializeGATracker, setGAUserDetails} from "./modules/analytics";
+import compose from "recompose/compose";
+import {pageViewGA} from "./modules/analytics"
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
@@ -58,7 +61,11 @@ export class ProtectedRoute extends React.Component {
 }
 
 
-export class AppRoutes extends React.Component {
+export class _AppRoutes extends React.Component {
+   componentDidUpdate(prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) pageViewGA();
+  }
+
   render() {
       console.log('AppRoutes', this.props.redirectOnSignIn);
     return (
@@ -82,6 +89,9 @@ export class AppRoutes extends React.Component {
 }
 
 
+export const AppRoutes = withRouter(_AppRoutes);
+
+
 export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
@@ -98,13 +108,14 @@ export class SetUserContext extends React.Component {
     updateUserDetails = (user) => {
         console.log('Updating user details', user);
         if(user && user.email) {
+            setGAUserDetails(user);
             this.setState({userDetails: {user: user, updater: this.updateUserDetails,
                     reset: this.resetUserDetails}});
         }
     }
 
     resetUserDetails = () => {
-        console.log('Resetting user details')
+        console.log('Resetting user details');
         this.setState({userDetails: {user: null, updater: this.updateUserDetails,
                 reset: this.resetUserDetails}});
     }
@@ -146,6 +157,7 @@ export class CustomSnackbarProvider extends React.Component {
 
 
 class App extends React.Component {
+
     render(){
         return (
             <CustomSnackbarProvider isMobile={this.props.isMobile}>
@@ -165,6 +177,5 @@ class App extends React.Component {
         )
     }
 }
-
 
 export default withRoot(App);

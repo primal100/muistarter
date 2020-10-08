@@ -11,6 +11,7 @@ import {FORM_ERROR} from "final-form";
 import { capitalize } from '@material-ui/core/utils';
 import AjaxRequest from "../components/AjaxRequest";
 import { nullOrEmptyObject } from "../utils"
+import {sendGAError} from "../analytics";
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
@@ -117,6 +118,14 @@ class AjaxForm extends React.Component {
         this.setState({values: values, submitKey: this.state.submitKey + 1})
     }
 
+    validate = (values) => {
+        if (this.props.validate) {
+            const errors = this.props.validate(values);
+            sendGAError(JSON.stringify(errors));
+            return errors
+        }
+    }
+
     render() {
         const {classes, formID, initialValues, validate, onSuccess, onValuesChange, ...ajaxRequestProps} = this.props;
         let formProps = {};
@@ -136,7 +145,7 @@ class AjaxForm extends React.Component {
                     <AjaxRequest key={this.state.submitKey} onSuccess={this.onSubmitSuccess}
                              onError={this.onSubmitError} values={this.state.values}
                              hideAlertsOnError {...ajaxRequestProps}/>}
-                <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
+                <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={this.validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit, form}) => (
                           <form {...formProps} onSubmit={handleSubmit} className={classes.form} noValidate>

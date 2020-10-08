@@ -10,6 +10,7 @@ import {
     setAccessToken,
     refreshTokenIfNeeded, setAuthTokens
 } from "axios-jwt";
+import {sendGAException} from "./analytics";
 
 
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
@@ -96,12 +97,17 @@ const requestRefresh = async (refreshToken) => {
             data: {refresh: refreshToken}
         });
     }
-    const response = await tokenRefreshPromise;
-    console.log('Promise result', response);
-    const data = await response.data;
-    if (data.refresh) setRefreshToken(data.refresh)
-    setTimeout(unsetTokenPromise, 3000);
-    return data.access;
+    try {
+        const response = await tokenRefreshPromise;
+        console.log('Promise result', response);
+        const data = await response.data;
+        if (data.refresh) setRefreshToken(data.refresh)
+        setTimeout(unsetTokenPromise, 3000);
+        return data.access;
+    } catch (e) {
+        sendGAException(e);
+        throw e;
+    }
 };
 
 
