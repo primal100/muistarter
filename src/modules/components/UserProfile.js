@@ -27,6 +27,7 @@ class UserProfile extends React.Component {
     }
 
     validate = (values) => {
+        console.log('Validating user profile')
       const errors = required(['email'], values);
 
       if (!errors.email) {
@@ -35,6 +36,7 @@ class UserProfile extends React.Component {
           errors.email = emailError;
         }
       }
+      console.log('Validation user profile result', errors);
       return errors;
     };
 
@@ -75,7 +77,8 @@ class UserProfile extends React.Component {
                 {({user, updater}) => (
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
-                        submitModifiedValuesOnly onSuccess={updater} classes={classes}>
+                        submitModifiedValuesOnly onSuccess={updater} validate={this.validate} classes={classes}
+              gaEventArgs={{category: 'User', action: 'Updating user profile'}} gaInitialValuesAction="Get User Profile">
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField

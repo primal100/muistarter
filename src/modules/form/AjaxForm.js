@@ -11,6 +11,7 @@ import {FORM_ERROR} from "final-form";
 import { capitalize } from '@material-ui/core/utils';
 import AjaxRequest from "../components/AjaxRequest";
 import { nullOrEmptyObject } from "../utils"
+import {sendGAErrorsFromObject} from "../analytics";
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
@@ -118,9 +119,16 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-        const {classes, formID, initialValues, validate, onSuccess, onValuesChange, ...ajaxRequestProps} = this.props;
+        const {classes, formID, initialValues, validate, onSuccess, onValuesChange, gaEventArgs, gaInitialValuesAction, ...ajaxRequestProps} = this.props;
         let formProps = {};
         let buttonProps = {};
+
+        const formGaEventArgs = {...gaEventArgs, label: 'Form'}
+        let formGAInitialValuesEventArgs;
+        if (formGaEventArgs && gaInitialValuesAction) {
+            formGAInitialValuesEventArgs = {category: formGaEventArgs.category,
+                action: gaInitialValuesAction, label: 'FormInitialValues'}
+        }
 
         if (formID){
             formProps.id = formID;
@@ -131,11 +139,12 @@ class AjaxForm extends React.Component {
             <React.Fragment>
                 {this.props.loadInitialValuesFromURL &&
                     <AjaxRequest url={this.props.loadInitialValuesFromURL} method="GET"
-                                 onSuccess={this.onGetInitialValues} showBackdrop/>}
+                                 onSuccess={this.onGetInitialValues} showBackdrop
+                    gaEventArgs={formGAInitialValuesEventArgs}/>}
                 {this.state.values &&
                     <AjaxRequest key={this.state.submitKey} onSuccess={this.onSubmitSuccess}
                              onError={this.onSubmitError} values={this.state.values}
-                             hideAlertsOnError {...ajaxRequestProps}/>}
+                             hideAlertsOnError gaEventArgs={formGaEventArgs} {...ajaxRequestProps}/>}
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit, form}) => (

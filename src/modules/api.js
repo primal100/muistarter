@@ -10,6 +10,7 @@ import {
     setAccessToken,
     refreshTokenIfNeeded, setAuthTokens
 } from "axios-jwt";
+import {sendGAEvent, sendGAEventForAjaxRequest, sendGAException} from "./analytics";
 
 
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
@@ -61,6 +62,12 @@ const isTokenExpired = (token, expire_fudge=0) => {
 
 const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
    //redirectPath = redirectPath || window.location.pathname;
+    sendGAEvent({
+        category: 'User',
+        action: 'Redirect to sign-in as refresh token expired',
+        label: 'RedirectToSignIn',
+        nonInteraction: true
+    });
    clearAuthTokens();
    console.log('Refresh token expired, redirecting to', redirectPath)
    window.location = redirectPath;
@@ -88,20 +95,30 @@ const requestRefresh = async (refreshToken) => {
         console.log('Refresh refresh token')
         onRefreshTokenExpired("sign-in");
     }
+
     if (!tokenRefreshPromise){
-        console.log('Getting token, creating promise')
-        tokenRefreshPromise = APINoAuthentication({
+        console.log('Getting token, creating promise');
+        const request = {
             method: 'POST',
             url: refreshEndpoint,
             data: {refresh: refreshToken}
-        });
+        }
+        sendGAEventForAjaxRequest(request.url, request.method, true, {
+            category: 'User', action: 'Refresh Access Token', label: "TokenRefresh", nonInteraction: true
+        })
+        tokenRefreshPromise = APINoAuthentication(request);
     }
-    const response = await tokenRefreshPromise;
-    console.log('Promise result', response);
-    const data = await response.data;
-    if (data.refresh) setRefreshToken(data.refresh)
-    setTimeout(unsetTokenPromise, 3000);
-    return data.access;
+    try {
+        const response = await tokenRefreshPromise;
+        console.log('Promise result', response);
+        const data = await response.data;
+        if (data.refresh) setRefreshToken(data.refresh)
+        setTimeout(unsetTokenPromise, 3000);
+        return data.access;
+    } catch (e) {
+        sendGAException(e);
+        throw e;
+    }
 };
 
 

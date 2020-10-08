@@ -30,4 +30,5 @@ export { default as FormButton } from './modules/form/FormButton'
 export { default as Announcement } from './modules/components/Announcement'
 export { default as FormFeedback } from './modules/form/FormFeedback'
 export { email as emailValidator, required } from './modules/form/validation'
-export { changeLocationState, paramsToObject, propsParamsToObject } from './modules/utils'
+export { sendGAError, sendGAException, sendGAModalView, sendGAOutboundLink, setGAFields, pageViewGA} from "./modules/analytics"
+export { paramsToObject, propsParamsToObject } from './modules/utils'
