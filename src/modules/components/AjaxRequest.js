@@ -80,15 +80,21 @@ class AjaxRequest extends React.Component {
 
             console.log("AJAXRequest", request);
 
-            sendGAEventForAjaxRequest(request.url, request.method, nonInteraction,
+            if (!this.props.passive) sendGAEventForAjaxRequest(request.url, request.method, nonInteraction,
                 this.props.gaEventArgs);
 
             let response
+            console.log(request.url, "PASSIVE", this.props.passive);
             if (this.props.noAuth) {
                 response = await APINoAuthentication(request);
+            }else if (this.props.passive){
+                console.log('Running AJAXRequest passively')
+                API(request);
+                return [true, null];
             } else {
                 response = await API(request);
             }
+
             console.log("AjaxRequest Response", response);
             responseData = response.data;
 
@@ -161,6 +167,10 @@ class AjaxRequest extends React.Component {
 
         } else {
             console.log('Sending request to', this.props.url, this.props.method)
+            if (this.props.passive){
+                this.sendRequest();
+                return
+            }
             const response = await this.sendRequest(false);
             success = response[0];
             responseData = response[1];

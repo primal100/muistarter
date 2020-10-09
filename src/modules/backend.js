@@ -137,6 +137,16 @@ const addAnnouncement = () => {
 }
 
 
+const getMockHistory = () => {
+    return mock.history;
+}
+
+
+const getMockRawHistory = () => {
+    return mockRaw.history;
+}
+
+
 export default function mockBackend(errorOnNoMatch) {
     if (mock) {
         mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL, wrong_login_details).reply(401, loginFailedResponse);
@@ -154,6 +164,7 @@ export default function mockBackend(errorOnNoMatch) {
         mockRaw.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL, verify_invalid_signature).reply(400, verify_response_invalid_signature);
         mockRaw.onPost(process.env.REACT_APP_VERIFY_REGISTRATION_URL).reply(200, verify_registration_response);
         mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(mockBackendRefreshTokenMock);
+        mock.onPost(process.env.REACT_APP_VISIT_URL).reply(201, {});
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logoutResponseOK);
         mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => mockBackendCheckIsStaff(config, [200, userDetailsResponse], [200, userDetailsStaffResponse]));
         mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_first_name_changed_response]));
@@ -166,6 +177,8 @@ export default function mockBackend(errorOnNoMatch) {
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_password_response]));
         mock.onGet(process.env.REACT_APP_ANNOUNCEMENT_URL).reply(getAnnouncements);
         window.addAnnouncement = addAnnouncement;
+        window.getMockHistory = getMockHistory;
+        window.getMockRawHistory = getMockRawHistory;
         if (errorOnNoMatch || process.env.REACT_APP_MOCK_BACKEND_ERROR_ON_NO_MATCH) {
             console.log('Error will be raised if API request cannot be matched')
             mock.onAny().reply((config) => {
