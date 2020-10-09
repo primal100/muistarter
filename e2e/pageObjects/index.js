@@ -74,6 +74,13 @@ export const getSuccessMessageText = async () => await page.$$eval('.success-mes
 export const getInfoMessageText = async () => await page.$$eval('.info-message', els => els.map((el) => el.textContent))
 export const getErrorMessageText = async () => await page.$$eval('.error-message', els => els.map((el) => el.textContent))
 
+export const getMockHistory = async() => await page.evaluate(() => getMockHistory());
+export const getMockHistoryVisits = async() => {
+    const mockHistory = await getMockHistory();
+    const postHistory = mockHistory.post;
+    return postHistory.filter(request => request.url === '/api/visits/');
+}
+
 
 if (logConsole) {
     page.on('console', msg => {

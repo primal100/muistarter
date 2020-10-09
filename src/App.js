@@ -22,12 +22,12 @@ import UserProfile from "./modules/components/UserProfile";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./modules/api";
 import { UserContext } from "./modules/contexts"
-import {initializeGATracker, sendGAEvent, setGAUserDetails, sendGAError} from "./modules/analytics";
-import compose from "recompose/compose";
-import {pageViewGA} from "./modules/analytics"
+import {sendGAEvent, setGAUserDetails, sendGAError} from "./modules/analytics";
+import {Analytics, pageViewGA} from "./modules/analytics"
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
+
 
 const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS || 5;
 const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 3;
@@ -100,10 +100,11 @@ export const AppRoutes = withRouter(_AppRoutes);
 
 
 export class SetUserContext extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails}
+            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails, userChecked: false}
         }
     }
 
@@ -117,14 +118,14 @@ export class SetUserContext extends React.Component {
         if(user && user.email) {
             setGAUserDetails(user);
             this.setState({userDetails: {user: user, updater: this.updateUserDetails,
-                    reset: this.resetUserDetails}});
+                    reset: this.resetUserDetails, userChecked: true}});
         }
     }
 
     resetUserDetails = () => {
         console.log('Resetting user details');
         this.setState({userDetails: {user: null, updater: this.updateUserDetails,
-                reset: this.resetUserDetails}});
+                reset: this.resetUserDetails, userChecked: true}});
     }
 
     render() {
@@ -171,6 +172,7 @@ class App extends React.Component {
             <Router>
               <ScrollToTop>
                 <SetUserContext>
+                <Analytics/>
                 <Announcement/>
                 <AppAppBar showName/>
                 <div>
