@@ -25,7 +25,7 @@ class SignOut extends React.Component {
         return (
             <AjaxRequest url={logoutEndpoint} method="POST" values={signOutData} resetUserDetails
                          redirectTo={redirect} reDirectOnError onSuccess={this.onSuccess} onError={this.onSuccess}
-            gaEventArgs={{category: 'User', action: 'Sign Out'}}>
+            analyticsEventArgs={{category: 'User', action: 'Sign Out'}}>
             </AjaxRequest>
         )
     }

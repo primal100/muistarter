@@ -81,7 +81,7 @@ class AjaxRequest extends React.Component {
             console.log("AJAXRequest", request);
 
             if (!this.props.passive) sendAnalyticsEventForAjaxRequest(request.url, request.method, nonInteraction,
-                this.props.gaEventArgs);
+                this.props.analyticsEventArgs);
 
             let response
             console.log(request.url, "PASSIVE", this.props.passive);
@@ -116,7 +116,7 @@ class AjaxRequest extends React.Component {
                 let responseData;
                 if (e.response.data === Object(e.response.data)) {
                     responseData = e.response.data;
-                    sendAnalyticsErrorsFromObject(responseData, this.props.gaEventArgs);
+                    sendAnalyticsErrorsFromObject(responseData, this.props.analyticsEventArgs);
                 }else{
                     console.log("response", e.response);
                     console.log('errormessage', e.message);

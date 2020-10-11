@@ -78,7 +78,7 @@ class UserProfile extends React.Component {
               <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
                         submitModifiedValuesOnly onSuccess={updater} validate={this.validate} classes={classes}
-              gaEventArgs={{category: 'User', action: 'Updating user profile'}} gaInitialValuesAction="Get User Profile">
+              analyticsEventArgs={{category: 'User', action: 'Updating user profile'}} analyticsInitialValuesAction="Get User Profile">
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
                         <EditableField

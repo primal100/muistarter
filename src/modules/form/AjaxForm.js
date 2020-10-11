@@ -118,15 +118,16 @@ class AjaxForm extends React.Component {
     }
 
     render() {
-        const {classes, formID, initialValues, validate, onSuccess, onValuesChange, gaEventArgs, gaInitialValuesAction, ...ajaxRequestProps} = this.props;
+        const {classes, formID, initialValues, validate, onSuccess, onValuesChange, analyticsEventArgs,
+            analyticsInitialValuesAction, ...ajaxRequestProps} = this.props;
         let formProps = {};
         let buttonProps = {};
 
-        const formGaEventArgs = {...gaEventArgs, label: 'Form'}
-        let formGAInitialValuesEventArgs;
-        if (formGaEventArgs && gaInitialValuesAction) {
-            formGAInitialValuesEventArgs = {category: formGaEventArgs.category,
-                action: gaInitialValuesAction, label: 'FormInitialValues'}
+        const formAnalyticsEventArgs = {...analyticsEventArgs, label: 'Form'}
+        let formAnalyticsInitialValuesEventArgs;
+        if (formAnalyticsEventArgs && analyticsInitialValuesAction) {
+            formAnalyticsInitialValuesEventArgs = {category: formAnalyticsEventArgs.category,
+                action: analyticsInitialValuesAction, label: 'FormInitialValues'}
         }
 
         if (formID){
@@ -139,11 +140,11 @@ class AjaxForm extends React.Component {
                 {this.props.loadInitialValuesFromURL &&
                     <AjaxRequest url={this.props.loadInitialValuesFromURL} method="GET"
                                  onSuccess={this.onGetInitialValues} showBackdrop
-                    gaEventArgs={formGAInitialValuesEventArgs}/>}
+                    analyticsEventArgs={formAnalyticsInitialValuesEventArgs}/>}
                 {this.state.values &&
                     <AjaxRequest key={this.state.submitKey} onSuccess={this.onSubmitSuccess}
                              onError={this.onSubmitError} values={this.state.values}
-                             hideAlertsOnError gaEventArgs={formGaEventArgs} {...ajaxRequestProps}/>}
+                             hideAlertsOnError analyticsEventArgs={formAnalyticsEventArgs} {...ajaxRequestProps}/>}
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit, form}) => (
