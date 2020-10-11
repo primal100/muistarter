@@ -11,7 +11,6 @@ import {FORM_ERROR} from "final-form";
 import { capitalize } from '@material-ui/core/utils';
 import AjaxRequest from "../components/AjaxRequest";
 import { nullOrEmptyObject } from "../utils"
-import {sendGAErrorsFromObject} from "../analytics";
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
