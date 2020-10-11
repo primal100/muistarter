@@ -7,7 +7,7 @@ import { withSnackbar } from 'notistack';
 import { isEmptyObject } from "../utils"
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {sendGAEventForAjaxRequest, sendGAException, sendGAError, sendGAErrorsFromObject} from '../analytics'
+import {sendAnalyticsEventForAjaxRequest, sendAnalyticsException, sendAnalyticsErrorsFromObject} from '../analytics'
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
 
@@ -80,8 +80,8 @@ class AjaxRequest extends React.Component {
 
             console.log("AJAXRequest", request);
 
-            if (!this.props.passive) sendGAEventForAjaxRequest(request.url, request.method, nonInteraction,
-                this.props.gaEventArgs);
+            if (!this.props.passive) sendAnalyticsEventForAjaxRequest(request.url, request.method, nonInteraction,
+                this.props.analyticsEventArgs);
 
             let response
             console.log(request.url, "PASSIVE", this.props.passive);
@@ -116,11 +116,11 @@ class AjaxRequest extends React.Component {
                 let responseData;
                 if (e.response.data === Object(e.response.data)) {
                     responseData = e.response.data;
-                    sendGAErrorsFromObject(responseData, this.props.gaEventArgs);
+                    sendAnalyticsErrorsFromObject(responseData, this.props.analyticsEventArgs);
                 }else{
                     console.log("response", e.response);
                     console.log('errormessage', e.message);
-                    sendGAException(e);
+                    sendAnalyticsException(e);
                     responseData = {[responseKey]: e.message};
                     let newWindow = window.open();
                     newWindow.document.write(e.response.data);
@@ -135,7 +135,7 @@ class AjaxRequest extends React.Component {
                         errorMessage, snackbarOptions);
                 }
             }else {
-                sendGAException(e);
+                sendAnalyticsException(e);
             }
             console.error(e)
             console.log("Error message", e.message);

@@ -22,8 +22,7 @@ import UserProfile from "./modules/components/UserProfile";
 import { isLoggedIn } from "axios-jwt";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./modules/api";
 import { UserContext } from "./modules/contexts"
-import {sendGAEvent, setGAUserDetails, sendGAError} from "./modules/analytics";
-import {Analytics, pageViewGA} from "./modules/analytics"
+import {Analytics, pageViewAnalytics, sendAnalyticsEvent, setAnalyticsUserDetails} from "./modules/analytics";
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
@@ -48,7 +47,7 @@ export class ProtectedRoute extends React.Component {
     const { component: Component, ...props } = this.props;
     const authenticated = isLoggedIn();
     if (!authenticated)
-        sendGAEvent({
+        sendAnalyticsEvent({
             category: 'User',
             action: `Redirect to sign-in as attempt was made to access ProtectedRoute by non-authenticated user: ${window.location.pathname}`,
             label: 'RedirectToSignIn',
@@ -70,7 +69,7 @@ export class ProtectedRoute extends React.Component {
 
 export class _AppRoutes extends React.Component {
    componentDidUpdate(prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) pageViewGA();
+    if (this.props.location.pathname !== prevProps.location.pathname) pageViewAnalytics();
   }
 
   render() {
@@ -116,7 +115,7 @@ export class SetUserContext extends React.Component {
     updateUserDetails = (user) => {
         console.log('Updating user details', user);
         if(user && user.email) {
-            setGAUserDetails(user);
+            setAnalyticsUserDetails(user);
             this.setState({userDetails: {user: user, updater: this.updateUserDetails,
                     reset: this.resetUserDetails, userChecked: true}});
         }

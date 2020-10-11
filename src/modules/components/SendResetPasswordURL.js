@@ -50,7 +50,7 @@ class SendResetPasswordURL extends React.Component {
              <AjaxForm formID="send-reset-password-url-form" url={sendResetPasswordUrl} method="POST" redirectTo={redirect}
                        validate={this.validate} showSuccessMessage buttonText="Send Reset Password E-mail"
                        classes={classes} noAuth
-             gaEventArgs={{category: 'User', action: 'Send reset password URL'}}>
+             analyticsEventArgs={{category: 'User', action: 'Send reset password URL'}}>
                   <Field
                     autoFocus
                     autoComplete="email"

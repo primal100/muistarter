@@ -19,37 +19,37 @@ const cookieWarningText = process.env.REACT_APP_COOKIE_WARNING_TEXT ||
 
 const consentKey = "CookieConsent";
 
-let gaEnabled = false;
+let analyticsEnabled = false;
 
 
-export const initializeGATracker = (hasConsent) => {
+export const initializeAnalyticsTracker = (hasConsent) => {
     hasConsent = hasConsent || JSON.parse(localStorage.getItem(consentKey));
-    console.log(!gaEnabled, trackingID, hasConsent)
-    if (!gaEnabled && trackingID && hasConsent) {
+    console.log(!analyticsEnabled, trackingID, hasConsent)
+    if (!analyticsEnabled && trackingID && hasConsent) {
         ReactGA.initialize(trackingID, {
             debug: trackingDebugMode,
             testMode: trackingTestMode
         });
         console.log('Initialized Google Analytics with trackingID', trackingID);
-        gaEnabled = true;
-        pageViewGA();
+        analyticsEnabled = true;
+        pageViewAnalytics();
     }
 }
 
-export const setGAUserDetails = (user) =>{
-    if (gaEnabled) ReactGA.set({
+export const setAnalyticsUserDetails = (user) =>{
+    if (analyticsEnabled) ReactGA.set({
         userId: user.id
     })
 }
 
 
-export const setGAFields = (fields) => {
-    if (gaEnabled) ReactGA.set(fields);
+export const setAnalyticsFields = (fields) => {
+    if (analyticsEnabled) ReactGA.set(fields);
 }
 
 
-export const pageViewGA = (path) => {
-    if(gaEnabled) {
+export const pageViewAnalytics = (path) => {
+    if(analyticsEnabled) {
         path = path || window.location.pathname;
         ReactGA.pageview(path);
         console.log('Sent pageview');
@@ -57,53 +57,53 @@ export const pageViewGA = (path) => {
 }
 
 
-export const sendGAError = (msg) => {
-  if (gaEnabled) ReactGA.exception({
+export const sendAnalyticsError = (msg) => {
+  if (analyticsEnabled) ReactGA.exception({
     description: msg,
     fatal: false
 });
 }
 
 
-const sendGAErrorFromFieldValue = (baseMsg, field, value) => {
+const sendAnalyticsErrorFromFieldValue = (baseMsg, field, value) => {
     const msg = `${baseMsg}${field}: ${value}`;
-    sendGAError(msg);
+    sendAnalyticsError(msg);
 }
 
 
-export const sendGAErrorsFromObject = (errorsObj, eventArgs) => {
+export const sendAnalyticsErrorsFromObject = (errorsObj, eventArgs) => {
     let baseMsg = '';
     if (eventArgs && eventArgs.action) baseMsg = `${eventArgs.action}: `
        Object.keys(errorsObj).forEach(field => {
            let value = errorsObj[field];
            if (Array.isArray(value)){
                value.forEach(v => {
-                   sendGAErrorFromFieldValue(baseMsg, field, v);
+                   sendAnalyticsErrorFromFieldValue(baseMsg, field, v);
                })
            }else{
-               sendGAErrorFromFieldValue(baseMsg, field, value);
+               sendAnalyticsErrorFromFieldValue(baseMsg, field, value);
            }
 
        })
 }
 
-export const sendGAException = (error) => {
-    if (gaEnabled) sendGAError(error.message);
+export const sendAnalyticsException = (error) => {
+    if (analyticsEnabled) sendAnalyticsError(error.message);
 }
 
-export const sendGAModalView = (name) => {
-    if (gaEnabled) ReactGA.modalview(name);
+export const sendAnalyticsModalView = (name) => {
+    if (analyticsEnabled) ReactGA.modalview(name);
 }
 
-export const sendGAOutboundLink = (label) => {
-    if (gaEnabled) ReactGA.outboundLink({label: label});
+export const sendAnalyticsOutboundLink = (label) => {
+    if (analyticsEnabled) ReactGA.outboundLink({label: label});
 }
 
-export const sendGAEvent = (EventArgs) => {
-    if (gaEnabled) ReactGA.event(EventArgs);
+export const sendAnalyticsEvent = (EventArgs) => {
+    if (analyticsEnabled) ReactGA.event(EventArgs);
 }
 
-export const sendGAEventForAjaxRequest = (url, method, nonInteraction, EventArgs) =>{
+export const sendAnalyticsEventForAjaxRequest = (url, method, nonInteraction, EventArgs) =>{
     EventArgs = EventArgs || {};
     const eventObj = {
         category: url,
@@ -112,10 +112,10 @@ export const sendGAEventForAjaxRequest = (url, method, nonInteraction, EventArgs
         ...EventArgs,
     }
     if (! eventObj.nonInteraction) delete eventObj.nonInteraction;
-    sendGAEvent(eventObj);
+    sendAnalyticsEvent(eventObj);
 }
 
-initializeGATracker();
+initializeAnalyticsTracker();
 
 
 const botPattern = "(googlebot\/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
@@ -141,10 +141,10 @@ class _Analytics extends React.Component {
 
     onConsent = (cookies_accepted=true) => {
         console.log('Consent exists')
-        initializeGATracker(true);
+        initializeAnalyticsTracker(true);
         const visitData = this.getInitialVisitData(true);
         visitData.cookies_accepted = cookies_accepted;
-        visitData.analytics_enabled = gaEnabled;
+        visitData.analytics_enabled = analyticsEnabled;
         this.setState({visitData: visitData});
     }
 

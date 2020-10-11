@@ -45,7 +45,7 @@ class ChangePassword extends React.Component {
               </React.Fragment>
               <AjaxForm url={change_password_url} method="POST" redirectTo={redirect} showSuccessMessage
                       validate={this.validate} buttonText="Change Password" classes={classes}
-              gaEventArgs={{category: 'User', action:'Change password'}}>
+              analyticsEventArgs={{category: 'User', action:'Change password'}}>
                       <Field
                           autoFocus
                           fullWidth

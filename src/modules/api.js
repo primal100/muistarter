@@ -10,7 +10,7 @@ import {
     setAccessToken,
     refreshTokenIfNeeded, setAuthTokens
 } from "axios-jwt";
-import {sendGAEvent, sendGAEventForAjaxRequest, sendGAException} from "./analytics";
+import {sendAnalyticsEvent, sendAnalyticsEventForAjaxRequest, sendAnalyticsException} from "./analytics";
 
 
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
@@ -62,7 +62,7 @@ const isTokenExpired = (token, expire_fudge=0) => {
 
 const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
    //redirectPath = redirectPath || window.location.pathname;
-    sendGAEvent({
+    sendAnalyticsEvent({
         category: 'User',
         action: 'Redirect to sign-in as refresh token expired',
         label: 'RedirectToSignIn',
@@ -103,7 +103,7 @@ const requestRefresh = async (refreshToken) => {
             url: refreshEndpoint,
             data: {refresh: refreshToken}
         }
-        sendGAEventForAjaxRequest(request.url, request.method, true, {
+        sendAnalyticsEventForAjaxRequest(request.url, request.method, true, {
             category: 'User', action: 'Refresh Access Token', label: "TokenRefresh", nonInteraction: true
         })
         tokenRefreshPromise = APINoAuthentication(request);
@@ -116,7 +116,7 @@ const requestRefresh = async (refreshToken) => {
         setTimeout(unsetTokenPromise, 3000);
         return data.access;
     } catch (e) {
-        sendGAException(e);
+        sendAnalyticsException(e);
         throw e;
     }
 };

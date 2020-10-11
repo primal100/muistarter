@@ -63,7 +63,7 @@ class SignUp extends React.Component {
               </React.Fragment>
               <AjaxForm formID="sign-up-form" url={signUpUrl} method="POST" redirectTo={redirect}
                         successMessage={successMessage} validate={this.validate} buttonText="Sign Up" classes={classes}
-                        noAuth gaEventArgs={{category: 'User', action: 'Sign Up'}}>
+                        noAuth analyticsEventArgs={{category: 'User', action: 'Sign Up'}}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                           <Field

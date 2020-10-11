@@ -41,7 +41,7 @@ class Announcement extends React.Component {
             <React.Fragment>
                 {announcementsUrl && <AjaxRequest url={announcementsUrl} method="GET" runAtInterval={announcementsCheckInterval}
                        onSuccess={this.showMessageFromResponseIfNotAlreadySeen} noImmediateRequest={Boolean(this.props.msg)}
-                gaEventArgs={{category: 'Announcements', action:'Getting announcement', label:'PageLoad',
+                analyticsEventArgs={{category: 'Announcements', action:'Getting announcement', label:'PageLoad',
                     nonInteraction: true}} />}
             </React.Fragment>
             )
