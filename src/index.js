@@ -27,7 +27,7 @@ export { default as AppFooter } from './modules/views/AppFooter';
 export { default as useStyles } from './modules/form/styles'
 export { default as withRoot } from './modules/withRoot'
 export { default as FormButton } from './modules/form/FormButton'
-export { default as Announcement } from './modules/components/Announcement'
+export Announcement from './modules/components/Announcement'
 export { default as FormFeedback } from './modules/form/FormFeedback'
 export { email as emailValidator, required } from './modules/form/validation'
 export { Analytics, sendAnalyticsError, sendAnalyticsException, sendAnalyticsModalView, sendAnalyticsOutboundLink,

@@ -11,12 +11,15 @@ import RFTextField from '../form/RFTextField';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
+import { OutboundLink } from "react-ga";
 import Grid from '@material-ui/core/Grid';
 import AjaxForm from '../form/AjaxForm';
+import { Switches } from 'mui-rff'
 
 
 const signUpUrl = process.env.REACT_APP_SIGN_UP_URL
-
+const privacyUrl = process.env.REACT_APP_PRIVACY_URL;
+const termsUrl = process.env.REACT_APP_TERMS_URL;
 
 class SignUp extends React.Component {
 
@@ -48,6 +51,16 @@ class SignUp extends React.Component {
       const redirect = {
           pathname: "/",
       }
+      this.mailingListSwitchData = [
+            {label: 'Join Our Mailing List'}
+      ];
+      this.privacySwitchData = [
+            {label: 'Accept Our Privacy Policy'}
+      ];
+      this.termsSwitchData = [
+            {label: 'Accept Our Terms & Conditions'}
+      ];
+      const initialValues = {mailing_list: true}
       return (
           <React.Fragment>
             <AppForm>
@@ -63,7 +76,7 @@ class SignUp extends React.Component {
               </React.Fragment>
               <AjaxForm formID="sign-up-form" url={signUpUrl} method="POST" redirectTo={redirect}
                         successMessage={successMessage} validate={this.validate} buttonText="Sign Up" classes={classes}
-                        noAuth analyticsEventArgs={{category: 'User', action: 'Sign Up'}}>
+                        initialValues={initialValues} noAuth analyticsEventArgs={{category: 'User', action: 'Sign Up'}}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                           <Field
@@ -116,6 +129,34 @@ class SignUp extends React.Component {
                           type="password"
                           margin="normal"
                       />
+                      <Grid item xs={12} sm={6}>
+                      <Switches
+                          color="primary"
+                          name="mailing_list"
+                          required
+                          data={this.mailingListSwitchData}
+                      />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                      <Switches
+                          color="primary"
+                          name="privacy"
+                          required
+                          data={this.privacySwitchData}
+                      />
+                      </Grid>
+                      <OutboundLink to={privacyUrl} target="_blank" eventLabel="Clicked link on signup form to privacy policy">
+                          Click here to view our privacy policy</OutboundLink>
+                      <Grid item xs={12} sm={6}>
+                      <Switches
+                          color="primary"
+                          name="terms"
+                          required
+                          data={this.termsSwitchData}
+                      />
+                      </Grid>
+                  <OutboundLink to={termsUrl} target="_blank" eventLabel="Clicked link on signup form to terms & conditions">
+                      Click here to view our terms & conditions</OutboundLink>
               </AjaxForm>
             </AppForm>
           </React.Fragment>

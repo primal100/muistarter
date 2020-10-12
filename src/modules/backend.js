@@ -48,10 +48,10 @@ const staffTokenRefreshResponseOK = {access: refreshedAccessTokenStaff, refresh:
 const logoutResponseOK = {[responseKey]: 'Logout successful'}
 const loginFailedResponse = {[responseKey]: 'No active account found with the given credentials'}
 const authorizationHeader = 'Authorization';
-const userDetailsResponse = {id: 1, first_name: first_name, last_name: last_name,
-                              email: email_address, is_staff: false, is_superuser: false}
-const userDetailsStaffResponse = {id: 2, first_name: "Admin", last_name: "Staff",
-                              email: staffEmailAddress, is_staff: true, is_superuser: false}
+let userDetails = {id: 1, first_name: first_name, last_name: last_name, email: email_address, is_staff: false,
+    is_superuser: false, mailing_list: true}
+let userDetailsStaff = {id: 2, first_name: "Admin", last_name: "Staff", email: staffEmailAddress, is_staff: true,
+    is_superuser: false, mailing_list: false}
 const new_first_name = 'Jane'
 const new_last_name = 'Doe'
 const change_first_name_data = {first_name: new_first_name}
@@ -61,10 +61,16 @@ const user_details_first_name_changed_response = {id: 1, first_name: new_first_n
 const user_details_both_names_changed_response = {id: 1, first_name: new_first_name, last_name: new_last_name,
                               email: email_address, is_staff: false}
 const register_data_short_password = {email: email_address, password: 'x', password_confirm: 'x',
-                      first_name: first_name, last_name: last_name}
+                      first_name: first_name, last_name: last_name, terms: true, privacy: true, mailing_list: true}
+const register_data_no_privacy = {email: email_address, password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a',
+                      first_name: first_name, last_name: last_name, terms: true, mailing_list: true}
+const register_no_privacy_response = {privacy: ["You must accept the privacy policy before registering"]}
+const register_data_no_terms = {email: email_address, password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a',
+                      first_name: first_name, last_name: last_name, privacy: true, mailing_list: true}
+const register_no_terms_response = {terms: ["You must accept the terms and conditions before registering"]}
 const register_too_short_password_response = {password: ['This password is too short. It must contain at least 8 characters.'], [nonFieldErrorsKey]: []}
 const register_data_already_exists = {email: 'c@a.com', password: password, password_confirm: password,
-                      first_name: first_name, last_name: last_name}
+                      first_name: first_name, last_name: last_name, terms: true, privacy: true, mailing_list: true}
 const register_user_already_exists = {email: ['user with this email address already exists.']}
 const verify_registration_response = {[responseKey]: "Your e-mail address has been verified. Please sign in."}
 const invalid_signature = "1234";
@@ -101,11 +107,11 @@ export const mockBackendCheckIsStaff = (config, normalReply, staffReply, notLogg
     if (userData) {
         if (userData.is_staff) {
             console.log('returning', staffReply)
-            if (staffReply instanceof Function) return staffReply();
+            if (staffReply instanceof Function) return staffReply(config);
             else return staffReply;
         } else {
             console.log('returning', normalReply)
-            if (normalReply instanceof Function) return normalReply();
+            if (normalReply instanceof Function) return normalReply(config);
             else return normalReply;
         }
     }
@@ -113,6 +119,28 @@ export const mockBackendCheckIsStaff = (config, normalReply, staffReply, notLogg
     return notLoggedIn || [401, {[responseKey]: 'Authentication credentials were not provided.'}]
 }
 
+
+export const userDetailsResponse = (config) => {
+    return mockBackendCheckIsStaff(config, [200, userDetails], [200, userDetailsStaff])
+}
+
+export const updateRegularUser = (config) =>{
+    console.log("updateRegularUser", config);
+    const userData = JSON.parse(config.data);
+    userDetails = {...userDetails, ...userData};
+    console.log(userDetails)
+    return [201, userDetails]
+}
+
+export const updateStaffUser = (config) =>{
+    const userData = config.data;
+    userDetailsStaff = {...userDetailsStaff, userData};
+    return [201, userDetailsStaff]
+}
+
+export const updateUserDetails = (config) => {
+    return mockBackendCheckIsStaff(config, updateRegularUser, updateStaffUser)
+}
 
 export const mockBackendRefreshTokenMock = (config) => {
     console.log('REFRESHING TOKEN ON BACKEND');
@@ -155,6 +183,8 @@ export default function mockBackend(errorOnNoMatch) {
         mockRaw.onPost(process.env.REACT_APP_SIGN_IN_URL).reply(200, loginResponseOk);
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_already_exists).reply(400, register_user_already_exists);
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_short_password).reply(400, register_too_short_password_response);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_no_privacy).reply(400, register_no_privacy_response);
+        mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_no_terms).reply(400, register_no_terms_response);
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, userDetailsResponse);
         mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
         mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
@@ -166,9 +196,8 @@ export default function mockBackend(errorOnNoMatch) {
         mockRaw.onPost(process.env.REACT_APP_REFRESH_TOKEN_URL).reply(mockBackendRefreshTokenMock);
         mock.onPost(process.env.REACT_APP_VISIT_URL).reply(201, {});
         mock.onPost(process.env.REACT_APP_SIGN_OUT_URL).reply(200, logoutResponseOK);
-        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply((config) => mockBackendCheckIsStaff(config, [200, userDetailsResponse], [200, userDetailsStaffResponse]));
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_first_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_first_name_changed_response]));
-        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL, change_last_name_data).reply((config) => mockBackendCheckIsStaff(config, [200, user_details_both_names_changed_response]));
+        mock.onGet(process.env.REACT_APP_USER_PROFILE_URL).reply(userDetailsResponse);
+        mock.onPatch(process.env.REACT_APP_USER_PROFILE_URL).reply(updateUserDetails);
         mock.onPost(process.env.REACT_APP_CHANGE_EMAIL_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_email_response]));
         mockRaw.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL, verify_email_invalid_signature).reply(400, verify_response_invalid_signature);
         mockRaw.onPost(process.env.REACT_APP_VERIFY_EMAIL_URL).reply(200, verify_email_response);
