@@ -7,7 +7,9 @@ import {
     fillForm,
     submitFieldTab,
     submitFormEnter,
-    getTextContent
+    getTextContent,
+    clickSwitch,
+    inputIsChecked
 } from "../pageObjects/forms"
 
 
@@ -27,6 +29,7 @@ describe("test user profile view", () => {
     it("should show the user profile page, correct initial form values and fields disabled", async () => {
         expect(await url()).toBe(URL + "/profile");
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'testuser@example.com']);
+        expect(await inputIsChecked('mailing_list')).toBeTruthy();
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
     });
@@ -42,15 +45,26 @@ describe("test user profile view", () => {
          expect(await getTextContent("#username")).toEqual(["Jane user testuser@example.com"]);
     });
 
-    it("should enable the last name form field, edit and submit values with enter, simulate first name being modified elsewhere, and disable the form fields", async () => {
+    it("should enable the last name form field, edit and submit values with enter, and disable the form fields", async () => {
         await clickEnableEditableFieldButton('last_name');
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, false, true]);
         await fillForm({last_name: 'Doe'}, true);
         await submitFormEnter();
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
-        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'testuser@example.com']);
+        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'Doe', 'testuser@example.com']);
         expect(await getSuccessMessageText()).toEqual(successMessages);
-        expect(await getTextContent("#username")).toEqual(["Jane Doe testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["test Doe testuser@example.com"]);
+    });
+
+    it("should disable and enable the mailing list switch", async () => {
+        await clickSwitch('mailing_list');
+        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'testuser@example.com']);
+        expect(await inputIsChecked('mailing_list')).toBeFalsy();
+        expect(await getSuccessMessageText()).toEqual(successMessages);
+        await clickSwitch('mailing_list');
+        expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'testuser@example.com']);
+        expect(await inputIsChecked('mailing_list')).toBeTruthy();
+        expect(await getSuccessMessageText()).toEqual(successMessages);
     });
 
     it("should enable the email form field, edit and submit, disable the form field, and show success message", async () => {

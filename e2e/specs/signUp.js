@@ -1,6 +1,6 @@
 import { url, getSuccessMessageText, sleep } from "../pageObjects/index"
-import { fillForm, clickSubmitButton, getFieldErrorText } from "../pageObjects/forms";
-import { loadSignup } from "../pageObjects/signUp";
+import {fillForm, clickSubmitButton, getFieldErrorText, clickSwitch, getSubmitErrorText} from "../pageObjects/forms";
+import { loadSignup, getSignUpAPIRequestData } from "../pageObjects/signUp";
 
 
 const successMessages = ["We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.\n" +
@@ -19,16 +19,53 @@ describe("test signup view", () => {
 
   it("should sign up with all values, submit, go home and show success message", async () => {
     expect(await getFieldErrorText()).toEqual([]);
-    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'New', last_name: 'User'})
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton()
     expect(await url()).toBe(URL + "/");
     expect(await getSuccessMessageText()).toEqual(successMessages);
+    expect(await getSignUpAPIRequestData()).toEqual({
+      email: 'testuser@example.com',
+      password: 'x1y@4f!21a',
+      password_confirm: 'x1y@4f!21a',
+      first_name: 'New',
+      last_name: 'User',
+      mailing_list: true,
+      privacy: true,
+      terms: true
+    })
+  });
+
+    it("should sign up with all values, disable mailing list, submit, go home and show success message", async () => {
+    expect(await getFieldErrorText()).toEqual([]);
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'New', last_name: 'User'})
+    await clickSwitch('mailing_list');
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
+    expect(await getFieldErrorText()).toEqual([]);
+    await clickSubmitButton()
+    expect(await url()).toBe(URL + "/");
+    expect(await getSuccessMessageText()).toEqual(successMessages);
+    expect(await getSignUpAPIRequestData()).toEqual({
+      email: 'testuser@example.com',
+      password: 'x1y@4f!21a',
+      password_confirm: 'x1y@4f!21a',
+      first_name: 'New',
+      last_name: 'User',
+      mailing_list: false,
+      privacy: true,
+      terms: true
+    })
   });
 
   it("should show email validation error", async () => {
     expect(await getFieldErrorText()).toEqual([]);
     await fillForm({email: 'testuser@example', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
+    expect(await getFieldErrorText()).toEqual(["Invalid email"]);
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
     expect(await getFieldErrorText()).toEqual(["Invalid email"]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");
@@ -38,6 +75,9 @@ describe("test signup view", () => {
   });
 
   it("should show password not match", async () => {
+    expect(await getFieldErrorText()).toEqual([]);
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
     expect(await getFieldErrorText()).toEqual([]);
     await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21', first_name: 'test', last_name: 'user'})
     expect(await getFieldErrorText()).toEqual(['Passwords do not match']);
@@ -51,6 +91,8 @@ describe("test signup view", () => {
   it("should say user already exists", async () => {
     expect(await getFieldErrorText()).toEqual([]);
     await fillForm({email: 'c@a.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a', first_name: 'test', last_name: 'user'})
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");
@@ -62,9 +104,61 @@ describe("test signup view", () => {
     expect(await getSuccessMessageText()).toEqual(successMessages);
   });
 
+  it("should say privacy has not been selected", async () => {
+    expect(await getFieldErrorText()).toEqual([]);
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a',
+      first_name: 'test', last_name: 'user'})
+    await clickSwitch('terms');
+    expect(await getFieldErrorText()).toEqual([]);
+    await clickSubmitButton();
+    expect(await getSignUpAPIRequestData()).toEqual({
+      email: 'testuser@example.com',
+      password: 'x1y@4f!21a',
+      password_confirm: 'x1y@4f!21a',
+      first_name: 'test',
+      last_name: 'user',
+      mailing_list: true,
+      terms: true,
+    })
+    expect(await url()).toEqual(URL + "/sign-up");
+    expect(await getSubmitErrorText()).toEqual(['You must accept the privacy policy before registering']);
+    expect(await getFieldErrorText()).toEqual(['You must accept the privacy policy before registering']);
+    await clickSwitch('privacy');
+    await clickSubmitButton();
+    expect(await url()).toBe(URL + "/");
+    expect(await getSuccessMessageText()).toEqual(successMessages);
+  });
+
+  it("should say terms has not been selected", async () => {
+    expect(await getFieldErrorText()).toEqual([]);
+    await fillForm({email: 'testuser@example.com', password: 'x1y@4f!21a', password_confirm: 'x1y@4f!21a',
+      first_name: 'test', last_name: 'user'})
+    await clickSwitch('privacy');
+    expect(await getFieldErrorText()).toEqual([]);
+    await clickSubmitButton();
+    expect(await getSignUpAPIRequestData()).toEqual({
+      email: 'testuser@example.com',
+      password: 'x1y@4f!21a',
+      password_confirm: 'x1y@4f!21a',
+      first_name: 'test',
+      last_name: 'user',
+      mailing_list: true,
+      privacy: true,
+    })
+    expect(await url()).toEqual(URL + "/sign-up");
+    expect(await getSubmitErrorText()).toEqual(['You must accept the terms and conditions before registering']);
+    expect(await getFieldErrorText()).toEqual(['You must accept the terms and conditions before registering']);
+    await clickSwitch('terms');
+    await clickSubmitButton();
+    expect(await url()).toBe(URL + "/");
+    expect(await getSuccessMessageText()).toEqual(successMessages);
+  });
+
   it("signup view should say password is not strong enough", async () => {
     expect(await getFieldErrorText()).toEqual([]);
     await fillForm({email: 'testuser@example.com', password: 'x', password_confirm: 'x', first_name: 'test', last_name: 'user'})
+    await clickSwitch('privacy');
+    await clickSwitch('terms');
     expect(await getFieldErrorText()).toEqual([]);
     await clickSubmitButton();
     expect(await url()).toEqual(URL + "/sign-up");

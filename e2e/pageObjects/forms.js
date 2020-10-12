@@ -55,7 +55,6 @@ export const clickSubmitButtonAndWait = async () => {
 
 export const clickEnableEditableFieldButton = async (name) => {
   await click(`#enable-${name}`)
-  //await page.$eval(, el => el.click());
 };
 
 export const submitFieldTab = async () => {
@@ -67,3 +66,17 @@ export const getErrors = async () => { await page.evaluate('.Mui-error') }
 export const getTextContent = async (selector) => await page.$$eval(selector, els => els.map((el) => el.textContent))
 export const getFieldErrorText = async () => await getTextContent('p.Mui-error')
 export const getSubmitErrorText = async () => await getTextContent('.submit-error')
+
+export const MaterialSelect = async (name, newSelectedValue) => {
+    await page.evaluate((newSelectedValue, name) => {
+        const selector = `#mui-component-select-${name}`
+        let clickEvent = document.createEvent('MouseEvents');
+        clickEvent.initEvent("mousedown", true, true);
+        let selectNode = document.querySelector(selector);
+        selectNode.dispatchEvent(clickEvent);
+        [...document.querySelectorAll('li')].filter(el => el.innerText === newSelectedValue)[0].click();
+    }, newSelectedValue, name);
+}
+
+export const clickSwitch = async(name) => await page.evaluate((selector) => document.querySelector(selector).click(), `input[name=${name}]`);
+export const inputIsChecked = async(name) => await page.$eval(`input[name=${name}]`, (el) => el.checked);

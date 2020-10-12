@@ -75,6 +75,7 @@ export const getInfoMessageText = async () => await page.$$eval('.info-message',
 export const getErrorMessageText = async () => await page.$$eval('.error-message', els => els.map((el) => el.textContent))
 
 export const getMockHistory = async() => await page.evaluate(() => getMockHistory());
+export const getMockRawHistory = async() => await page.evaluate(() => getMockRawHistory())
 export const getMockHistoryVisits = async() => {
     const mockHistory = await getMockHistory();
     const postHistory = mockHistory.post;
