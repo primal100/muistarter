@@ -87,10 +87,10 @@ export default function AppFooter() {
             </Typography>
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <OutboundLink to="/terms/" eventLabel="Clicked on link to terms & conditions">Terms</OutboundLink>
+                <OutboundLink to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
               </li>
               <li className={classes.listItem}>
-                <OutboundLink to="/privacy/" eventLabel="Clicked on link to terms & conditions">Privacy</OutboundLink>
+                <OutboundLink to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
               </li>
             </ul>
           </Grid>
