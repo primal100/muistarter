@@ -13,6 +13,7 @@ import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import {Link as RouterLink} from "react-router-dom";
+import { Switches} from "mui-rff";
 import { UserContext } from "../contexts";
 
 
@@ -22,9 +23,6 @@ const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 
 
 class UserProfile extends React.Component {
-    state = {
-        enabled: null
-    }
 
     validate = (values) => {
         console.log('Validating user profile')
@@ -62,8 +60,17 @@ class UserProfile extends React.Component {
         return 'Your details have been updated';
     }
 
+    handleSwitchChange = async (event) => {
+        console.log('Mailing list event', event)
+        const form = event.target.form;
+        setTimeout(() => form.dispatchEvent(new Event('submit', { cancelable: true })), 0);
+    }
+
     render() {
       const { classes } = this.props;
+      this.mailingListSwitchData = [
+            {label: 'Be part of our Mailing List'}
+      ];
       return (
           <React.Fragment>
             <AppForm>
@@ -75,7 +82,7 @@ class UserProfile extends React.Component {
               <React.Fragment>
               <UserContext.Consumer>
                 {({user, updater}) => (
-              <AjaxForm createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
+              <AjaxForm formID="user-profile-form" createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
                         submitModifiedValuesOnly onSuccess={updater} validate={this.validate} classes={classes}
               analyticsEventArgs={{category: 'User', action: 'Updating user profile'}} analyticsInitialValuesAction="Get User Profile">
@@ -111,6 +118,12 @@ class UserProfile extends React.Component {
                           name="email"
                           required
                   />
+                  <Switches
+                          color="primary"
+                          name="mailing_list"
+                          onClick={this.handleSwitchChange}
+                          data={this.mailingListSwitchData}
+                      />
               </AjaxForm>
               )}
               </UserContext.Consumer>

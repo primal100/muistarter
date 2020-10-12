@@ -106,7 +106,8 @@ class AjaxForm extends React.Component {
             Object.assign(values, additionalValues);
         }
         if (this.props.submitModifiedValuesOnly) {
-            console.log('InitialValues', this.state.initialValues)
+            console.log('InitialValues', this.state.initialValues);
+            console.log('Comparing with new data', values);
             values = Object.keys(values).reduce((obj, key) => {
                 if (values[key] !== this.state.initialValues[key]) {
                     obj[key] = values[key];
