@@ -12,8 +12,10 @@ if (document.querySelector(selector)) {
 }
 
 
-export { default as AuthenticationApp, ProtectedRoute, AppRoutes, SetUserContext, CustomSnackbarProvider } from './App'
-export { UserContext } from './modules/contexts'
+export { default as AuthenticationApp } from './App'
+export { ProtectedRoute, AppRoutes } from "./routes"
+export { CustomSnackbarProvider } from './snackbars'
+export { UserContext, SetUserContext } from './modules/contexts'
 export { default as mockAuthenticationBackend, mock, mockRaw, mockBackendCheckIsStaff,
     mockBackendDecodeAccessTokenFromAxiosConfig, mockBackendRefreshTokenMock } from './modules/backend';
 export { API, APINoAuthentication } from './modules/api'
