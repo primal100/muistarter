@@ -22,10 +22,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.secondary.light,
+    marginBottom: 0,
+    margin: 0,
   },
   container: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(8),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     display: 'flex',
   },
   iconsWrapper: {

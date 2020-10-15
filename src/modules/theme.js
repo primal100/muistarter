@@ -27,6 +27,14 @@ const rawTheme = createMuiTheme({
       main: green[500],
       dark: green[700],
     },
+    background: {
+      paper:"#000000",
+      default:"#ffffff",
+      placeholder: grey[200]
+    },
+    text: {
+      primary: '#000000'
+    }
   },
   typography: {
     fontFamily: "'Work Sans', sans-serif",
@@ -51,8 +59,8 @@ const theme = {
     ...rawTheme.palette,
     background: {
       ...rawTheme.palette.background,
-      default: rawTheme.palette.common.white,
-      placeholder: grey[200],
+      //default: rawTheme.palette.common.white,
+      //placeholder: grey[200],
     },
   },
   typography: {
@@ -104,5 +112,9 @@ const theme = {
     },
   },
 };
+
+
+console.log('theme', theme)
+console.log('theme', JSON.stringify(theme))
 
 export default theme;
