@@ -6,13 +6,13 @@ import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 import { OutboundLink } from "react-ga";
 
-function Copyright() {
+function Copyright(props) {
+  const title = props.title || "Your Website";
   return (
     <React.Fragment>
-      {'© '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
+      <Typography color="inherit">
+        © {title}
+      </Typography>{' '}
       {new Date().getFullYear()}
     </React.Fragment>
   );
@@ -61,16 +61,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     width: 150,
   },
+  rightLinks: {
+    justifyContent: 'flex-end',
+  }
 }));
 
-export default function AppFooter() {
+export default function AppFooter(props) {
   const classes = useStyles();
 
   return (
     <Typography component="footer" className={classes.root}>
       <Container className={classes.container}>
         <Grid container spacing={5}>
-          <Grid item xs={6} sm={4} md={3}>
+          <Grid item xs={9} sm={9} md={9}>
             <Grid
               container
               direction="column"
@@ -79,11 +82,11 @@ export default function AppFooter() {
               spacing={2}
             >
               <Grid item>
-                <Copyright />
+                <Copyright title={props.title}/>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} sm={4} md={2}>
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h6" marked="left" gutterBottom>
               Legal
             </Typography>

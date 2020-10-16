@@ -8,7 +8,7 @@ import Paper from '../components/Paper';
 const styles = (theme) => ({
   root: {
     display: 'flex',
-    backgroundImage: 'url(/static/onepirate/appCurvyLines.png)',
+    backgroundImage: '/appCurvyLines.png',
     backgroundRepeat: 'no-repeat',
   },
   paper: {
