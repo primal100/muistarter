@@ -1,7 +1,4 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import { Field, } from 'react-final-form';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
@@ -77,7 +74,4 @@ class ResetPassword extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(ResetPassword);
+export default withStyles(useStyles)(ResetPassword);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 import { OutboundLink } from "react-ga";
@@ -57,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
   },
+  linkNoUnderline: {
+    color: theme.palette.primary.light,
+    textDecoration: 'none'
+  },
   language: {
     marginTop: theme.spacing(1),
     width: 150,
@@ -90,14 +93,16 @@ export default function AppFooter(props) {
             <Typography variant="h6" marked="left" gutterBottom>
               Legal
             </Typography>
+            <Typography variant="body1">
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <OutboundLink to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
+                <OutboundLink className={classes.linkNoUnderline} to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
               </li>
               <li className={classes.listItem}>
-                <OutboundLink to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
+                <OutboundLink className={classes.linkNoUnderline} to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
               </li>
             </ul>
+            </Typography>
           </Grid>
         </Grid>
       </Container>

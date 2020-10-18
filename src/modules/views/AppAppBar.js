@@ -60,7 +60,7 @@ const styles = (theme) => ({
     marginLeft: theme.spacing(3),
   },
   linkSecondary: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.light,
   }
 });
 
@@ -133,7 +133,7 @@ function RightIconLinks(props){
 
 
 
-function getRightLinksText(user){
+function getRightLinksText(user, preferences, extra){
   if (!user) return [
     {
       id: 'sign-in',
@@ -150,7 +150,7 @@ function getRightLinksText(user){
 }
 
 
-function getLeftTextLinks(user, homeText){
+function getLeftTextLinks(user, preferences, extra, homeText){
   const links = [{
       id: 'home',
       href: '/',
@@ -165,7 +165,7 @@ function getLeftTextLinks(user, homeText){
 }
 
 
-function getIconLinks(user){
+function getIconLinks(user, preferences, extra){
   if (user) return [
     {
       id: 'profile',
@@ -199,20 +199,20 @@ class AppAppBar extends React.Component {
     return (
         <div>
           <UserContext.Consumer>
-              {({user, updater}) => {
+              {({user, preferences, extra}) => {
                 console.log("USER", user);
                     let rightTextLinks;
-                    if (this.props.getRightTextLinks) rightTextLinks = this.props.getRightTextLinks(user);
-                    else rightTextLinks = getRightLinksText(user);
-                    if (this.props.additionalRightTextLinks) rightTextLinks = rightTextLinks.concat(this.props.additionalRightTextLinks(user));
+                    if (this.props.getRightTextLinks) rightTextLinks = this.props.getRightTextLinks(user, preferences, extra);
+                    else rightTextLinks = getRightLinksText(user, preferences, extra);
+                    if (this.props.additionalRightTextLinks) rightTextLinks = rightTextLinks.concat(this.props.additionalRightTextLinks(user, preferences, extra));
                     let leftTextLinks;
-                    if (this.props.getLeftTextLinks) rightTextLinks = this.props.getLeftTextLinks(user);
-                    else leftTextLinks = getLeftTextLinks(user);
-                    if (this.props.additionalLeftTextLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalLeftTextLinks(user));
+                    if (this.props.getLeftTextLinks) rightTextLinks = this.props.getLeftTextLinks(user, preferences, extra);
+                    else leftTextLinks = getLeftTextLinks(user, preferences, extra);
+                    if (this.props.additionalLeftTextLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalLeftTextLinks(user, preferences, extra));
                     let iconLinks;
-                    if (this.props.getIconLinks) iconLinks = this.props.getIconLinks(user);
-                    else iconLinks = getIconLinks(user);
-                    if (this.props.additionalIconLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalIconLinks(user));
+                    if (this.props.getIconLinks) iconLinks = this.props.getIconLinks(user, preferences, extra);
+                    else iconLinks = getIconLinks(user, preferences, extra);
+                    if (this.props.additionalIconLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalIconLinks(user, preferences, extra));
                 return (
                   <React.Fragment>
           <AppBar position="fixed">

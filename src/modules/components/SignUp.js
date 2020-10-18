@@ -1,7 +1,4 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import { Field, } from 'react-final-form';
 import Link from '@material-ui/core/Link';
 import Typography from './Typography';
@@ -131,7 +128,7 @@ class SignUp extends React.Component {
                       />
                       <Grid item xs={12} sm={6}>
                       <Switches
-                          color="primary"
+                          color="secondary"
                           name="mailing_list"
                           required
                           data={this.mailingListSwitchData}
@@ -139,24 +136,29 @@ class SignUp extends React.Component {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                       <Switches
-                          color="primary"
+                          color="secondary"
                           name="privacy"
                           required
                           data={this.privacySwitchData}
                       />
                       </Grid>
+                  <Typography variant="body1" paragraph>
                       <OutboundLink to={privacyUrl} target="_blank" eventLabel="Clicked link on signup form to privacy policy">
-                          Click here to view our privacy policy</OutboundLink>
+                          Click here to view our privacy policy
+                          </OutboundLink>
+                  </Typography>
                       <Grid item xs={12} sm={6}>
                       <Switches
-                          color="primary"
+                          color="secondary"
                           name="terms"
                           required
                           data={this.termsSwitchData}
                       />
                       </Grid>
+                  <Typography variant="body1" paragraph>
                   <OutboundLink to={termsUrl} target="_blank" eventLabel="Clicked link on signup form to terms & conditions">
                       Click here to view our terms & conditions</OutboundLink>
+                  </Typography>
               </AjaxForm>
             </AppForm>
           </React.Fragment>
@@ -164,7 +166,4 @@ class SignUp extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(SignUp);
+export default withStyles(useStyles)(SignUp);

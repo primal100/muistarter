@@ -1,7 +1,4 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import {required, email} from '../form/validation';
@@ -139,7 +136,4 @@ class UserProfile extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(UserProfile);
+export default withStyles(useStyles)(UserProfile);

@@ -1,5 +1,3 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
@@ -19,4 +17,4 @@ function Home(props) {
   );
 }
 
-export default withRoot(Home);
+export default Home;

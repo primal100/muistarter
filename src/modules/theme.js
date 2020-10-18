@@ -9,8 +9,8 @@ const rawTheme = createMuiTheme({
       dark: '#1e1e1f',
     },
     secondary: {
-      light: '#fff5f8',
-      main: '#ff3366',
+      light: '#ffffff',
+      main: '#172A3A',
       dark: '#e62958',
     },
     warning: {
@@ -29,7 +29,7 @@ const rawTheme = createMuiTheme({
     },
     background: {
       paper:"#000000",
-      default:"#ffffff",
+      default:"#172A3A",
       placeholder: grey[200]
     },
     text: {
@@ -109,7 +109,7 @@ const theme = {
     body2: {
       ...rawTheme.typography.body1,
       fontSize: 14,
-    },
+    }
   },
 };
 

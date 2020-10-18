@@ -1,5 +1,3 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
 import { Field } from 'react-final-form';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,7 +6,6 @@ import AppForm from '../views/AppForm';
 import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
 import useStyles from '../form/styles';
-import compose from "recompose/compose";
 import AjaxForm from "../form/AjaxForm";
 
 
@@ -70,7 +67,4 @@ class SendResetPasswordURL extends React.Component {
 }
 
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(SendResetPasswordURL);
+export default withStyles(useStyles)(SendResetPasswordURL);

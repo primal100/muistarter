@@ -1,7 +1,4 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import { Field } from 'react-final-form';
 import Link from '@material-ui/core/Link';
 import Typography from './Typography';
@@ -12,9 +9,6 @@ import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import AjaxForm from '../form/AjaxForm';
-import {authResponseToAuthTokens, onSignIn} from '../api';
-import AjaxRequest from "./AjaxRequest";
-import {setAuthTokens} from "axios-jwt";
 
 
 const signInUrl = process.env.REACT_APP_SIGN_IN_URL
@@ -92,7 +86,4 @@ class SignIn extends React.Component {
 }
 
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(SignIn);
+export default withStyles(useStyles)(SignIn);
