@@ -73,7 +73,7 @@ class UserProfile extends React.Component {
             <AppForm>
               <React.Fragment>
                 <Typography variant="h3" gutterBottom marked="center" align="center">
-                  User Details
+                  Your Profile
                 </Typography>
               </React.Fragment>
               <React.Fragment>
@@ -92,7 +92,6 @@ class UserProfile extends React.Component {
                            fullWidth
                            label="First name"
                            name="first_name"
-                           required
                         />
                      </Grid>
                      <Grid item xs={12} sm={6}>
@@ -102,7 +101,6 @@ class UserProfile extends React.Component {
                            fullWidth
                            label="Last name"
                            name="last_name"
-                           required
                         />
                      </Grid>
                   </Grid>
@@ -113,10 +111,9 @@ class UserProfile extends React.Component {
                           label="Email"
                           margin="normal"
                           name="email"
-                          required
                   />
                   <Switches
-                          color="primary"
+                          color="secondary"
                           name="mailing_list"
                           onClick={this.handleSwitchChange}
                           data={this.mailingListSwitchData}

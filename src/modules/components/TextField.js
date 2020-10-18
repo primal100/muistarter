@@ -4,16 +4,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MuiTextField from '@material-ui/core/TextField';
 import { capitalize } from '@material-ui/core/utils';
-import {Field} from "react-final-form";
+
 
 const styles = (theme) => ({
   input: {
     minWidth: theme.spacing(6),
-    '&$disabled': {
-      backgroundColor: theme.palette.divider,
-    },
   },
-  disabled: {},
+  disabled: {
+  },
   inputSizeSmall: {
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
