@@ -17,6 +17,7 @@ describe("test signin view", () => {
   it("should show the sign-in page", async () => {
     expect(await url()).toBe(URL + "/sign-in");
     expect(await getTextContent("#username")).toEqual([]);
+    expect(await getTextContent("#email")).toEqual([]);
     expect(await adminLinkExists()).toBeFalsy();
   });
 
@@ -89,7 +90,8 @@ describe("test signin view", () => {
     expect(await url()).toBe(URL + "/");
     expect(await getLocalStorageTokens()).toEqual(tokens);
     await sleep(1);
-    expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+    expect(await getTextContent("#username")).toEqual(["test user"]);
+    expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     expect(await getTextContent("#is-staff")).toEqual([]);
     expect(await adminLinkExists()).toBeFalsy();
   });
@@ -102,7 +104,8 @@ describe("test signin view", () => {
     expect(await url()).toBe(URL + "/");
     expect(await getLocalStorageTokens()).toEqual(tokens)
     await sleep(1);
-    expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+    expect(await getTextContent("#username")).toEqual(["test user"]);
+    expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     expect(await getTextContent("#is-staff")).toEqual([]);
     expect(await adminLinkExists()).toBeFalsy();
   });

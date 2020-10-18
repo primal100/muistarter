@@ -1,7 +1,7 @@
 import { waitForNavigation, url, getSuccessMessageText, getErrorMessageText } from "../pageObjects/index"
 import { loadVerifyEmailUrl, goToVerifyEmailUrl } from "../pageObjects/verifyEmail";
 import {getTextContent} from "../pageObjects/forms";
-import {getLocalStorageTokens, signedIn, tokens} from "../pageObjects/signIn";
+import {signedIn} from "../pageObjects/signIn";
 
 
 const successMessages = ["Email verified successfully",];
@@ -31,14 +31,16 @@ describe("test verify email view signed in", () => {
    });
 
    it("should sign in, verify email, redirect to home and show success message", async () => {
-        expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["test user"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
         await Promise.all([goToVerifyEmailUrl("user_id=1&timestamp=1589819019&signature=1235&email=a@c.com"), waitForNavigation()])
         expect(await url()).toBe(URL + "/");
         expect(await getSuccessMessageText()).toEqual(successMessages);
   });
 
   it("should sign in, fail to verify email with wrong signature", async () => {
-    expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+    expect(await getTextContent("#username")).toEqual(["test user"]);
+    expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     await Promise.all([goToVerifyEmailUrl("user_id=1&timestamp=1589819019&signature=1234&email=a@c.com"), waitForNavigation()])
     expect(await url()).toBe(URL + "/");
     expect(await getErrorMessageText()).toEqual(errorMessages);
