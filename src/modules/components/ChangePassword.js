@@ -4,8 +4,6 @@ import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 
 
@@ -28,7 +26,6 @@ class ChangePassword extends React.Component {
     };
 
     render() {
-      const { classes } = this.props
       const redirect = {
           pathname: "/profile",
       }
@@ -41,7 +38,7 @@ class ChangePassword extends React.Component {
                 </Typography>
               </React.Fragment>
               <AjaxForm url={changePasswordUrl} method="POST" redirectTo={redirect} showSuccessMessage
-                      validate={this.validate} buttonText="Change Password" classes={classes}
+                      validate={this.validate} buttonText="Change Password"
               analyticsEventArgs={{category: 'User', action:'Change password'}}>
                       <Field
                           autoFocus
@@ -81,4 +78,4 @@ class ChangePassword extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(ChangePassword);
+export default ChangePassword;

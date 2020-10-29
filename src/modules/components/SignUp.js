@@ -5,8 +5,6 @@ import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { email, required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import { OutboundLink } from "react-ga";
 import Grid from '@material-ui/core/Grid';
@@ -41,7 +39,6 @@ class SignUp extends React.Component {
     };
 
     render() {
-      const { classes } = this.props
       const successMessage = "We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.\n" +
           "\n" +
           "If you do not receive a confirmation email, please check your spam folder. Also, please verify that you entered a valid email address in our sign-up form."
@@ -72,7 +69,7 @@ class SignUp extends React.Component {
                 </Typography>
               </React.Fragment>
               <AjaxForm formID="sign-up-form" url={signUpUrl} method="POST" redirectTo={redirect}
-                        successMessage={successMessage} validate={this.validate} buttonText="Sign Up" classes={classes}
+                        successMessage={successMessage} validate={this.validate} buttonText="Sign Up"
                         initialValues={initialValues} noAuth analyticsEventArgs={{category: 'User', action: 'Sign Up'}}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
@@ -166,4 +163,4 @@ class SignUp extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(SignUp);
+export default SignUp;

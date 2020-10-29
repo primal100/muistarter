@@ -5,8 +5,6 @@ import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import {Link as RouterLink} from "react-router-dom";
 import AjaxForm from '../form/AjaxForm';
 
@@ -29,7 +27,6 @@ class SignIn extends React.Component {
     };
 
     render() {
-      const { classes } = this.props;
       const redirect = {
               pathname: this.props.redirectTo || "/",
         }
@@ -49,7 +46,7 @@ class SignIn extends React.Component {
               </Typography>
             </React.Fragment>
             <AjaxForm formID="sign-in-form" url={signInUrl} method="POST" validate={this.validate} noAuth
-                      redirectTo={redirect} buttonText="sign in" updateUserDetails classes={classes}
+                      redirectTo={redirect} buttonText="sign in" updateUserDetails
             analyticsEventArgs={{category: 'User', action: 'Sign in'}}>
                   <Field
                     autoComplete="email"
@@ -86,4 +83,4 @@ class SignIn extends React.Component {
 }
 
 
-export default withStyles(useStyles)(SignIn);
+export default SignIn;

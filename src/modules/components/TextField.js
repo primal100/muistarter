@@ -9,8 +9,10 @@ import { capitalize } from '@material-ui/core/utils';
 const styles = (theme) => ({
   input: {
     minWidth: theme.spacing(6),
+    color: theme.palette.primary.main
   },
   disabled: {
+    color: theme.palette.text.disabled
   },
   inputSizeSmall: {
     width: `calc(100% - ${theme.spacing(2)}px)`,

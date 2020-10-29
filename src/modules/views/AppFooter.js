@@ -93,7 +93,7 @@ export default function AppFooter(props) {
             <Typography variant="h6" marked="left" gutterBottom>
               Legal
             </Typography>
-            <Typography variant="body1">
+            <Typography component={'span'}  variant="body1">
             <ul className={classes.list}>
               <li className={classes.listItem}>
                 <OutboundLink className={classes.linkNoUnderline} to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>

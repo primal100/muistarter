@@ -3,7 +3,7 @@ import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./api";
 import {setAnalyticsUserDetails} from "./analytics";
 
 export const UserContext = React.createContext({user: null, updater: null, reset: null,
-    userChecked: false, preferences: null, extra: null});
+    userChecked: false, preferences: null, setExtra: null});
 UserContext.displayName = "UserContext"
 
 
@@ -14,7 +14,7 @@ export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.defaultUserDetails = {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails,
-            userChecked: false, preferences: getPreferences(), extra: null}
+            userChecked: false, preferences: getPreferences(), setExtra: this.setExtra}
         this.state = {
             userDetails: this.defaultUserDetails
         }
@@ -29,8 +29,7 @@ export class SetUserContext extends React.Component {
         console.log('Updating user details', user);
         if(user && user.email) {
             setAnalyticsUserDetails(user);
-            this.setState({userDetails: {...this.state.userDetails, user: user, updater: this.updateUserDetails,
-                    reset: this.resetUserDetails, userChecked: true}});
+            this.setState({userDetails: {...this.state.userDetails, user: user, userChecked: true}});
         }
     }
 
@@ -43,7 +42,7 @@ export class SetUserContext extends React.Component {
 
     setExtra = (obj) => {
         console.log('Setting user extra', obj);
-        this.setState({userDetails: {...this.state.userDetails, extra: obj}});
+        setTimeout(() => this.setState({userDetails: {...this.state.userDetails, ...obj}}), 0);
     }
 
     resetUserDetails = () => {

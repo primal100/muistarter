@@ -4,8 +4,6 @@ import AppForm from '../views/AppForm';
 import {required, email} from '../form/validation';
 import RFTextField from '../form/RFTextField';
 import EditableField from '../form/EditableField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
@@ -64,7 +62,6 @@ class UserProfile extends React.Component {
     }
 
     render() {
-      const { classes } = this.props;
       this.mailingListSwitchData = [
             {label: 'Be part of our Mailing List'}
       ];
@@ -81,7 +78,7 @@ class UserProfile extends React.Component {
                 {({user, updater}) => (
               <AjaxForm formID="user-profile-form" createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
-                        submitModifiedValuesOnly onSuccess={updater} validate={this.validate} classes={classes}
+                        submitModifiedValuesOnly onSuccess={updater} validate={this.validate}
               analyticsEventArgs={{category: 'User', action: 'Updating user profile'}} analyticsInitialValuesAction="Get User Profile">
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
@@ -133,4 +130,4 @@ class UserProfile extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(UserProfile);
+export default UserProfile;

@@ -25,10 +25,10 @@ class App extends React.Component {
                 <Announcement/>
                 <div className="App Site">
                     <div className="Site-content">
-                <AppAppBar showUserDetails title="OnePirate"/>
-                <AppRoutes/>
+                        <AppAppBar showUserDetails title="OnePirate"/>
+                        <AppRoutes/>
                     </div>
-                <AppFooter/>
+                    <AppFooter/>
                 </div>
                 </SetUserContext>
               </ScrollToTop>

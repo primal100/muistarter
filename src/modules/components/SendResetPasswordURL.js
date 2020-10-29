@@ -1,11 +1,9 @@
 import React from 'react';
 import { Field } from 'react-final-form';
-import { withStyles } from '@material-ui/core/styles';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import useStyles from '../form/styles';
 import AjaxForm from "../form/AjaxForm";
 
 
@@ -28,7 +26,6 @@ class SendResetPasswordURL extends React.Component {
   };
 
     render() {
-       const { classes } = this.props
        const redirect = {
           pathname: "/",
        }
@@ -46,7 +43,7 @@ class SendResetPasswordURL extends React.Component {
             </React.Fragment>
              <AjaxForm formID="send-reset-password-url-form" url={sendResetPasswordUrl} method="POST" redirectTo={redirect}
                        validate={this.validate} showSuccessMessage buttonText="Send Reset Password E-mail"
-                       classes={classes} noAuth
+                       noAuth
              analyticsEventArgs={{category: 'User', action: 'Send reset password URL'}}>
                   <Field
                     autoFocus
@@ -67,4 +64,4 @@ class SendResetPasswordURL extends React.Component {
 }
 
 
-export default withStyles(useStyles)(SendResetPasswordURL);
+export default SendResetPasswordURL;

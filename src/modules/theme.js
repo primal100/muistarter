@@ -33,7 +33,9 @@ const rawTheme = createMuiTheme({
       placeholder: grey[200]
     },
     text: {
-      primary: '#000000'
+      primary: '#ffffff',
+      secondary: '#000000',
+      disabled: '#a9a6a6',
     }
   },
   typography: {

@@ -71,10 +71,12 @@ function TextLinks(props){
       <React.Fragment>
         {props.links.map(link => {
           const {pathname, leftLink, rightLink, classes} = props;
-          const { id, isSecondary, href, ...linkProps} = link;
+          const { id, href, ...linkProps} = link;
+          console.log("LINK", id, href, linkProps);
           console.log('Comparing pathname', pathname, href)
           return (<Link
               id={id}
+              key={id}
               variant="h6"
               underline="none"
               color={textColor}
@@ -114,7 +116,7 @@ function RightIconLinks(props){
         {props.links.map(link => {
           const {pathname, classes} = props;
           const {Icon, id, title, description, href} = link;
-          return (<Tooltip title={title} aria-label={description}>
+          return (<Tooltip key={id} title={title} aria-label={description}>
                 <IconButton
                     id={id}
                     component={RouterLink} to={href}
@@ -133,7 +135,7 @@ function RightIconLinks(props){
 
 
 
-function getRightLinksText(user, preferences, extra){
+function getRightLinksText(user, preferences){
   if (!user) return [
     {
       id: 'sign-in',
@@ -150,7 +152,7 @@ function getRightLinksText(user, preferences, extra){
 }
 
 
-function getLeftTextLinks(user, preferences, extra, homeText){
+function getLeftTextLinks(user, preferences, homeText){
   const links = [{
       id: 'home',
       href: '/',
@@ -165,7 +167,7 @@ function getLeftTextLinks(user, preferences, extra, homeText){
 }
 
 
-function getIconLinks(user, preferences, extra){
+function getIconLinks(user, preferences){
   if (user) return [
     {
       id: 'profile',
@@ -193,27 +195,29 @@ class AppAppBar extends React.Component {
   }
 
   render() {
-    const {title, location, classes} = this.props;
+    const {title, homeText, location, classes} = this.props;
     console.log("LOCATION", location)
     const pathname = location.pathname;
     return (
         <div>
           <UserContext.Consumer>
-              {({user, preferences, extra}) => {
+              {({user, preferences}) => {
                 console.log("USER", user);
                     let rightTextLinks;
-                    if (this.props.getRightTextLinks) rightTextLinks = this.props.getRightTextLinks(user, preferences, extra);
-                    else rightTextLinks = getRightLinksText(user, preferences, extra);
-                    if (this.props.additionalRightTextLinks) rightTextLinks = rightTextLinks.concat(this.props.additionalRightTextLinks(user, preferences, extra));
+                    if (this.props.getRightTextLinks) rightTextLinks = this.props.getRightTextLinks(user, preferences);
+                    else rightTextLinks = getRightLinksText(user, preferences);
+                    if (this.props.additionalRightTextLinks) rightTextLinks = rightTextLinks.concat(this.props.additionalRightTextLinks(user, preferences));
                     let leftTextLinks;
-                    if (this.props.getLeftTextLinks) rightTextLinks = this.props.getLeftTextLinks(user, preferences, extra);
-                    else leftTextLinks = getLeftTextLinks(user, preferences, extra);
-                    if (this.props.additionalLeftTextLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalLeftTextLinks(user, preferences, extra));
+                    if (this.props.getLeftTextLinks) leftTextLinks = this.props.getLeftTextLinks(user, preferences, homeText);
+                    else leftTextLinks = getLeftTextLinks(user, preferences, homeText);
+                    if (this.props.additionalLeftTextLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalLeftTextLinks(user, preferences));
                     let iconLinks;
-                    if (this.props.getIconLinks) iconLinks = this.props.getIconLinks(user, preferences, extra);
-                    else iconLinks = getIconLinks(user, preferences, extra);
-                    if (this.props.additionalIconLinks) leftTextLinks = leftTextLinks.concat(this.props.additionalIconLinks(user, preferences, extra));
-                return (
+                    if (this.props.getIconLinks) iconLinks = this.props.getIconLinks(user, preferences);
+                    else iconLinks = getIconLinks(user, preferences);
+                    if (this.props.additionalIconLinks) iconLinks = iconLinks.concat(this.props.additionalIconLinks(user, preferences));
+                    console.log('leftTextLinks', leftTextLinks)
+                    console.log('rightTextLinks', rightTextLinks)
+                    return (
                   <React.Fragment>
           <AppBar position="fixed">
             <Toolbar className={classes.toolbar}>

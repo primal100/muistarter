@@ -5,7 +5,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import defaultTheme from './theme';
 
 
-export default function withRoot(Component) {
+export default function withRoot(Component, theme) {
+  theme = theme || defaultTheme;
   function WithRoot(props) {
     let isMobile;
     if (process.env.NODE_ENV === 'production') {
@@ -13,8 +14,7 @@ export default function withRoot(Component) {
     }else{  /// Workaround for puppeteer useMediaQuery doesn't work jsdom
         isMobile = false;
     }
-    let { theme, componentProps} = props;
-    theme = theme || defaultTheme;
+    let { componentProps} = props;
     return (
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
