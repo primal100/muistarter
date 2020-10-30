@@ -72,7 +72,6 @@ function TextLinks(props){
         {props.links.map(link => {
           const {pathname, leftLink, rightLink, classes} = props;
           const { id, href, ...linkProps} = link;
-          console.log("LINK", id, href, linkProps);
           console.log('Comparing pathname', pathname, href)
           return (<Link
               id={id}
@@ -83,7 +82,7 @@ function TextLinks(props){
               className={clsx({
                 [classes.leftLink]: leftLink,
                 [classes.rightLink]: rightLink,
-                [classes.linkSecondary]: (pathname === href)
+                [classes.linkSecondary]: (href === "/" ? pathname === "/" : pathname.startsWith(href))
               })}
               component={RouterLink} to={href}
               {...linkProps}
@@ -121,7 +120,7 @@ function RightIconLinks(props){
                     id={id}
                     component={RouterLink} to={href}
                     className={clsx({
-                      [classes.linkSecondary]: (pathname === href)
+                      [classes.linkSecondary]: (pathname.startsWith(href))
                     })}
                     color={textColor}
                 >
