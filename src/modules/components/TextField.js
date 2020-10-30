@@ -30,10 +30,7 @@ const styles = (theme) => ({
   },
   select: {
     height: 'auto',
-  },
-  selectIcon: {
-    top: '50%',
-  },
+  }
 });
 
 function TextField(props) {
