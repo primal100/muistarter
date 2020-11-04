@@ -36,6 +36,7 @@ const styles = (theme) => ({
 function TextField(props) {
   const {
     classes,
+    disabledProps,
     InputProps = {},
     InputLabelProps,
     noBorder = false,
@@ -57,7 +58,7 @@ function TextField(props) {
             classes[`inputSize${capitalize(size)}`],
             InputPropsClassesInput,
           ),
-          disabled: classes.disabled,
+          disabled: disabledProps || classes.disabled,
           ...InputPropsClassesOther,
         },
         ...InputPropsOther,

@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.light,
     marginBottom: 0,
     margin: 0,
+    width: "100%"
   },
   container: {
     marginTop: theme.spacing(2),
