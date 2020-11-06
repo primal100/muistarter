@@ -46,10 +46,11 @@ const variantMapping = {
 };
 
 function Typography(props) {
-  const { children, classes, marked = false, variant, ...other } = props;
+  let { children, classes, marked = false, variant, color, ...other } = props;
+  color = color || 'inherit';
 
   return (
-    <MuiTypography variantMapping={variantMapping} variant={variant} {...other}>
+    <MuiTypography variantMapping={variantMapping} variant={variant} color={color } {...other}>
       {children}
       {marked ? (
         <span className={classes[`marked${capitalize(variant) + capitalize(marked)}`]} />

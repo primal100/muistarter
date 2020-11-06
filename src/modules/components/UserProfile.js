@@ -1,14 +1,9 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import {required, email} from '../form/validation';
 import RFTextField from '../form/RFTextField';
 import EditableField from '../form/EditableField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
@@ -67,7 +62,6 @@ class UserProfile extends React.Component {
     }
 
     render() {
-      const { classes } = this.props;
       this.mailingListSwitchData = [
             {label: 'Be part of our Mailing List'}
       ];
@@ -76,7 +70,7 @@ class UserProfile extends React.Component {
             <AppForm>
               <React.Fragment>
                 <Typography variant="h3" gutterBottom marked="center" align="center">
-                  User Details
+                  Your Profile
                 </Typography>
               </React.Fragment>
               <React.Fragment>
@@ -84,7 +78,7 @@ class UserProfile extends React.Component {
                 {({user, updater}) => (
               <AjaxForm formID="user-profile-form" createRequest={this.createRequest} loadInitialValuesFromURL={userProfileUrl}
                         getSuccessMessage={this.getSuccessMessage} noSubmitButton={true} updateInitialValuesOnResponse
-                        submitModifiedValuesOnly onSuccess={updater} validate={this.validate} classes={classes}
+                        submitModifiedValuesOnly onSuccess={updater} validate={this.validate}
               analyticsEventArgs={{category: 'User', action: 'Updating user profile'}} analyticsInitialValuesAction="Get User Profile">
                   <Grid container spacing={2}>
                      <Grid item xs={12} sm={6}>
@@ -95,7 +89,6 @@ class UserProfile extends React.Component {
                            fullWidth
                            label="First name"
                            name="first_name"
-                           required
                         />
                      </Grid>
                      <Grid item xs={12} sm={6}>
@@ -105,7 +98,6 @@ class UserProfile extends React.Component {
                            fullWidth
                            label="Last name"
                            name="last_name"
-                           required
                         />
                      </Grid>
                   </Grid>
@@ -116,10 +108,9 @@ class UserProfile extends React.Component {
                           label="Email"
                           margin="normal"
                           name="email"
-                          required
                   />
                   <Switches
-                          color="primary"
+                          color="secondary"
                           name="mailing_list"
                           onClick={this.handleSwitchChange}
                           data={this.mailingListSwitchData}
@@ -139,7 +130,4 @@ class UserProfile extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(UserProfile);
+export default UserProfile;

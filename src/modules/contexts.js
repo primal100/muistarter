@@ -2,16 +2,21 @@ import React from "react";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./api";
 import {setAnalyticsUserDetails} from "./analytics";
 
-export const UserContext = React.createContext({user: null, updater: null, reset: null, userChecked: false});
+export const UserContext = React.createContext({user: null, updater: null, reset: null,
+    userChecked: false, preferences: null, setExtra: null});
 UserContext.displayName = "UserContext"
 
+
+const getPreferences = () => localStorage.getItem('preferences');
 
 export class SetUserContext extends React.Component {
 
     constructor(props) {
         super(props);
+        this.defaultUserDetails = {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails,
+            userChecked: false, preferences: getPreferences(), setExtra: this.setExtra}
         this.state = {
-            userDetails: {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails, userChecked: false}
+            userDetails: this.defaultUserDetails
         }
     }
 
@@ -24,15 +29,25 @@ export class SetUserContext extends React.Component {
         console.log('Updating user details', user);
         if(user && user.email) {
             setAnalyticsUserDetails(user);
-            this.setState({userDetails: {user: user, updater: this.updateUserDetails,
-                    reset: this.resetUserDetails, userChecked: true}});
+            this.setState({userDetails: {...this.state.userDetails, user: user, userChecked: true}});
         }
+    }
+
+    refreshPreferences = (user) => {
+        console.log('Refreshing Preferences', user);
+        if(user && user.email) {
+            this.setState({userDetails: {...this.state.userDetails, preferences: getPreferences()}});
+        }
+    }
+
+    setExtra = (obj) => {
+        console.log('Setting user extra', obj);
+        setTimeout(() => this.setState({userDetails: {...this.state.userDetails, ...obj}}), 0);
     }
 
     resetUserDetails = () => {
         console.log('Resetting user details');
-        this.setState({userDetails: {user: null, updater: this.updateUserDetails,
-                reset: this.resetUserDetails, userChecked: true}});
+        this.setState({userDetails: {...this.defaultUserDetails, preferences: null, userChecked: true}});
     }
 
     render() {

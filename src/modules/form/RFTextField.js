@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '../components/TextField';
 
+
 function RFTextField(props) {
   const {
     autoComplete,
@@ -10,6 +11,9 @@ function RFTextField(props) {
     meta: { touched, error, submitError },
     ...other
   } = props;
+  console.log('RFTextFieldOther', other)
+  console.log('RFTextFieldinput', input)
+  console.log('RFTextFieldinputProps', InputProps)
   return (
     <TextField
       error={Boolean(touched && (error || submitError))}

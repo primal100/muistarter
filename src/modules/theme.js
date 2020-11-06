@@ -9,8 +9,8 @@ const rawTheme = createMuiTheme({
       dark: '#1e1e1f',
     },
     secondary: {
-      light: '#fff5f8',
-      main: '#ff3366',
+      light: '#ffffff',
+      main: '#172A3A',
       dark: '#e62958',
     },
     warning: {
@@ -27,6 +27,16 @@ const rawTheme = createMuiTheme({
       main: green[500],
       dark: green[700],
     },
+    background: {
+      paper:"#000000",
+      default:"#172A3A",
+      placeholder: grey[200]
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#000000',
+      disabled: '#a9a6a6',
+    }
   },
   typography: {
     fontFamily: "'Work Sans', sans-serif",
@@ -51,8 +61,8 @@ const theme = {
     ...rawTheme.palette,
     background: {
       ...rawTheme.palette.background,
-      default: rawTheme.palette.common.white,
-      placeholder: grey[200],
+      //default: rawTheme.palette.common.white,
+      //placeholder: grey[200],
     },
   },
   typography: {
@@ -101,8 +111,12 @@ const theme = {
     body2: {
       ...rawTheme.typography.body1,
       fontSize: 14,
-    },
+    }
   },
 };
+
+
+console.log('theme', theme)
+console.log('theme', JSON.stringify(theme))
 
 export default theme;

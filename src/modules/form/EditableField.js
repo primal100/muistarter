@@ -3,10 +3,8 @@ import { Field } from 'react-final-form';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from "@material-ui/core/IconButton";
 import { InputAdornment } from '@material-ui/core';
-import compose from "recompose/compose";
 import {withStyles} from "@material-ui/core/styles";
 import useStyles from "./styles";
-import withRoot from "../withRoot";
 
 
 class EditableField extends React.Component {
@@ -40,7 +38,9 @@ class EditableField extends React.Component {
                  InputProps={{
                        endAdornment:
                            <InputAdornment position="end" >
-                                   <IconButton id={`enable-${fieldProps.name}`} onClick={this.handleClick}><EditIcon/></IconButton>
+                                   <IconButton id={`enable-${fieldProps.name}`} onClick={this.handleClick}>
+                                       <EditIcon/>
+                                   </IconButton>
                            </InputAdornment>
                        }}
                  />
@@ -49,7 +49,4 @@ class EditableField extends React.Component {
 }
 
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(EditableField);
+export default withStyles(useStyles)(EditableField);

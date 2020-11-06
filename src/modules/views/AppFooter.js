@@ -1,18 +1,17 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 import { OutboundLink } from "react-ga";
 
-function Copyright() {
+function Copyright(props) {
+  const title = props.title || "Your Website";
   return (
     <React.Fragment>
-      {'© '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
+      <Typography color="inherit">
+        © {title}
+      </Typography>{' '}
       {new Date().getFullYear()}
     </React.Fragment>
   );
@@ -22,10 +21,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.secondary.light,
+    marginBottom: 0,
+    margin: 0,
+    width: "100%"
   },
   container: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(8),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     display: 'flex',
   },
   iconsWrapper: {
@@ -55,20 +57,27 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
   },
+  linkNoUnderline: {
+    color: theme.palette.primary.light,
+    textDecoration: 'none'
+  },
   language: {
     marginTop: theme.spacing(1),
     width: 150,
   },
+  rightLinks: {
+    justifyContent: 'flex-end',
+  }
 }));
 
-export default function AppFooter() {
+export default function AppFooter(props) {
   const classes = useStyles();
 
   return (
     <Typography component="footer" className={classes.root}>
       <Container className={classes.container}>
         <Grid container spacing={5}>
-          <Grid item xs={6} sm={4} md={3}>
+          <Grid item xs={9} sm={9} md={9}>
             <Grid
               container
               direction="column"
@@ -77,22 +86,24 @@ export default function AppFooter() {
               spacing={2}
             >
               <Grid item>
-                <Copyright />
+                <Copyright title={props.title}/>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} sm={4} md={2}>
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h6" marked="left" gutterBottom>
               Legal
             </Typography>
+            <Typography component={'span'}  variant="body1">
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <OutboundLink to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
+                <OutboundLink className={classes.linkNoUnderline} to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
               </li>
               <li className={classes.listItem}>
-                <OutboundLink to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
+                <OutboundLink className={classes.linkNoUnderline} to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
               </li>
             </ul>
+            </Typography>
           </Grid>
         </Grid>
       </Container>

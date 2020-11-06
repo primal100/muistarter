@@ -24,9 +24,9 @@ export { default as AjaxRequest } from './modules/components/AjaxRequest'
 export { default as Typography } from './modules/components/Typography'
 export { default as AppForm } from './modules/views/AppForm'
 export { default as RFTextField } from './modules/form/RFTextField'
-export { default as AppBar} from './modules/views/AppAppBar';
+export { default as AppBar} from './modules/views/AppAppBar'
+export { default as Paper } from './modules/components/Paper'
 export { default as AppFooter } from './modules/views/AppFooter';
-export { default as useStyles } from './modules/form/styles'
 export { default as withRoot } from './modules/withRoot'
 export { default as FormButton } from './modules/form/FormButton'
 export Announcement from './modules/components/Announcement'

@@ -1,7 +1,4 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import {Form, FormSpy} from 'react-final-form';
 import FormButton from '../form/FormButton';
 import FormFeedback from '../form/FormFeedback';
@@ -14,7 +11,7 @@ import { nullOrEmptyObject } from "../utils"
 
 
 const responseKey = process.env.REACT_APP_GENERAL_RESPONSE_KEY
-const non_field_errors_key = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
+const nonFieldErrorsKey = process.env.REACT_APP_NON_FIELD_ERRORS_KEY
 
 
 class AjaxForm extends React.Component {
@@ -66,13 +63,13 @@ class AjaxForm extends React.Component {
     onSubmitError = (data, request) => {
         console.log('Running onSubmitError')
         console.log(!nullOrEmptyObject(data[responseKey]))
-        console.log(!nullOrEmptyObject(data[non_field_errors_key]))
+        console.log(!nullOrEmptyObject(data[nonFieldErrorsKey]))
         console.log("Data", data)
         let errors;
         if (!nullOrEmptyObject(data[responseKey])) {
             errors = {[FORM_ERROR]: data[responseKey]}
-        }else if (!nullOrEmptyObject(data[non_field_errors_key])){
-            errors = {[FORM_ERROR]: data[non_field_errors_key]}
+        }else if (!nullOrEmptyObject(data[nonFieldErrorsKey])){
+            errors = {[FORM_ERROR]: data[nonFieldErrorsKey]}
         }else{
             console.log('Getting field errors');
             errors = Object.keys(data).reduce((obj, k) => {
@@ -187,7 +184,4 @@ class AjaxForm extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot,
-)(AjaxForm);
+export default withStyles(useStyles)(AjaxForm);

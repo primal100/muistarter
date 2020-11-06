@@ -8,7 +8,7 @@ import Paper from '../components/Paper';
 const styles = (theme) => ({
   root: {
     display: 'flex',
-    backgroundImage: 'url(/static/onepirate/appCurvyLines.png)',
+    backgroundImage: '/appCurvyLines.png',
     backgroundRepeat: 'no-repeat',
   },
   paper: {
@@ -16,6 +16,7 @@ const styles = (theme) => ({
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing(8, 6),
     },
+    color: theme.palette.text.secondary
   },
 });
 

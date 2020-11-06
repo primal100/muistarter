@@ -1,18 +1,13 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import { Field, } from 'react-final-form';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 
 
-const change_password_url = process.env.REACT_APP_CHANGE_PASSWORD_URL
+const changePasswordUrl = process.env.REACT_APP_CHANGE_PASSWORD_URL
 
 
 class ChangePassword extends React.Component {
@@ -31,7 +26,6 @@ class ChangePassword extends React.Component {
     };
 
     render() {
-      const { classes } = this.props
       const redirect = {
           pathname: "/profile",
       }
@@ -43,8 +37,8 @@ class ChangePassword extends React.Component {
                   Change Password
                 </Typography>
               </React.Fragment>
-              <AjaxForm url={change_password_url} method="POST" redirectTo={redirect} showSuccessMessage
-                      validate={this.validate} buttonText="Change Password" classes={classes}
+              <AjaxForm url={changePasswordUrl} method="POST" redirectTo={redirect} showSuccessMessage
+                      validate={this.validate} buttonText="Change Password"
               analyticsEventArgs={{category: 'User', action:'Change password'}}>
                       <Field
                           autoFocus
@@ -84,7 +78,4 @@ class ChangePassword extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(ChangePassword);
+export default ChangePassword;

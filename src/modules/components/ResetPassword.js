@@ -1,14 +1,9 @@
-import withRoot from '../withRoot';
-// --- Post bootstrap -----
 import React from 'react';
-import compose from 'recompose/compose';
 import { Field, } from 'react-final-form';
 import Typography from './Typography';
 import AppForm from '../views/AppForm';
 import { required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../form/styles';
 import AjaxForm from '../form/AjaxForm';
 import {propsParamsToObject} from "../utils";
 
@@ -33,7 +28,7 @@ class ResetPassword extends React.Component {
 
     render() {
       this.additionalValues = propsParamsToObject(this.props);
-      const { classes } = this.props;
+
       const redirect = {
           pathname: "/sign-in",
       }
@@ -46,7 +41,7 @@ class ResetPassword extends React.Component {
                 </Typography>
               </React.Fragment>
               <AjaxForm formID="reset-password-form" url={resetPasswordUrl} method="POST" redirectTo={redirect}
-                        validate={this.validate} buttonText="Set New Password" showSuccessMessage classes={classes}
+                        validate={this.validate} buttonText="Set New Password" showSuccessMessage
                         additonalValues={this.additionalValues} noAuth
               analyticsEventArgs={{category: 'User', action:'Reset password'}}>
                   <Field
@@ -77,7 +72,4 @@ class ResetPassword extends React.Component {
     }
 }
 
-export default compose(
-  withStyles(useStyles),
-  withRoot
-)(ResetPassword);
+export default ResetPassword;

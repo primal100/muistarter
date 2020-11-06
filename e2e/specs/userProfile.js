@@ -31,7 +31,8 @@ describe("test user profile view", () => {
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'testuser@example.com']);
         expect(await inputIsChecked('mailing_list')).toBeTruthy();
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
-        expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["test user"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     });
 
     it("should enable the first name form field, edit and submit values with tab, and disable the form field", async () => {
@@ -42,7 +43,8 @@ describe("test user profile view", () => {
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'user', 'testuser@example.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(successMessages);
-         expect(await getTextContent("#username")).toEqual(["Jane user testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane user"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     });
 
     it("should enable the last name form field, edit and submit values with enter, and disable the form fields", async () => {
@@ -53,8 +55,8 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'Doe', 'testuser@example.com']);
         expect(await getSuccessMessageText()).toEqual(successMessages);
-        expect(await getTextContent("#username")).toEqual(["test Doe testuser@example.com"]);
-    });
+        expect(await getTextContent("#username")).toEqual(["test Doe"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);    });
 
     it("should disable and enable the mailing list switch", async () => {
         await clickSwitch('mailing_list');
@@ -75,7 +77,8 @@ describe("test user profile view", () => {
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['test', 'user', 'a@c.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(changeEmailSuccessMessages);
-        expect(await getTextContent("#username")).toEqual(["test user testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["test user"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     });
 
     it("should submit first name, last name and email fields", async () => {
@@ -83,7 +86,8 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([false, true, true]);
         await fillForm({first_name: 'Jane'}, true);
         await submitFieldTab();
-        expect(await getTextContent("#username")).toEqual(["Jane user testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane user"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'user', 'testuser@example.com']);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(successMessages);
@@ -91,7 +95,8 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, false, true]);
         await fillForm({last_name: 'Doe'}, true);
         await submitFormEnter();
-        expect(await getTextContent("#username")).toEqual(["Jane Doe testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane Doe"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getFormValues(['first_name', 'last_name', 'email'])).toEqual(['Jane', 'Doe', 'testuser@example.com']);
         expect(await getSuccessMessageText()).toEqual(successMessages);
@@ -103,7 +108,8 @@ describe("test user profile view", () => {
         expect(await getFormIsDisabled(['first_name', 'last_name', 'email'])).toEqual([true, true, true]);
         expect(await getSuccessMessageText()).toEqual(successMessages.concat(changeEmailSuccessMessages));
         await sleep(1)
-        expect(await getTextContent("#username")).toEqual(["Jane Doe testuser@example.com"]);
+        expect(await getTextContent("#username")).toEqual(["Jane Doe"]);
+        expect(await getTextContent("#email")).toEqual(["testuser@example.com"]);
     });
 })
 

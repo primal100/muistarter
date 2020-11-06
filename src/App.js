@@ -12,6 +12,7 @@ import { SetUserContext } from "./modules/contexts"
 import {Analytics} from "./modules/analytics";
 
 
+
 class App extends React.Component {
 
     render(){
@@ -22,11 +23,13 @@ class App extends React.Component {
                 <SetUserContext>
                 <Analytics/>
                 <Announcement/>
-                <AppAppBar showName/>
-                <div>
-                    <AppRoutes/>
+                <div className="App Site">
+                    <div className="Site-content">
+                        <AppAppBar showUserDetails title="OnePirate"/>
+                        <AppRoutes/>
+                    </div>
+                    <AppFooter/>
                 </div>
-                <AppFooter/>
                 </SetUserContext>
               </ScrollToTop>
             </Router>

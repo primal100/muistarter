@@ -8,7 +8,7 @@ const useStyles = (theme) => ({
   },
   feedback: {
     marginTop: theme.spacing(2),
-  },
+  }
 })
 
 
