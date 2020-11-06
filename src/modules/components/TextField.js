@@ -30,6 +30,9 @@ const styles = (theme) => ({
   },
   select: {
     height: 'auto',
+  },
+  selectIcon: {
+
   }
 });
 
@@ -44,7 +47,8 @@ function TextField(props) {
     SelectProps,
     ...other
   } = props;
-
+  console.log('TextFieldOther', other)
+  console.log('TextFieldSelectProps', SelectProps)
   const {
     classes: { input: InputPropsClassesInput, ...InputPropsClassesOther } = {},
     ...InputPropsOther
