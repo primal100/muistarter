@@ -34,4 +34,4 @@ export { default as FormFeedback } from './modules/form/FormFeedback'
 export { email as emailValidator, required } from './modules/form/validation'
 export { Analytics, sendAnalyticsError, sendAnalyticsException, sendAnalyticsModalView, sendAnalyticsOutboundLink,
     setAnalyticsFields, pageViewAnalytics} from "./modules/analytics"
-export { paramsToObject, propsParamsToObject } from './modules/utils'
+export { paramsToObject, propsParamsToObject, parseBool } from './modules/utils'

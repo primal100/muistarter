@@ -116,7 +116,4 @@ const theme = {
 };
 
 
-console.log('theme', theme)
-console.log('theme', JSON.stringify(theme))
-
 export default theme;

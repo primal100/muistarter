@@ -16,9 +16,9 @@ import {sendAnalyticsEvent, sendAnalyticsEventForAjaxRequest, sendAnalyticsExcep
 const userProfileUrl = process.env.REACT_APP_USER_PROFILE_URL
 const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
 const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
-const clearLocalStorageOnSignOut = parseBool(process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
+const clearLocalStorageOnSignOut = parseBool(process.env.REACT_APP_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
 
-console.log('process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT', process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
+console.log('process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT', process.env.REACT_APP_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
 console.log('clearLocalStorageOnSignOut', clearLocalStorageOnSignOut);
 
 const REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS = 300;

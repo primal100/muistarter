@@ -3,13 +3,16 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import defaultTheme from './theme';
+import { parseBool } from "./utils";
+
+const mediaQueries = parseBool(process.env.REACT_APP_USE_MEDIA_QUERIES)
 
 
 export default function withRoot(Component, theme) {
   theme = theme || defaultTheme;
   function WithRoot(props) {
     let isMobile;
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || mediaQueries) {
         isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     }else{  /// Workaround for puppeteer useMediaQuery doesn't work jsdom
         isMobile = false;
