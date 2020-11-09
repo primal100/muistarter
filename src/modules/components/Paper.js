@@ -19,7 +19,9 @@ const styles = (theme) => ({
     color: theme.palette.primary.light
   },
   padding: {
-    padding: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(1),
+    }
   },
 });
 
