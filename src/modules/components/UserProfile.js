@@ -20,7 +20,7 @@ const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 class UserProfile extends React.Component {
 
     validate = (values) => {
-        console.log('Validating user profile')
+      console.log('Validating user profile')
       const errors = required(['email'], values);
 
       if (!errors.email) {

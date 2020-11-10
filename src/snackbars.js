@@ -6,11 +6,11 @@ import CloseIcon from "@material-ui/icons/Close";
 
 
 const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS || 5;
-const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 3;
+const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 0;
 const anchorOrigin = {horizontal: process.env.REACT_APP_ANCHOR_ORIGIN_HORIZONTAL || 'center',
     vertical: process.env.REACT_APP_ANCHOR_ORIGIN_VERTICAL || 'top'}
-const maxAlertsMobile = process.env.REACT_APP_MAX_ALERTS_MOBILE || 3
-const maxAlerts = process.env.REACT_APP_MAX_ALERTS_MOBILE || 5
+const maxAlertsMobile = parseInt(process.env.REACT_APP_MAX_ALERTS_MOBILE || 1)
+const maxAlerts = parseInt(process.env.REACT_APP_MAX_ALERTS || 1)
 const snackbarClasses = {
             variantSuccess: 'success-message',
             variantError: 'error-message',
