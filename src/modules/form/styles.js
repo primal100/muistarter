@@ -1,6 +1,8 @@
 const useStyles = (theme) => ({
-  form: {
-    marginTop: theme.spacing(6),
+  [theme.breakpoints.up('md')]: {
+    form: {
+      marginTop: theme.spacing(6),
+    }
   },
   button: {
     marginTop: theme.spacing(3),
