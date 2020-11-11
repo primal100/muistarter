@@ -48,7 +48,6 @@ export class _AppRoutes extends React.Component {
   }
 
   render() {
-      console.log('AppRoutes', this.props.redirectOnSignIn);
     return (
       <Switch>
         <Route path="/sign-in" render={() => <SignIn redirectTo={this.props.redirectOnSignIn}/>}/>

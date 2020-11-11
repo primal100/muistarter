@@ -18,9 +18,6 @@ const refreshEndpoint = process.env.REACT_APP_REFRESH_TOKEN_URL
 const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
 const clearLocalStorageOnSignOut = parseBool(process.env.REACT_APP_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
 
-console.log('process.env.REACT_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT', process.env.REACT_APP_CLEAR_LOCAL_STORAGE_ON_SIGN_OUT)
-console.log('clearLocalStorageOnSignOut', clearLocalStorageOnSignOut);
-
 const REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS = 300;
 
 
@@ -50,12 +47,8 @@ const getTokenExpiresTimeStamp = (token) => {
 
 const isTokenExpired = (token, expire_fudge=0) => {
     if (!token) return true
-    console.log('Checking if token is expired:', token);
-    console.log("expire_fudge", expire_fudge)
     const expin = getExpiresInFromJWT(token) - expire_fudge
-    console.log('expin', expin)
     const isExpired = !expin || expin < 0;
-    console.log('isExpired', isExpired);
     return isExpired;
 }
 
@@ -69,7 +62,6 @@ const onRefreshTokenExpired = (redirectPath=window.location.pathname) => {
         nonInteraction: true
     });
    clearAuthTokens();
-   console.log('Refresh token expired, redirecting to', redirectPath)
    window.location = redirectPath;
 }
 
@@ -85,19 +77,15 @@ let tokenRefreshPromise;
 
 
 const unsetTokenPromise = () =>{
-    console.log('Unsetting token promise');
     tokenRefreshPromise = null;
 }
 
 const requestRefresh = async (refreshToken) => {
-    console.log('Getting token')
     if (isTokenExpired(refreshToken)){
-        console.log('Refresh refresh token')
         onRefreshTokenExpired("sign-in");
     }
 
     if (!tokenRefreshPromise){
-        console.log('Getting token, creating promise');
         const request = {
             method: 'POST',
             url: refreshEndpoint,
@@ -110,7 +98,6 @@ const requestRefresh = async (refreshToken) => {
     }
     try {
         const response = await tokenRefreshPromise;
-        console.log('Promise result', response);
         const data = await response.data;
         if (data.refresh) setRefreshToken(data.refresh)
         setTimeout(unsetTokenPromise, 3000);
@@ -166,9 +153,7 @@ export const getAndUpdateUserDetails = async(updater, data) => {
     }
     else if (isLoggedIn()){
         setAccessToken(null);
-        console.log('Refreshing token if needed');
         const accessToken = await refreshTokenIfNeeded(requestRefresh);
-        console.log('AccessToken:', accessToken)
         user = jwt.decode(accessToken);
     }else{
         user = null;

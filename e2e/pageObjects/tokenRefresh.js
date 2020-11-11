@@ -35,6 +35,5 @@ export const setShortLivedAccessToken = async (expire_seconds) => {
 export const setShortLivedRefreshToken = async (expire_seconds) => {
     const accessToken = generateToken(expire_seconds);
     const refreshToken = generateToken(expire_seconds);
-    console.log(Date.now(), accessToken, refreshToken)
     await setTokens(accessToken, refreshToken);
 }

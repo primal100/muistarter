@@ -26,7 +26,6 @@ export class SetUserContext extends React.Component {
     }
 
     updateUserDetails = (user) => {
-        console.log('Updating user details', user);
         if(user && user.email) {
             setAnalyticsUserDetails(user);
             this.setState({userDetails: {...this.state.userDetails, user: user, userChecked: true}});
@@ -34,19 +33,16 @@ export class SetUserContext extends React.Component {
     }
 
     refreshPreferences = (user) => {
-        console.log('Refreshing Preferences', user);
         if(user && user.email) {
             this.setState({userDetails: {...this.state.userDetails, preferences: getPreferences()}});
         }
     }
 
     setExtra = (obj) => {
-        console.log('Setting user extra', obj);
         setTimeout(() => this.setState({userDetails: {...this.state.userDetails, ...obj}}), 0);
     }
 
     resetUserDetails = () => {
-        console.log('Resetting user details');
         this.setState({userDetails: {...this.defaultUserDetails, preferences: null, userChecked: true}});
     }
 

@@ -73,7 +73,6 @@ function TextLinks(props){
         {props.links.map(link => {
           const {pathname, leftLink, rightLink, classes} = props;
           const { id, href, ...linkProps} = link;
-          console.log('Comparing pathname', pathname, href)
           return (<Link
               id={id}
               key={id}
@@ -196,13 +195,11 @@ class AppAppBar extends React.Component {
 
   render() {
     const {title, homeText, location, classes} = this.props;
-    console.log("LOCATION", location)
     const pathname = location.pathname;
     return (
         <div>
           <UserContext.Consumer>
               {({user, preferences}) => {
-                console.log("USER", user);
                     let rightTextLinks;
                     if (this.props.getRightTextLinks) rightTextLinks = this.props.getRightTextLinks(user, preferences);
                     else rightTextLinks = getRightLinksText(user, preferences);
@@ -215,8 +212,6 @@ class AppAppBar extends React.Component {
                     if (this.props.getIconLinks) iconLinks = this.props.getIconLinks(user, preferences);
                     else iconLinks = getIconLinks(user, preferences);
                     if (this.props.additionalIconLinks) iconLinks = iconLinks.concat(this.props.additionalIconLinks(user, preferences));
-                    console.log('leftTextLinks', leftTextLinks)
-                    console.log('rightTextLinks', rightTextLinks)
                     return (
                   <React.Fragment>
           <AppBar position="fixed">

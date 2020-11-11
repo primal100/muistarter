@@ -10,10 +10,8 @@ const logoutEndpoint = process.env.REACT_APP_SIGN_OUT_URL
 class SignOut extends React.Component {
 
     onSuccess= () => {
-        console.log('Clearing auth tokens')
         signOut();
         if (this.props.onSuccess) setTimeout(this.props.onSuccess, 0);
-        console.log('SignOut onSuccess finished')
     }
 
     render(){

@@ -8,7 +8,6 @@ import AjaxRequest from "./AjaxRequest"
 class SendParams extends React.Component {
 
     render() {
-        console.log("Running sendParams component @ " + window.location.pathname);
         const values = propsParamsToObject(this.props);
 
         const redirect = {

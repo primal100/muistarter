@@ -8,14 +8,11 @@ let mockRaw;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
     const adaptorConfig = { delayResponse: parseInt(process.env.REACT_APP_MOCK_DELAY || 0) }
-    console.log(`Running in ${process.env.NODE_ENV} mode`)
-    console.log('AdaptorConfig', adaptorConfig);
     mock = new MockAdapter(API, adaptorConfig);
     mockRaw = new MockAdapter(APINoAuthentication, adaptorConfig);
     mock.onNoMatch = "passthrough";
     mockRaw.onNoMatch = "passthrough";
 }else {
-    console.log(`Running in ${process.env.NODE_ENV} mode`)
     mock = null
     mockRaw = null;
 }
@@ -93,7 +90,6 @@ const change_password_response_wrong_old_password = {old_password: ['Old passwor
 export const mockBackendDecodeAccessTokenFromAxiosConfig = (config) => {
     if (config.headers[authorizationHeader]){
         const accessToken = config.headers[authorizationHeader].split(' ')[1]
-        console.log('found accessToken', accessToken)
         return jwt.decode(accessToken);
     }
     return null;
@@ -101,16 +97,12 @@ export const mockBackendDecodeAccessTokenFromAxiosConfig = (config) => {
 
 
 export const mockBackendCheckIsStaff = (config, normalReply, staffReply, notLoggedIn) => {
-    console.log('Received request', config);
     const userData = mockBackendDecodeAccessTokenFromAxiosConfig(config);
-    console.log('userData', userData)
     if (userData) {
         if (userData.is_staff) {
-            console.log('returning', staffReply)
             if (staffReply instanceof Function) return staffReply(config);
             else return staffReply;
         } else {
-            console.log('returning', normalReply)
             if (normalReply instanceof Function) return normalReply(config);
             else return normalReply;
         }
@@ -125,10 +117,8 @@ export const userDetailsResponse = (config) => {
 }
 
 export const updateRegularUser = (config) =>{
-    console.log("updateRegularUser", config);
     const userData = JSON.parse(config.data);
     userDetails = {...userDetails, ...userData};
-    console.log(userDetails)
     return [201, userDetails]
 }
 
@@ -143,10 +133,8 @@ export const updateUserDetails = (config) => {
 }
 
 export const mockBackendRefreshTokenMock = (config) => {
-    console.log('REFRESHING TOKEN ON BACKEND');
     const refreshToken = JSON.parse(config.data).refresh;
     const userData = jwt.decode(refreshToken);
-    console.log('userData', userData)
     if (userData.is_staff) return [200, staffTokenRefreshResponseOK];
     else return [200, refreshResponseOK];
 }
@@ -209,20 +197,15 @@ export default function mockBackend(errorOnNoMatch) {
         window.getMockHistory = getMockHistory;
         window.getMockRawHistory = getMockRawHistory;
         if (errorOnNoMatch || process.env.REACT_APP_MOCK_BACKEND_ERROR_ON_NO_MATCH) {
-            console.log('Error will be raised if API request cannot be matched')
             mock.onAny().reply((config) => {
-                console.log("Mock request did not match", config);
                 return [404, []]
             })
         }else{
-            console.log('Unmatched mock api requests will be passed through')
             mock.onAny().passThrough()
         }
     }
 }
 
 
-console.log('mock', mock)
-console.log('mockRaw', mockRaw)
 export { mock }
 export { mockRaw }
