@@ -30,7 +30,6 @@ class AjaxForm extends React.Component {
     }
 
     onSubmitSuccess = (data, request, reDirected) => {
-        console.log('onSubmitSuccess called with', data)
         let updatedState = {};
         let unRendered;
 
@@ -40,38 +39,26 @@ class AjaxForm extends React.Component {
 
         unRendered = reDirected || unRendered;
 
-        console.log('unRendered', unRendered);
-        console.log(this.state.initialValues, "initialValues", !nullOrEmptyObject(this.state.initialValues))
-        console.log(data[responseKey], "data[responseKey]", nullOrEmptyObject(data[responseKey]))
         if (!unRendered ){
             if (this.props.restartFormOnSuccess && this.form){
-                console.log('Scheduling form restart')
                 setTimeout(this.form.restart, 0);
             }
             else if (this.props.updateInitialValuesOnResponse && nullOrEmptyObject(data[responseKey])) {
-                const updatedInitialValues = {...this.state.initialValues, ...data};
-                console.log('Setting initialValues', updatedInitialValues)
-                updatedState.initialValues = updatedInitialValues;
+                updatedState.initialValues = {...this.state.initialValues, ...data};
             }
             updatedState.sent = false;
             this.setState(updatedState);
-            console.log('State set to false');
         }
         this.callback();
     }
 
     onSubmitError = (data, request) => {
-        console.log('Running onSubmitError')
-        console.log(!nullOrEmptyObject(data[responseKey]))
-        console.log(!nullOrEmptyObject(data[nonFieldErrorsKey]))
-        console.log("Data", data)
         let errors;
         if (!nullOrEmptyObject(data[responseKey])) {
             errors = {[FORM_ERROR]: data[responseKey]}
         }else if (!nullOrEmptyObject(data[nonFieldErrorsKey])){
             errors = {[FORM_ERROR]: data[nonFieldErrorsKey]}
         }else{
-            console.log('Getting field errors');
             errors = Object.keys(data).reduce((obj, k) => {
                 let value = obj[k]
                 if (value && value.length > 0) {
@@ -92,7 +79,6 @@ class AjaxForm extends React.Component {
     }
 
     handleSubmit = async (values, form, callback) => {
-        console.log('Submitting form with values', values);
         this.form = form;
         this.callback = callback;
         this.formKeys = Object.keys(values);
@@ -103,8 +89,6 @@ class AjaxForm extends React.Component {
             Object.assign(values, additionalValues);
         }
         if (this.props.submitModifiedValuesOnly) {
-            console.log('InitialValues', this.state.initialValues);
-            console.log('Comparing with new data', values);
             values = Object.keys(values).reduce((obj, key) => {
                 if (values[key] !== this.state.initialValues[key]) {
                     obj[key] = values[key];

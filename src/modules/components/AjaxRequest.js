@@ -23,7 +23,6 @@ class AjaxRequest extends React.Component {
         let msg;
 
         if (this.props.onSuccess) {
-           console.log('Calling onSuccess with', responseData)
            this.props.onSuccess(responseData, request, Boolean(this.props.redirectTo));
         }
 
@@ -36,7 +35,6 @@ class AjaxRequest extends React.Component {
         }
 
         if (msg) {
-            console.log('AJAXRequest adding snackbar', msg)
             snackbarOptions = { variant: "success",  ...snackbarOptions}
             this.props.enqueueSnackbar(msg, snackbarOptions);
         }
@@ -78,24 +76,19 @@ class AjaxRequest extends React.Component {
 
             if (this.props.adaptRequest) request = this.props.adaptRequest(request);
 
-            console.log("AJAXRequest", request);
-
             if (!this.props.passive) sendAnalyticsEventForAjaxRequest(request.url, request.method, nonInteraction,
                 this.props.analyticsEventArgs);
 
             let response
-            console.log(request.url, "PASSIVE", this.props.passive);
             if (this.props.noAuth) {
                 response = await APINoAuthentication(request);
             }else if (this.props.passive){
-                console.log('Running AJAXRequest passively')
                 API(request);
                 return [true, null];
             } else {
                 response = await API(request);
             }
 
-            console.log("AjaxRequest Response", response);
             responseData = response.data;
 
             this.onSuccess(responseData, request, snackbarOptions);
@@ -103,10 +96,8 @@ class AjaxRequest extends React.Component {
             return [true, responseData];
 
         }catch (e) {
-            console.log(e, typeof e);
             if (typeof e === "string" && (e.includes("Got 401 on token refresh") || e.includes('Resetting auth token:'))){
                 // Failed to refresh token
-                console.log('Failed to refresh token', e);
                 let snackbarOptions = {variant: "error", ...snackbarOptions};
                 this.props.enqueueSnackbar('Authentication issue encountered. Please login again.',
                     snackbarOptions);
@@ -118,15 +109,12 @@ class AjaxRequest extends React.Component {
                     responseData = e.response.data;
                     sendAnalyticsErrorsFromObject(responseData, this.props.analyticsEventArgs);
                 }else{
-                    console.log("response", e.response);
-                    console.log('errormessage', e.message);
                     sendAnalyticsException(e);
                     responseData = {[responseKey]: e.message};
                     let newWindow = window.open();
                     newWindow.document.write(e.response.data);
                     newWindow.document.close();
                 }
-                console.log('error response object received');
                 snackbarOptions = {variant: "error", ...snackbarOptions}
                 const errorMessage = Object.values(responseData).join('\n');
                 if (this.props.onError) this.props.onError(responseData, request, snackbarOptions);
@@ -138,7 +126,6 @@ class AjaxRequest extends React.Component {
                 sendAnalyticsException(e);
             }
             console.error(e)
-            console.log("Error message", e.message);
             return [false, responseData];
         }
     }
@@ -146,7 +133,6 @@ class AjaxRequest extends React.Component {
     send = async() => {
         if (this.props.showBackdrop) this.setState({showBackdrop: true});
 
-        console.log('runAtInterval', this.props.interval);
         let redirect;
         let success;
         let responseData;
@@ -154,7 +140,6 @@ class AjaxRequest extends React.Component {
         if (this.props.redirectTo) redirect = { ...this.props.redirectTo }
 
         if (this.props.checkLocationState && this.props.location.state && this.props.location.state.data) {
-            console.log("AjaxRequest retrieving from location.state.data");
             success = true;
             responseData = this.props.location.state.data;
             let newState = {...this.props.location.state}
@@ -166,7 +151,6 @@ class AjaxRequest extends React.Component {
             this.onSuccess(responseData, {});
 
         } else {
-            console.log('Sending request to', this.props.url, this.props.method)
             if (this.props.passive){
                 this.sendRequest();
                 return
@@ -191,7 +175,6 @@ class AjaxRequest extends React.Component {
         } else {
             if (responseData === "Token Refresh Failed"){
                 // Redirect to sign-in page if there was an issue refreshing access token
-                console.log('Resetting user details and redirecting to login');
                 resetUserDetails = true;
                 redirect = {
                     pathname: "/sign-in"
@@ -200,20 +183,16 @@ class AjaxRequest extends React.Component {
             else if (!this.props.reDirectOnError) redirect = null;
         }
 
-        console.log('resetUserDetails', this.props.resetUserDetails);
         if (resetUserDetails){
                setTimeout(userContext.reset, 0);
         }
 
-        console.log('AJAXRequest redirectState', redirect);
         if (redirect) this.setState({redirect: redirect});
         else if (this.props.showBackdrop) this.setState({showBackdrop: false});
     }
 
     async componentDidMount(){
-        console.log('Mounting AJAXRequest');
         if (!this.props.noImmediateRequest) await this.send();
-        console.log('runAtInterval', this.props.runAtInterval);
         if (this.props.runAtInterval) this.intervalTask = setInterval(this.sendRequest, this.props.runAtInterval);
     }
 
@@ -221,11 +200,9 @@ class AjaxRequest extends React.Component {
         if (this.intervalTask){
             clearInterval(this.intervalTask);
         }
-        console.log('AJAXRequest Unmounted')
     }
 
     render(){
-        console.log('Rendering AJAXRequest');
         return (
             <React.Fragment>
                 {this.state.redirect &&

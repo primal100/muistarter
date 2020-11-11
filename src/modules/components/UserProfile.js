@@ -20,7 +20,6 @@ const changeEmailUrl = process.env.REACT_APP_CHANGE_EMAIL_URL
 class UserProfile extends React.Component {
 
     validate = (values) => {
-      console.log('Validating user profile')
       const errors = required(['email'], values);
 
       if (!errors.email) {
@@ -29,7 +28,6 @@ class UserProfile extends React.Component {
           errors.email = emailError;
         }
       }
-      console.log('Validation user profile result', errors);
       return errors;
     };
 
@@ -56,7 +54,6 @@ class UserProfile extends React.Component {
     }
 
     handleSwitchChange = async (event) => {
-        console.log('Mailing list event', event)
         const form = event.target.form;
         setTimeout(() => form.dispatchEvent(new Event('submit', { cancelable: true })), 0);
     }

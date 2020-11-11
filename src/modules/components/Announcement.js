@@ -8,13 +8,9 @@ const announcementsCheckInterval = (parseInt(process.env.REACT_APP_ANNOUNCEMENT_
 const announcementsUrl = process.env.REACT_APP_ANNOUNCEMENT_URL;
 
 
-console.log('announcementsCheckInterval', announcementsCheckInterval);
-
-
 class Announcement extends React.Component {
 
     componentDidMount() {
-        console.log('Mounting announcement', this.props.msg);
         if (this.props.msg) this.showMessage(this.props.msg);
     }
 
@@ -25,13 +21,10 @@ class Announcement extends React.Component {
     }
 
     showMessageFromResponseIfNotAlreadySeen = (response) => {
-        console.log("Showing message if not already seen")
         if (response && response.length > 0){
             const announcement = response[0];
             const lastAnnouncement = parseInt(localStorage.getItem('announcementId'));
-            console.log(lastAnnouncement, announcement.id)
             if (lastAnnouncement !== announcement.id) {
-                console.log("Showing message")
                 this.showMessage(announcement.text);
                 localStorage.setItem('announcementId', announcement.id);
             }
@@ -39,7 +32,6 @@ class Announcement extends React.Component {
     }
 
     render() {
-        console.log('Rendering announcement', this.props.msg);
         return (
             <React.Fragment>
                 {announcementsUrl && <AjaxRequest url={announcementsUrl} method="GET" runAtInterval={announcementsCheckInterval}

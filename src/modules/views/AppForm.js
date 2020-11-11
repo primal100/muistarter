@@ -8,7 +8,6 @@ import Paper from '../components/Paper';
 const styles = (theme) => ({
   root: {
     display: 'flex',
-    backgroundImage: '/appCurvyLines.png',
     backgroundRepeat: 'no-repeat',
   },
   paper: {

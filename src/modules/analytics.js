@@ -24,13 +24,11 @@ let analyticsEnabled = false;
 
 export const initializeAnalyticsTracker = (hasConsent) => {
     hasConsent = hasConsent || JSON.parse(localStorage.getItem(consentKey));
-    console.log(!analyticsEnabled, trackingID, hasConsent)
     if (!analyticsEnabled && trackingID && hasConsent) {
         ReactGA.initialize(trackingID, {
             debug: trackingDebugMode,
             testMode: trackingTestMode
         });
-        console.log('Initialized Google Analytics with trackingID', trackingID);
         analyticsEnabled = true;
         pageViewAnalytics();
     }
@@ -52,7 +50,6 @@ export const pageViewAnalytics = (path) => {
     if(analyticsEnabled) {
         path = path || window.location.pathname;
         ReactGA.pageview(path);
-        console.log('Sent pageview');
     }
 }
 
@@ -140,7 +137,6 @@ class _Analytics extends React.Component {
     }
 
     onConsent = (cookies_accepted=true) => {
-        console.log('Consent exists')
         initializeAnalyticsTracker(true);
         const visitData = this.getInitialVisitData(true);
         visitData.cookies_accepted = cookies_accepted;
@@ -149,7 +145,6 @@ class _Analytics extends React.Component {
     }
 
     onNoConsent = (cookies_accepted=false) => {
-        console.log('Consent does not exist')
         const visitData = this.getInitialVisitData();
         visitData.cookies_accepted = cookies_accepted;
         visitData.analytics_enabled = false;
@@ -157,14 +152,12 @@ class _Analytics extends React.Component {
     }
 
     onAccept = (key) =>{
-        console.log('Consent hsa been accepted')
         this.props.closeSnackbar(key);
         localStorage.setItem(consentKey, JSON.stringify(true));
         this.onConsent(true);
     }
 
     onReject = (key) =>{
-         console.log('Consent has been rejected')
         this.props.closeSnackbar(key);
         localStorage.setItem(consentKey, JSON.stringify(false))
         this.onNoConsent(false);
@@ -172,9 +165,7 @@ class _Analytics extends React.Component {
 
     componentDidMount() {
         const consent = JSON.parse(localStorage.getItem(consentKey));
-        console.log('Mounting Analytics, consent:', consent, 'showCookieWarning:', showCookieWarning)
         if (showCookieWarning && consent === null) {
-            console.log('Showing cookie warning with no consent in localStorage')
             const action = key => (
                 <React.Fragment>
                     <Button onClick={() => this.onAccept(key)}>
@@ -204,14 +195,11 @@ class _Analytics extends React.Component {
             <UserContext.Consumer>
                 {({user}) => {
                     let ajaxKey;
-                    console.log('Rendering analytics with user', user)
                     if (user){
                         ajaxKey = user.user_id
                     }else {
                         ajaxKey = 0
                     }
-                    console.log('Rendering analytics with ajaxKey', ajaxKey)
-                    console.log('Rendering analytics with data', this.state.visitData)
                     return (
                         <React.Fragment>
                         {
