@@ -8,6 +8,9 @@ const announcementsCheckInterval = (parseInt(process.env.REACT_APP_ANNOUNCEMENT_
 const announcementsUrl = process.env.REACT_APP_ANNOUNCEMENT_URL;
 
 
+console.log('announcementsCheckInterval', announcementsCheckInterval);
+
+
 class Announcement extends React.Component {
 
     componentDidMount() {

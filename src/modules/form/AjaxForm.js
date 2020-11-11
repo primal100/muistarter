@@ -146,7 +146,7 @@ class AjaxForm extends React.Component {
                 <Form onSubmit={this.handleSubmit} subscription={{submitting: true}} validate={validate}
                       initialValues={this.state.initialValues}
                       render={({submitError, handleSubmit, form}) => (
-                          <form {...formProps} onSubmit={handleSubmit} className={!noTopPadding && classes.form} noValidate>
+                          <form {...formProps} onSubmit={handleSubmit} className={!noTopPadding ? classes.form : undefined} noValidate>
                               <fieldset disabled={this.state.sent}>
                                   {this.props.children}
                               </fieldset>
