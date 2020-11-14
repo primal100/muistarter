@@ -10,12 +10,14 @@ import SendResetPasswordURL from "./modules/components/SendResetPasswordURL";
 import ResetPassword from "./modules/components/ResetPassword";
 import UserProfile from "./modules/components/UserProfile";
 import ChangePassword from "./modules/components/ChangePassword";
+import MarkdownFileView from "./modules/components/MarkdownFileView"
 import Home from "./modules/components/Home";
 
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
 const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
-
+const privacyFile = process.env.REACT_APP_PRIVACY_MARKDOWN_FILE || "/privacy.md"
+const termsFile = process.env.REACT_APP_TERMS_MARKDOWN_FILE || "/terms.md"
 
 export class ProtectedRoute extends React.Component {
   render() {
@@ -60,6 +62,8 @@ export class _AppRoutes extends React.Component {
         <ProtectedRoute path="/profile" component={UserProfile}/>
         <Route path="/verify-email" render={() => <SendParams url={verifyEmailUrl} action="Verify new e-mail address" redirectTo="/"/>}/>
         <ProtectedRoute path="/change-password" component={ChangePassword}/>
+        <Route path="/privacy" render={() => <MarkdownFileView key="privacy" url={privacyFile}/>}/>
+        <Route path="/terms" render={() => <MarkdownFileView key="terms" url={termsFile}/>}/>
         {this.props.children}
         <Route exact path="/" component={Home}/>
         <Route exact render={props => <Redirect to="/"/>}/>

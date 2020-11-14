@@ -3,17 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
-import { OutboundLink } from "react-ga";
+import Link from "@material-ui/core/Link"
+import Box from "@material-ui/core/Box"
+import { Link as RouterLink } from 'react-router-dom';
+
+
+const websiteLink = process.env.REACT_APP_WEBSITE_LINK
+
 
 function Copyright(props) {
   const title = props.title || "Your Website";
   return (
-    <React.Fragment>
-      <Typography color="inherit">
-        © {title}
-      </Typography>{' '}
-      {new Date().getFullYear()}
-    </React.Fragment>
+      <Typography color="primary">
+        © {new Date().getFullYear() } <Link href={websiteLink}>{title}</Link>
+       </Typography>
   );
 }
 
@@ -86,7 +89,7 @@ export default function AppFooter(props) {
               spacing={2}
             >
               <Grid item>
-                <Copyright title={props.title}/>
+                <Copyright title={props.title} titleLink={props.titleLink}/>
               </Grid>
             </Grid>
           </Grid>
@@ -97,10 +100,10 @@ export default function AppFooter(props) {
             <Typography component={'span'}  variant="body1">
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <OutboundLink className={classes.linkNoUnderline} to="/terms/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Terms</OutboundLink>
+                <Link className={classes.linkNoUnderline} component={RouterLink} to="/terms/">Terms</Link>
               </li>
               <li className={classes.listItem}>
-                <OutboundLink className={classes.linkNoUnderline} to="/privacy/" target="_blank" eventLabel="Clicked on footer link to terms & conditions">Privacy</OutboundLink>
+                <Link className={classes.linkNoUnderline} component={RouterLink} to="/privacy/">Privacy</Link>
               </li>
             </ul>
             </Typography>

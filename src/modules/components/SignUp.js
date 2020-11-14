@@ -6,7 +6,6 @@ import AppForm from '../views/AppForm';
 import { email, required, passwords_match } from '../form/validation';
 import RFTextField from '../form/RFTextField';
 import {Link as RouterLink} from "react-router-dom";
-import { OutboundLink } from "react-ga";
 import Grid from '@material-ui/core/Grid';
 import AjaxForm from '../form/AjaxForm';
 import { Switches } from 'mui-rff'
@@ -140,9 +139,9 @@ class SignUp extends React.Component {
                       />
                       </Grid>
                   <Typography variant="body1" paragraph>
-                      <OutboundLink to={privacyUrl} target="_blank" eventLabel="Clicked link on signup form to privacy policy">
+                      <Link component={RouterLink} to={privacyUrl} target="_blank">
                           Click here to view our privacy policy
-                          </OutboundLink>
+                       </Link>
                   </Typography>
                       <Grid item xs={12} sm={6}>
                       <Switches
@@ -153,8 +152,9 @@ class SignUp extends React.Component {
                       />
                       </Grid>
                   <Typography variant="body1" paragraph>
-                  <OutboundLink to={termsUrl} target="_blank" eventLabel="Clicked link on signup form to terms & conditions">
-                      Click here to view our terms & conditions</OutboundLink>
+                  <Link component={RouterLink}  to={termsUrl} target="_blank">
+                      Click here to view our terms & conditions
+                  </Link>
                   </Typography>
               </AjaxForm>
             </AppForm>
