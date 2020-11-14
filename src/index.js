@@ -35,3 +35,4 @@ export { email as emailValidator, required } from './modules/form/validation'
 export { Analytics, sendAnalyticsError, sendAnalyticsException, sendAnalyticsModalView, sendAnalyticsOutboundLink,
     setAnalyticsFields, pageViewAnalytics} from "./modules/analytics"
 export { paramsToObject, propsParamsToObject, parseBool } from './modules/utils'
+export MarkdownFileView from './modules/components/MarkdownFileView'

@@ -180,6 +180,10 @@ class _Analytics extends React.Component {
                 variant: 'warning',
                 persist: true,
                 transitionDuration: 1000,
+                anchorOrigin: {
+                  horizontal: "left",
+                  vertical: "bottom"
+                },
                 action
             })
             if (isBot()){
