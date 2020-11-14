@@ -12,8 +12,6 @@ import { Switches } from 'mui-rff'
 
 
 const signUpUrl = process.env.REACT_APP_SIGN_UP_URL
-const privacyUrl = process.env.REACT_APP_PRIVACY_URL;
-const termsUrl = process.env.REACT_APP_TERMS_URL;
 
 class SignUp extends React.Component {
 
@@ -139,7 +137,7 @@ class SignUp extends React.Component {
                       />
                       </Grid>
                   <Typography variant="body1" paragraph>
-                      <Link component={RouterLink} to={privacyUrl} target="_blank">
+                      <Link component={RouterLink} to="privacy" target="_blank">
                           Click here to view our privacy policy
                        </Link>
                   </Typography>
@@ -152,7 +150,7 @@ class SignUp extends React.Component {
                       />
                       </Grid>
                   <Typography variant="body1" paragraph>
-                  <Link component={RouterLink}  to={termsUrl} target="_blank">
+                  <Link component={RouterLink} to="terms" target="_blank">
                       Click here to view our terms & conditions
                   </Link>
                   </Typography>

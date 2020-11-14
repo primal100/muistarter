@@ -100,10 +100,10 @@ export default function AppFooter(props) {
             <Typography component={'span'}  variant="body1">
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <Link className={classes.linkNoUnderline} component={RouterLink} to="/terms/">Terms And Conditions</Link>
+                <Link className={classes.linkNoUnderline} component={RouterLink} to="/terms">Terms And Conditions</Link>
               </li>
               <li className={classes.listItem}>
-                <Link className={classes.linkNoUnderline} component={RouterLink} to="/privacy/">Privacy Policy</Link>
+                <Link className={classes.linkNoUnderline} component={RouterLink} to="/privacy">Privacy Policy</Link>
               </li>
             </ul>
             </Typography>
