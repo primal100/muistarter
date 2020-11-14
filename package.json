@@ -2,7 +2,7 @@
   "name": "react-authentication-skeleton",
   "main": "lib/index.js",
   "module": "lib",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A skeleton for an app with ajax authentication and registration",
   "private": false,
   "files": [
