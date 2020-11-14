@@ -10,7 +10,7 @@ import ScrollToTop from 'react-router-scroll-top'
 import { AppRoutes} from "./routes";
 import { SetUserContext } from "./modules/contexts"
 import {Analytics} from "./modules/analytics";
-
+import {NoSsr} from "@material-ui/core/NoSsr";
 
 
 class App extends React.Component {

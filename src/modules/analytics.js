@@ -5,6 +5,7 @@ import { withSnackbar} from "notistack";
 import { parseBool } from "./utils"
 import AjaxRequest from "./components/AjaxRequest";
 import { UserContext } from "./contexts"
+import {NoSsr} from "@material-ui/core/NoSsr";
 
 
 const visitUrl = process.env.REACT_APP_VISIT_URL;
@@ -219,4 +220,13 @@ class _Analytics extends React.Component {
 }
 
 
-export const Analytics = withSnackbar(_Analytics)
+const WithSnackbarAnalytics = withSnackbar(_Analytics)
+
+
+export default function Analytics (props){
+    return (
+        <NoSsr>
+            <WithSnackbarAnalytics {...props}/>
+        </NoSsr>
+    )
+}
