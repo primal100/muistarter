@@ -14,7 +14,7 @@ describe("test announcement", () => {
 
   it("should show announcement", async () => {
         expect(await getInfoMessageText()).toEqual([infoMessage]);
-        expect(await getAnnouncementKey()).toBe(1);
+        expect(await getAnnouncementKey()).toBe("this-is-a-test-announcement");
   });
 });
 
@@ -29,7 +29,6 @@ describe("test announcement already shown", () => {
 
   it("should not show announcement", async () => {
         expect(await getInfoMessageText()).toEqual([]);
-        expect(await getAnnouncementKey()).toBe(1);
+        expect(await getAnnouncementKey()).toBe("this-is-a-test-announcement");
   });
 });
-

@@ -149,7 +149,7 @@ export const getAnnouncements = () => {
 
 
 const addAnnouncement = () => {
-    announcements.push({id: 1, text: "This is a test announcement"})
+    announcements.push({slug: "this-is-a-test-announcement", text: "This is a test announcement"})
 }
 
 
