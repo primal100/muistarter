@@ -23,10 +23,10 @@ class Announcement extends React.Component {
     showMessageFromResponseIfNotAlreadySeen = (response) => {
         if (response && response.length > 0){
             const announcement = response[0];
-            const lastAnnouncement = parseInt(localStorage.getItem('announcementId'));
-            if (lastAnnouncement !== announcement.id) {
+            const lastAnnouncement = localStorage.getItem('announcement');
+            if (lastAnnouncement !== announcement.slug) {
                 this.showMessage(announcement.text);
-                localStorage.setItem('announcementId', announcement.id);
+                localStorage.setItem('announcement', announcement.slug);
             }
         }
     }
