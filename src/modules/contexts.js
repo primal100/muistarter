@@ -1,16 +1,17 @@
 import React from "react";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./api";
 import {setAnalyticsUserDetails} from "./analytics";
-import {NoSsr} from "@material-ui/core/NoSsr";
+import NoSsr from "@material-ui/core/NoSsr";
 
 export const UserContext = React.createContext({user: null, updater: null, reset: null,
     userChecked: false, preferences: null, setExtra: null});
 UserContext.displayName = "UserContext"
 
 
-const getPreferences = () => localStorage.getItem('preferences');
+const getPreferences = () => localStorage.getItem('userPreferences');
 
-export class _SetUserContext extends React.Component {
+
+class _SetUserContext extends React.Component {
 
     constructor(props) {
         super(props);
@@ -57,14 +58,14 @@ export class _SetUserContext extends React.Component {
 }
 
 
-function SetUserContext(props){
+export function SetUserContext(props){
     const ssRUserDetails = {user: null, updater: null, reset: null,
         userChecked: true, preferences: null, setExtra: null}
     return (
         <NoSsr fallback={<UserContext.Provider value={ssRUserDetails}>
-                {this.props.children}
+                {props.children}
             </UserContext.Provider>}>
-            <SetUserContext {...props}/>
+            <_SetUserContext {...props}/>
         </NoSsr>
     )
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { withSnackbar } from 'notistack';
 import {AjaxRequest} from "../../index";
-import { Nossr } from "@material-ui/core/NoSsr";
+import NoSsr from "@material-ui/core/NoSsr";
 
 
 const announcementDuration = (parseInt(process.env.REACT_APP_ANNOUNCEMENT_DURATION) || 10) * 1000;
@@ -24,10 +24,12 @@ class _Announcement extends React.Component {
     showMessageFromResponseIfNotAlreadySeen = (response) => {
         if (response && response.length > 0){
             const announcement = response[0];
-            const lastAnnouncement = localStorage.getItem('announcement');
-            if (lastAnnouncement !== announcement.slug) {
-                this.showMessage(announcement.text);
-                localStorage.setItem('announcement', announcement.slug);
+            if (announcement.text) {
+                const lastAnnouncement = localStorage.getItem('announcement');
+                if (lastAnnouncement !== announcement.slug) {
+                    this.showMessage(announcement.text);
+                    localStorage.setItem('announcement', announcement.slug);
+                }
             }
         }
     }
@@ -51,10 +53,10 @@ class _Announcement extends React.Component {
 const WithSnackbarAnnouncement = withSnackbar(_Announcement);
 
 
-function Announcement(props){
+export default function Announcement(props){
     return (
-        <Nossr>
+        <NoSsr>
             <WithSnackbarAnnouncement {...props}/>
-        </Nossr>
+        </NoSsr>
     )
 }

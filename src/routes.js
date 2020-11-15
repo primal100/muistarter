@@ -21,36 +21,37 @@ const privacyFile = process.env.REACT_APP_PRIVACY_MARKDOWN_FILE || "/privacy.md"
 const termsFile = process.env.REACT_APP_TERMS_MARKDOWN_FILE || "/terms.md"
 
 
-function NotLoggedInRedirect (){
-    sendAnalyticsEvent({
-        category: 'User',
-        action: `Redirect to sign-in as attempt was made to access ProtectedRoute by non-authenticated user: ${window.location.pathname}`,
-        label: 'RedirectToSignIn',
-        nonInteraction: true
-    });
-
-    return (
-        <Redirect to='/sign-in' />
-    )
-}
-
-
-export class ProtectedRoute extends React.Component {
+class ProtectedRouteInner extends React.Component {
   render() {
     const { component: Component, ...props } = this.props;
+    const authenticated = isLoggedIn();
+    if (!authenticated)
+        sendAnalyticsEvent({
+            category: 'User',
+            action: `Redirect to sign-in as attempt was made to access ProtectedRoute by non-authenticated user: ${window.location.pathname}`,
+            label: 'RedirectToSignIn',
+            nonInteraction: true
+        });
     return (
       <Route
         {...props}
         render={props => (
-          <NoSsr fallback="Loading...please wait">
-            isLoggedIn() ?
+          authenticated ?
             <Component {...props} /> :
-                <NotLoggedInRedirect/>
-          </NoSsr>
+            <Redirect to='/sign-in' />
         )}
       />
     )
   }
+}
+
+
+export function ProtectedRoute(props){
+    return (
+        <NoSsr>
+            <ProtectedRouteInner {...props}/>
+        </NoSsr>
+    )
 }
 
 

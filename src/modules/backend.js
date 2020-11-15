@@ -6,7 +6,7 @@ let mock;
 let mockRaw;
 
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') {
+if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' || process.env.REACT_APP_MOCK_BACKEND) {
     const adaptorConfig = { delayResponse: parseInt(process.env.REACT_APP_MOCK_DELAY || 0) }
     mock = new MockAdapter(API, adaptorConfig);
     mockRaw = new MockAdapter(APINoAuthentication, adaptorConfig);
@@ -193,9 +193,11 @@ export default function mockBackend(errorOnNoMatch) {
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL, change_password_request_password_too_short).reply((config) => mockBackendCheckIsStaff(config, [400, register_too_short_password_response]));
         mock.onPost(process.env.REACT_APP_CHANGE_PASSWORD_URL).reply((config) => mockBackendCheckIsStaff(config, [200, change_password_response]));
         mock.onGet(process.env.REACT_APP_ANNOUNCEMENT_URL).reply(getAnnouncements);
-        window.addAnnouncement = addAnnouncement;
-        window.getMockHistory = getMockHistory;
-        window.getMockRawHistory = getMockRawHistory;
+        if (typeof window !== "undefined") {
+            window.addAnnouncement = addAnnouncement;
+            window.getMockHistory = getMockHistory;
+            window.getMockRawHistory = getMockRawHistory;
+        }
         if (errorOnNoMatch || process.env.REACT_APP_MOCK_BACKEND_ERROR_ON_NO_MATCH) {
             mock.onAny().reply((config) => {
                 return [404, []]

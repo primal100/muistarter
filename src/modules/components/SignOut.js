@@ -1,6 +1,6 @@
 import React from 'react';
 import AjaxRequest from "../components/AjaxRequest";
-import {clearAuthTokens, getRefreshToken} from "axios-jwt";
+import {getRefreshToken} from "axios-jwt";
 import {signOut} from "../api"
 
 

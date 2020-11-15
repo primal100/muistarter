@@ -188,9 +188,6 @@ function getIconLinks(user, preferences){
 
 
 class AppAppBar extends React.Component {
-  state = {
-    signOut: false
-  }
 
   render() {
     const {title, homeText, location, classes} = this.props;

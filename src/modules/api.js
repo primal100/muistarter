@@ -8,7 +8,8 @@ import {
     getAccessToken,
     isLoggedIn,
     setAccessToken,
-    refreshTokenIfNeeded, setAuthTokens
+    refreshTokenIfNeeded,
+    setAuthTokens
 } from "axios-jwt";
 import {sendAnalyticsEvent, sendAnalyticsEventForAjaxRequest, sendAnalyticsException} from "./analytics";
 
@@ -48,8 +49,7 @@ const getTokenExpiresTimeStamp = (token) => {
 const isTokenExpired = (token, expire_fudge=0) => {
     if (!token) return true
     const expin = getExpiresInFromJWT(token) - expire_fudge
-    const isExpired = !expin || expin < 0;
-    return isExpired;
+    return  !expin || expin < 0;
 }
 
 
@@ -109,15 +109,7 @@ const requestRefresh = async (refreshToken) => {
 };
 
 
-const currentRefreshToken = getRefreshToken();
-if (currentRefreshToken && isTokenExpired(currentRefreshToken, REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS)){
-    onRefreshTokenExpired();
-}
-
-useAuthTokenInterceptor(API, { requestRefresh });
-
-
-export const authResponseToAuthTokens = (values) => ({
+const authResponseToAuthTokens = (values) => ({
   accessToken: values.access,
   refreshToken: values.refresh
 });
@@ -131,7 +123,7 @@ function AttributeMissingFromTokenError(message) {
 }
 
 
-export const verifyTokenAttrs = (decodedToken) => {
+const verifyTokenAttrs = (decodedToken) => {
     expectedAttrs.forEach((attr) => {
         if (! attr in decodedToken) {
             throw new AttributeMissingFromTokenError(`${attr} value is missing from decoded jwt token:`, decodedToken);
@@ -140,6 +132,12 @@ export const verifyTokenAttrs = (decodedToken) => {
 }
 
 export const updateUserFromCurrentAccessToken = (updater) => {
+    useAuthTokenInterceptor(API, { requestRefresh });
+
+    const currentRefreshToken = getRefreshToken();
+    if (currentRefreshToken && isTokenExpired(currentRefreshToken, REMOVE_REFRESH_TOKEN_IF_EXPIRES_IN_SECS)){
+        onRefreshTokenExpired();
+    }
     const accessToken = getAccessToken();
     if (accessToken) updater(jwt.decode(accessToken));
 }
