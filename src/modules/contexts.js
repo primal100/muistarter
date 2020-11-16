@@ -59,8 +59,11 @@ class _SetUserContext extends React.Component {
 
 
 export function SetUserContext(props){
-    const ssRUserDetails = {user: null, updater: null, reset: null,
-        userChecked: true, preferences: null, setExtra: null}
+    const doNothing = () =>{
+    }
+
+    const ssRUserDetails = {user: null, updater: doNothing, reset: doNothing,
+        userChecked: true, preferences: null, setExtra: doNothing}
     return (
         <NoSsr fallback={<UserContext.Provider value={ssRUserDetails}>
                 {props.children}
