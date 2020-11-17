@@ -21,13 +21,11 @@ class MarkdownFileView extends React.Component {
     }
 
     setText = (response) => {
-        console.log('setting state')
         this.setState({ text: response })
     }
 
     render() {
         const { classes } = this.props;
-        console.log('Text', this.state.text)
         return (
             <Box className={classes.root}>
             <AjaxRequest method="GET" url={this.props.url} onSuccess={this.setText} showBackdrop/>

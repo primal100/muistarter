@@ -61,7 +61,6 @@ class _SetUserContext extends React.Component {
 export function SetUserContext(props){
     const doNothing = () =>{
     }
-
     const ssRUserDetails = {user: null, updater: doNothing, reset: doNothing,
         userChecked: true, preferences: null, setExtra: doNothing}
     return (
