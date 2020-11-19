@@ -71,7 +71,10 @@ function TextLinks(props){
       <React.Fragment>
         {props.links.map(link => {
           const {pathname, leftLink, rightLink, classes} = props;
-          const { id, href, ...linkProps} = link;
+          const { id, href, external, ...linkProps} = link;
+          let component;
+          if (external) component = {component: 'a', href: href}
+          else component = {component: RouterLink, to: href}
           return (<Link
               id={id}
               key={id}
@@ -83,7 +86,7 @@ function TextLinks(props){
                 [classes.rightLink]: rightLink,
                 [classes.linkSecondary]: (href === "/" ? pathname === "/" : pathname.startsWith(href))
               })}
-              component={RouterLink} to={href}
+              {...component}
               {...linkProps}
           >
             {link.text}
@@ -159,6 +162,7 @@ function getLeftTextLinks(user, preferences, homeText){
   if (user && user.is_staff && adminUrl) links.push({
       id: 'admin',
       href: adminUrl,
+      external: true,
       text: 'Admin'
     })
   return links;
