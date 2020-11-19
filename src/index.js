@@ -1,14 +1,32 @@
 import React from 'react'
-import {render} from 'react-dom'
-import './index.css';
 import mockBackend from "./modules/backend";
 import App from "./App";
+import ReactDOM from 'react-dom'
+import {BrowserRouter as Router } from "react-router-dom";
 
 
-const selector = "#react-authentication-app"
-if (document.querySelector(selector)) {
+function Main() {
+  React.useEffect(() => {
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
+
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+
+export const selector = "#react-authentication-app"
+
+
+if (module.hot && document.querySelector(selector)) {
     mockBackend();
-    render(<App/>, document.querySelector(selector))
+    ReactDOM.render(<Main/>, document.querySelector(selector))
 }
 
 

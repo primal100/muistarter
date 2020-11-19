@@ -12,6 +12,7 @@ import UserProfile from "./modules/components/UserProfile";
 import ChangePassword from "./modules/components/ChangePassword";
 import MarkdownFileView from "./modules/components/MarkdownFileView"
 import Home from "./modules/components/Home";
+import NoSsr from "@material-ui/core/NoSsr";
 
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
@@ -19,7 +20,8 @@ const verifyEmailUrl = process.env.REACT_APP_VERIFY_EMAIL_URL
 const privacyFile = process.env.REACT_APP_PRIVACY_MARKDOWN_FILE || "/privacy.md"
 const termsFile = process.env.REACT_APP_TERMS_MARKDOWN_FILE || "/terms.md"
 
-export class ProtectedRoute extends React.Component {
+
+class ProtectedRouteInner extends React.Component {
   render() {
     const { component: Component, ...props } = this.props;
     const authenticated = isLoggedIn();
@@ -41,6 +43,15 @@ export class ProtectedRoute extends React.Component {
       />
     )
   }
+}
+
+
+export function ProtectedRoute(props){
+    return (
+        <NoSsr>
+            <ProtectedRouteInner {...props}/>
+        </NoSsr>
+    )
 }
 
 

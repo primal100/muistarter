@@ -186,7 +186,6 @@ class AjaxRequest extends React.Component {
         if (resetUserDetails){
                setTimeout(userContext.reset, 0);
         }
-
         if (redirect) this.setState({redirect: redirect});
         else if (this.props.showBackdrop) this.setState({showBackdrop: false});
     }

@@ -1,9 +1,9 @@
 {
-  "name": "react-authentication-skeleton",
+  "name": "muistarter",
   "main": "lib/index.js",
   "module": "lib",
-  "version": "1.0.5",
-  "description": "A skeleton for an app with ajax authentication and registration",
+  "version": "0.0.1",
+  "description": "A skeleton for an react material-ui app with ajax authentication and registration",
   "private": false,
   "files": [
     "lib",
@@ -26,6 +26,7 @@
     "axios-mock-adapter": "^1.18.2",
     "clsx": "^1.1.1",
     "dotenv-webpack": "^2.0.0",
+    "express": "^4.17.1",
     "react-ga": "^3.1.2",
     "react-router-scroll-top": "^0.2.1",
     "validator": "^13.1.1"
@@ -70,7 +71,7 @@
   },
   "author": "Paul Martin",
   "license": "MIT",
-  "homepage": "https://github.com/primal100/react_authentication",
+  "homepage": "https://www.npmjs.com/package/muistarter",
   "repository": {
     "url": "git+https://github.com/primal100/react_authentication.git",
     "type": "git"

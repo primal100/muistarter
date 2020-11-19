@@ -12,7 +12,7 @@ export default function withRoot(Component, theme) {
   theme = theme || defaultTheme;
   function WithRoot(props) {
     let isMobile;
-    if (process.env.NODE_ENV === 'production' || mediaQueries) {
+    if (mediaQueries) {
         isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     }else{  /// Workaround for puppeteer useMediaQuery doesn't work jsdom
         isMobile = false;

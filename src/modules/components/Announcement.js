@@ -1,6 +1,7 @@
 import React from "react";
 import { withSnackbar } from 'notistack';
 import {AjaxRequest} from "../../index";
+import NoSsr from "@material-ui/core/NoSsr";
 
 
 const announcementDuration = (parseInt(process.env.REACT_APP_ANNOUNCEMENT_DURATION) || 10) * 1000;
@@ -8,7 +9,7 @@ const announcementsCheckInterval = (parseInt(process.env.REACT_APP_ANNOUNCEMENT_
 const announcementsUrl = process.env.REACT_APP_ANNOUNCEMENT_URL;
 
 
-class Announcement extends React.Component {
+class _Announcement extends React.Component {
 
     componentDidMount() {
         if (this.props.msg) this.showMessage(this.props.msg);
@@ -23,10 +24,12 @@ class Announcement extends React.Component {
     showMessageFromResponseIfNotAlreadySeen = (response) => {
         if (response && response.length > 0){
             const announcement = response[0];
-            const lastAnnouncement = localStorage.getItem('announcement');
-            if (lastAnnouncement !== announcement.slug) {
-                this.showMessage(announcement.text);
-                localStorage.setItem('announcement', announcement.slug);
+            if (announcement.text) {
+                const lastAnnouncement = localStorage.getItem('announcement');
+                if (lastAnnouncement !== announcement.slug) {
+                    this.showMessage(announcement.text);
+                    localStorage.setItem('announcement', announcement.slug);
+                }
             }
         }
     }
@@ -47,4 +50,13 @@ class Announcement extends React.Component {
 
 
 
-export default withSnackbar(Announcement);
+const WithSnackbarAnnouncement = withSnackbar(_Announcement);
+
+
+export default function Announcement(props){
+    return (
+        <NoSsr>
+            <WithSnackbarAnnouncement {...props}/>
+        </NoSsr>
+    )
+}
