@@ -1,5 +1,4 @@
 import React from 'react';
-import compose from 'recompose/compose';
 import { withRouter } from "react-router-dom";
 import {propsParamsToObject} from "../utils";
 import AjaxRequest from "./AjaxRequest"
@@ -24,6 +23,4 @@ class SendParams extends React.Component {
 }
 
 
-export default compose(
-  withRouter,
-)(SendParams);
+export default withRouter(SendParams);
