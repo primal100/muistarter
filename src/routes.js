@@ -13,6 +13,7 @@ import ChangePassword from "./modules/components/ChangePassword";
 import MarkdownFileView from "./modules/components/MarkdownFileView"
 import Home from "./modules/components/Home";
 import NoSsr from "@material-ui/core/NoSsr";
+import NotFound404 from "./modules/components/404";
 
 
 const verifyRegistrationUrl = process.env.REACT_APP_VERIFY_REGISTRATION_URL
@@ -55,12 +56,12 @@ export function ProtectedRoute(props){
 }
 
 
-export class AppRoutes extends React.Component {
+export function AppRoutes (props) {
 
-  render() {
     return (
       <Switch>
-        <Route path="/sign-in" render={() => <SignIn redirectTo={this.props.redirectOnSignIn}/>}/>
+         {props.children}
+        <Route path="/sign-in" render={() => <SignIn redirectTo={props.redirectOnSignIn}/>}/>
         <ProtectedRoute path="/sign-out" component={SignOut}/>
         <Route path="/sign-up" component={SignUp}/>
         <Route path="/sign-up-verify-email"
@@ -72,10 +73,14 @@ export class AppRoutes extends React.Component {
         <ProtectedRoute path="/change-password" component={ChangePassword}/>
         <Route path="/privacy" render={() => <MarkdownFileView key="privacy" url={privacyFile}/>}/>
         <Route path="/terms" render={() => <MarkdownFileView key="terms" url={termsFile}/>}/>
-        {this.props.children}
         <Route exact path="/" component={Home}/>
-        <Route exact render={props => <Redirect to="/"/>}/>
+        <Route render={({ staticContext }) => {
+            if (staticContext) {
+                staticContext.statusCode = 404
+                }
+            return props.notFoundComponent || <NotFound404 />
+            }}
+        />
       </Switch>
     )
-  }
 }

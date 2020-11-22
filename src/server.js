@@ -10,13 +10,14 @@ import {selector} from "./index";
 
 const buildDir = 'lib'
 
+
 function handleRender(req, res) {
   const sheets = new ServerStyleSheets();
+  const staticRouterContext = {}
 
-  // Render the component to a string.
   const html = ReactDOMServer.renderToString(
     sheets.collect(
-        <Router>
+        <Router location={req.url} context={staticRouterContext}>
         <App />
         </Router>
     ),
@@ -38,6 +39,9 @@ function handleRender(req, res) {
     data = data.replace('<style id="jss-server-side"/>',
         `<style id="jss-server-side">${css}</style>`)
 
+    if (staticRouterContext.statusCode) {
+      res.status(staticRouterContext.statusCode)
+    }
     res.send(data);
   });
 }
