@@ -2,7 +2,7 @@
   "name": "muistarter",
   "main": "lib/index.js",
   "module": "lib",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A skeleton for an react material-ui app with ajax authentication and registration",
   "private": false,
   "files": [
