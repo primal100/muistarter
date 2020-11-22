@@ -1,7 +1,7 @@
 import React from "react";
 import {isLoggedIn} from "axios-jwt";
-import {pageViewAnalytics, sendAnalyticsEvent} from "./modules/analytics";
-import {Redirect, Route, Switch, withRouter} from "react-router-dom";
+import {sendAnalyticsEvent} from "./modules/analytics";
+import {Redirect, Route, Switch} from "react-router-dom";
 import SignIn from "./modules/components/SignIn";
 import SignOut from "./modules/components/SignOut";
 import SignUp from "./modules/components/SignUp";
@@ -55,10 +55,7 @@ export function ProtectedRoute(props){
 }
 
 
-export class _AppRoutes extends React.Component {
-   componentDidUpdate(prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) pageViewAnalytics();
-  }
+export class AppRoutes extends React.Component {
 
   render() {
     return (
@@ -82,6 +79,3 @@ export class _AppRoutes extends React.Component {
     )
   }
 }
-
-
-export const AppRoutes = withRouter(_AppRoutes);

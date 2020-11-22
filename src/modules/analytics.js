@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 import { Button} from "@material-ui/core";
+import { compose } from "recompose";
 import { withSnackbar} from "notistack";
 import { parseBool } from "./utils"
 import AjaxRequest from "./components/AjaxRequest";
 import { UserContext } from "./contexts"
 import NoSsr from "@material-ui/core/NoSsr";
+import {withRouter} from "react-router-dom";
 
 
 const visitUrl = process.env.REACT_APP_VISIT_URL;
@@ -27,7 +29,10 @@ export const initializeAnalyticsTracker = (hasConsent) => {
     if (!analyticsEnabled && trackingID && hasConsent) {
         ReactGA.initialize(trackingID, {
             debug: trackingDebugMode,
-            testMode: trackingTestMode
+            testMode: trackingTestMode,
+            gaOptions: {
+                cookieFlags: 'SameSite=None;Secure'
+            }
         });
         analyticsEnabled = true;
         pageViewAnalytics();
@@ -127,6 +132,10 @@ class _Analytics extends React.Component {
         visitData: null,
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.location.pathname !== prevProps.location.pathname) pageViewAnalytics();
+    }
+
     getInitialVisitData = () => {
         return {
             url: window.location.origin + window.location.pathname,
@@ -218,7 +227,10 @@ class _Analytics extends React.Component {
 }
 
 
-const WithSnackbarAnalytics = withSnackbar(_Analytics)
+const WithSnackbarAnalytics = compose(
+  withRouter,
+  withSnackbar
+)(_Analytics);
 
 
 export function Analytics (props){
