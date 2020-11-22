@@ -11,7 +11,7 @@ UserContext.displayName = "UserContext"
 const getPreferences = () => localStorage.getItem('userPreferences');
 
 
-class _SetUserContext extends React.Component {
+export class SetUserContext extends React.Component {
 
     constructor(props) {
         super(props);
@@ -57,17 +57,3 @@ class _SetUserContext extends React.Component {
     }
 }
 
-
-export function SetUserContext(props){
-    const doNothing = () =>{
-    }
-    const ssRUserDetails = {user: null, updater: doNothing, reset: doNothing,
-        userChecked: true, preferences: null, setExtra: doNothing}
-    return (
-        <NoSsr fallback={<UserContext.Provider value={ssRUserDetails}>
-                {props.children}
-            </UserContext.Provider>}>
-            <_SetUserContext {...props}/>
-        </NoSsr>
-    )
-}
