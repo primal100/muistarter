@@ -1,7 +1,5 @@
 import React from "react";
-import {isLoggedIn} from "axios-jwt";
-import {sendAnalyticsEvent} from "./modules/analytics";
-import {Redirect, Route, Switch} from "react-router-dom";
+import { Route, Switch} from "react-router-dom";
 import SignIn from "./modules/components/SignIn";
 import SignOut from "./modules/components/SignOut";
 import SignUp from "./modules/components/SignUp";
@@ -12,7 +10,7 @@ import UserProfile from "./modules/components/UserProfile";
 import ChangePassword from "./modules/components/ChangePassword";
 import MarkdownFileView from "./modules/components/MarkdownFileView"
 import Home from "./modules/components/Home";
-import NoSsr from "@material-ui/core/NoSsr";
+import ProtectedRoute from "./modules/components/ProtectedRoute"
 import NotFound404 from "./modules/components/404";
 
 
@@ -22,41 +20,8 @@ const privacyFile = process.env.REACT_APP_PRIVACY_MARKDOWN_FILE || "/privacy.md"
 const termsFile = process.env.REACT_APP_TERMS_MARKDOWN_FILE || "/terms.md"
 
 
-class ProtectedRouteInner extends React.Component {
-  render() {
-    const { component: Component, ...props } = this.props;
-    const authenticated = isLoggedIn();
-    if (!authenticated)
-        sendAnalyticsEvent({
-            category: 'User',
-            action: `Redirect to sign-in as attempt was made to access ProtectedRoute by non-authenticated user: ${window.location.pathname}`,
-            label: 'RedirectToSignIn',
-            nonInteraction: true
-        });
-    return (
-      <Route
-        {...props}
-        render={props => (
-          authenticated ?
-            <Component {...props} /> :
-            <Redirect to='/sign-in' />
-        )}
-      />
-    )
-  }
-}
 
-
-export function ProtectedRoute(props){
-    return (
-        <NoSsr>
-            <ProtectedRouteInner {...props}/>
-        </NoSsr>
-    )
-}
-
-
-export function AppRoutes (props) {
+export default function AppRoutes (props) {
 
     return (
       <Switch>

@@ -31,7 +31,8 @@ if (module.hot && document.querySelector(selector)) {
 
 
 export { default as AuthenticationApp } from './App'
-export { ProtectedRoute, AppRoutes } from "./routes"
+export { default as ProtectedRoute} from "./modules/components/ProtectedRoute"
+export { default as AppRoutes } from "./routes"
 export { CustomSnackbarProvider } from './snackbars'
 export { UserContext, SetUserContext } from './modules/contexts'
 export { default as mockAuthenticationBackend, mock, mockRaw, mockBackendCheckIsStaff,
