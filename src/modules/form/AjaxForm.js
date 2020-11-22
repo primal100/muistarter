@@ -38,13 +38,17 @@ class AjaxForm extends React.Component {
         }
 
         unRendered = reDirected || unRendered;
-
         if (!unRendered ){
             if (this.props.restartFormOnSuccess && this.form){
                 setTimeout(this.form.restart, 0);
             }
-            else if (this.props.updateInitialValuesOnResponse && nullOrEmptyObject(data[responseKey])) {
-                updatedState.initialValues = {...this.state.initialValues, ...data};
+            else if (this.props.updateInitialValuesOnResponse) {
+                if (nullOrEmptyObject(data[responseKey])) {
+                    updatedState.initialValues = {...this.state.initialValues, ...data};
+                }else{
+                    updatedState.initialValues = {...this.state.initialValues, ...request.data};
+
+                }
             }
             updatedState.sent = false;
             this.setState(updatedState);
