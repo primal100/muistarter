@@ -6,7 +6,7 @@ import Announcement from "./modules/components/Announcement";
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
 import ScrollToTop from 'react-router-scroll-top'
-import { AppRoutes } from "./routes";
+import AppRoutes from "./routes";
 import { SetUserContext } from "./modules/contexts"
 import {Analytics} from "./modules/analytics";
 
