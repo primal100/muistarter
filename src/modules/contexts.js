@@ -16,7 +16,7 @@ export class SetUserContext extends React.Component {
     constructor(props) {
         super(props);
         this.defaultUserDetails = {user: null, updater: this.updateUserDetails, reset: this.resetUserDetails,
-            userChecked: false, preferences: getPreferences(), setExtra: this.setExtra}
+            userChecked: false, preferences: null, setExtra: this.setExtra}
         this.state = {
             userDetails: this.defaultUserDetails
         }
@@ -28,9 +28,11 @@ export class SetUserContext extends React.Component {
     }
 
     updateUserDetails = (user) => {
+        const preferences = getPreferences();
         if(user && user.email) {
             setAnalyticsUserDetails(user);
-            this.setState({userDetails: {...this.state.userDetails, user: user, userChecked: true}});
+            this.setState({userDetails: {...this.state.userDetails, user: user, userChecked: true,
+                preferences: preferences}});
         }
     }
 
