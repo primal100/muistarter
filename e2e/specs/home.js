@@ -13,14 +13,3 @@ describe("test home", () => {
       expect(await url()).toBe(URL + "/");
   });
 });
-
-
-describe("test home redirects from non-existing url", () => {
-  beforeEach(async () => {
-    await load('/x');
-  });
-
-  it("should redirect to home", async () => {
-      expect(await url()).toBe(URL + "/");
-  });
-});
