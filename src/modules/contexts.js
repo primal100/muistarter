@@ -1,7 +1,6 @@
 import React from "react";
 import {getAndUpdateUserDetails, updateUserFromCurrentAccessToken} from "./api";
 import {setAnalyticsUserDetails} from "./analytics";
-import NoSsr from "@material-ui/core/NoSsr";
 
 export const UserContext = React.createContext({user: null, updater: null, reset: null,
     userChecked: false, preferences: null, setExtra: null});
