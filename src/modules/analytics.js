@@ -139,7 +139,7 @@ class _Analytics extends React.Component {
     getInitialVisitData = () => {
         return {
             url: window.location.origin + window.location.pathname,
-            referrer: document.referrer,
+            referrer: document.referrer.substring(0, 200),
         }
     }
 
