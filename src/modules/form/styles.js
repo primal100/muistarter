@@ -10,6 +10,9 @@ const useStyles = (theme) => ({
   },
   feedback: {
     marginTop: theme.spacing(2),
+  },
+  fieldset: {
+    border: 0
   }
 })
 

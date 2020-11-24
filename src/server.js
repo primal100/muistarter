@@ -3,18 +3,19 @@ import path from 'path';
 import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import {StaticRouter as Router} from "react-router-dom";
 import { ServerStyleSheets } from '@material-ui/core/styles';
-import App from './App';
-import {selector} from "./index";
+import {StaticRouter as Router} from "react-router-dom";
+import App from '../src/App';
 
+
+const selector = '#react-authentication-app';
 const buildDir = 'lib'
 
 
 function handleRender(req, res) {
   const sheets = new ServerStyleSheets();
-  const staticRouterContext = {}
-
+  const staticRouterContext = {};
+  // Render the component to a string.
   const html = ReactDOMServer.renderToString(
     sheets.collect(
         <Router location={req.url} context={staticRouterContext}>
@@ -34,10 +35,11 @@ function handleRender(req, res) {
       return res.status(500).send('Internal server error');
     }
 
-    data = data.replace(`<div id="${selector}"></div>`, `<div id="${selector}">${html}</div>`)
+    data = data.replace(`<div id="${selector}"></div>`,
+        `<div id="${selector}">${html}</div>`)
 
-    data = data.replace('<style id="jss-server-side"/>',
-        `<style id="jss-server-side">${css}</style>`)
+    data = data.replace('<title>',
+        `<style id="jss-server-side">${css}</style><title>`)
 
     if (staticRouterContext.statusCode) {
       res.status(staticRouterContext.statusCode)
@@ -48,10 +50,12 @@ function handleRender(req, res) {
 
 const app = express();
 
-app.use('/build', express.static(buildDir));
 
-// This is fired every time the server-side receives a request.
+app.use("", express.static(buildDir, {index: false}))
+
+
 app.use(handleRender);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port);
