@@ -12,5 +12,8 @@ module.exports = {
         }),
       ]
     }
+  },
+  babel: {
+    plugins: ['transform-regexp-constructors']
   }
 }
