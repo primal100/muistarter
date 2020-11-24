@@ -28,8 +28,8 @@ const rawTheme = createMuiTheme({
       dark: green[700],
     },
     background: {
-      paper:"#000000",
-      default:"#172A3A",
+      paper: "#000000",
+      default: "#172A3A",
       placeholder: grey[200]
     },
     text: {

@@ -21,7 +21,7 @@ const adminUrl = process.env.REACT_APP_ADMIN_URL
 const textColor = "inherit"
 
 
-const styles = (theme) => ({
+const styles = theme => ({
   title: {
     fontSize: 24,
   },
