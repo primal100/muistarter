@@ -36,7 +36,12 @@ const rawTheme = createMuiTheme({
       primary: '#ffffff',
       secondary: '#000000',
       disabled: '#a9a6a6',
-    }
+    },
+    action: {
+      disabled: '#000000',
+      hover: '#F5F5F5',
+      selected: '#F5F5F5',
+    },
   },
   typography: {
     fontFamily: "'Work Sans', sans-serif",
