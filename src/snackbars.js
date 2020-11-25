@@ -9,7 +9,6 @@ const autoHideDurationSeconds = process.env.REACT_APP_AUTO_HIDE_DURATION_SECONDS
 const transitionExitDurationSeconds = process.env.REACT_APP_TRANSITION_EXIT_DURATION_SECONDS || 0;
 const anchorOrigin = {horizontal: process.env.REACT_APP_ANCHOR_ORIGIN_HORIZONTAL || 'center',
     vertical: process.env.REACT_APP_ANCHOR_ORIGIN_VERTICAL || 'top'}
-const maxAlertsMobile = parseInt(process.env.REACT_APP_MAX_ALERTS_MOBILE || 1)
 const maxAlerts = parseInt(process.env.REACT_APP_MAX_ALERTS || 1)
 const snackbarClasses = {
             variantSuccess: 'success-message',
@@ -27,12 +26,11 @@ export class CustomSnackbarProvider extends React.Component {
     }
 
     render(){
-        const isMobile = this.props.isMobile;
         return (
-            <SnackbarProvider maxSnack={isMobile ? maxAlertsMobile : maxAlerts} dense={isMobile}
-                autoHideDuration={autoHideDurationSeconds * 1000} anchorOrigin={anchorOrigin}
-                transitionDuration = {{enter: 0, exit: transitionExitDurationSeconds * 1000}}
-                TransitionComponent={Fade} classes={snackbarClasses} ref={this.snackbarRef}
+            <SnackbarProvider maxSnack={maxAlerts} autoHideDuration={autoHideDurationSeconds * 1000}
+                              anchorOrigin={anchorOrigin}
+                              transitionDuration = {{enter: 0, exit: transitionExitDurationSeconds * 1000}}
+                              TransitionComponent={Fade} classes={snackbarClasses} ref={this.snackbarRef}
                 action={(key) => (
                     <IconButton onClick={this.onClickDismiss(key)}>
                         <CloseIcon/>

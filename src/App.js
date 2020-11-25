@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 function App (props) {
     const classes = useStyles();
     return (
-        <CustomSnackbarProvider isMobile={props.isMobile}>
+        <CustomSnackbarProvider>
           <ScrollToTop>
             <SetUserContext>
             <Analytics/>

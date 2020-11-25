@@ -15,6 +15,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { UserContext } from "../contexts";
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
+import Hidden from "@material-ui/core/Hidden";
+import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home'
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 
 const adminUrl = process.env.REACT_APP_ADMIN_URL
@@ -157,7 +165,8 @@ function getLeftTextLinks(user, preferences, homeText){
   const links = [{
       id: 'home',
       href: '/',
-      text: homeText || 'Home'
+      text: homeText || 'Home',
+      icon: <HomeIcon/>
   }]
   if (user && user.is_staff && adminUrl) links.push({
       id: 'admin',
@@ -192,9 +201,16 @@ function getIconLinks(user, preferences){
 
 
 class AppAppBar extends React.Component {
+  state = {
+    mobileMenuOpen: false
+  }
+
+  toggleMobileMenu = () =>{
+    this.setState({mobileMenuOpen: !this.state.mobileMenuOpen})
+  }
 
   render() {
-    const {title, homeText, location, classes} = this.props;
+    const {title, homeText, location, initialWidth="lg", classes} = this.props;
     const pathname = location.pathname;
     return (
         <div>
@@ -214,8 +230,35 @@ class AppAppBar extends React.Component {
                     if (this.props.additionalIconLinks) iconLinks = iconLinks.concat(this.props.additionalIconLinks(user, preferences));
                     return (
                   <React.Fragment>
+          <SwipeableDrawer onClose={this.toggleMobileMenu} onOpen={this.toggleMobileMenu} open={this.state.mobileMenuOpen}>
+              <div role="presentation" onClick={this.toggleMobileMenu} onKeyDown={this.toggleMobileMenu}>
+              <List>
+                    {leftTextLinks.map(link => {
+                      const { id, href, external} = link;
+                      let component;
+                      if (external) component = {component: 'a', href: href}
+                      else component = {component: RouterLink, to: href}
+                      const isCurrentPath = (href === "/" ? pathname === "/" : pathname.startsWith(href))
+                      const className = isCurrentPath ? classes.linkSecondary : classes.leftLinkActive;
+                      return (<ListItem
+                        id={id}
+                        key={id}
+                        {...component}
+                    >
+                    <ListItemIcon className={className}>
+                      {link.icon}
+                     </ListItemIcon>
+                    <ListItemText className={className} primary={
+                                       link.text
+                    } />
+                    </ListItem>)
+              })}
+                  </List>
+              </div>
+                </SwipeableDrawer>
           <AppBar position="fixed">
             <Toolbar className={classes.toolbar}>
+              <Hidden smDown initialWidth={initialWidth}>
               <div className={classes.left}>
                <LeftTextLinks links={leftTextLinks} pathname={pathname} classes={classes} />
               </div>
@@ -228,6 +271,18 @@ class AppAppBar extends React.Component {
               >
                 {title}
               </Link>}
+              </Hidden>
+              <Hidden mdUp initialWidth={initialWidth}>
+                <div className={classes.left}>
+                <IconButton
+                    id="toggle-mobile-drawer"
+                    onClick={this.toggleMobileMenu}
+                    color={textColor}
+                >
+                  <MenuIcon/>
+                </IconButton>
+                </div>
+              </Hidden>
               <div className={classes.right}>
               <RightTextLinks links={rightTextLinks} pathname={pathname} classes={classes}/>
               {user && <React.Fragment>

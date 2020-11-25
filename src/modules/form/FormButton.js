@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 function FormButton(props) {
   const classes = useStyles();
   let { disabled, mounted, ...others } = props;
-  if (!mounted) others.classes = {disabled: classes.notMounted}
+  if (!mounted) others.classes = {root: classes.notMounted}
   return <Button disabled={!mounted || disabled} type="submit" variant="contained" {...others} />;
 }
 
