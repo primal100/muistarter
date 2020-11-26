@@ -83,9 +83,18 @@ export const getMockHistoryVisits = async() => {
 }
 
 
+export const clickMobileDrawerIfExists = async() => {
+    if (await page.$('#toggle-mobile-drawer')){
+        await click('#toggle-mobile-drawer');
+    }
+}
+
+
 if (logConsole) {
     page.on('console', msg => {
         for (let i = 0; i < msg.args().length; ++i)
             console.log(`${i}: ${msg.args()[i]}`);
     });
 }
+
+

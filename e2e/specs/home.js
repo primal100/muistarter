@@ -1,4 +1,4 @@
-import { clickAndWaitNavigation, url} from "../pageObjects";
+import {clickAndWaitNavigation, clickMobileDrawerIfExists, url} from "../pageObjects";
 import { load } from "../pageObjects";
 import { loadSignIn } from "../pageObjects/signIn";
 
@@ -9,6 +9,7 @@ describe("test home", () => {
   });
 
   it("should click home icon and go home", async () => {
+      await clickMobileDrawerIfExists();
       await clickAndWaitNavigation('#home')
       expect(await url()).toBe(URL + "/");
   });

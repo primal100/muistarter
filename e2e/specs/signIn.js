@@ -1,4 +1,4 @@
-import { waitForNavigation, clearLocalStorage, sleep, url } from "../pageObjects/index"
+import { waitForNavigation, clearLocalStorage, sleep, url, clickMobileDrawerIfExists} from "../pageObjects/index"
 import { fillForm, submitFormEnter, clickSubmitButton, getSubmitErrorText, getFieldErrorText, getTextContent } from "../pageObjects/forms";
 import { loadSignIn, loadSignUpViaSignIn, getLocalStorageTokens, tokens, staffTokens, adminLinkExists } from "../pageObjects/signIn";
 import * as jwt from 'jsonwebtoken'
@@ -119,6 +119,7 @@ describe("test signin view", () => {
     expect(await getLocalStorageTokens()).toEqual(staffTokens);
     await sleep(1);
     expect(await getTextContent("#is-staff")).toEqual(["Staff Account"]);
+    await clickMobileDrawerIfExists();
     expect(await adminLinkExists()).toBeTruthy();
   });
 

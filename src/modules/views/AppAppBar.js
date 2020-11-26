@@ -23,6 +23,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 
 const adminUrl = process.env.REACT_APP_ADMIN_URL
@@ -79,7 +80,7 @@ function TextLinks(props){
       <React.Fragment>
         {props.links.map(link => {
           const {pathname, leftLink, rightLink, classes} = props;
-          const { id, href, external, ...linkProps} = link;
+          const { id, href, external, icon, ...linkProps} = link;
           let component;
           if (external) component = {component: 'a', href: href}
           else component = {component: RouterLink, to: href}
@@ -172,7 +173,8 @@ function getLeftTextLinks(user, preferences, homeText){
       id: 'admin',
       href: adminUrl,
       external: true,
-      text: 'Admin'
+      text: 'Admin',
+      icon: <SupervisorAccountIcon/>
     })
   return links;
 }
@@ -210,6 +212,7 @@ class AppAppBar extends React.Component {
   }
 
   render() {
+    console.log('Rendering App Bar')
     const {title, homeText, location, initialWidth="lg", classes} = this.props;
     const pathname = location.pathname;
     return (
@@ -234,7 +237,7 @@ class AppAppBar extends React.Component {
               <div role="presentation" onClick={this.toggleMobileMenu} onKeyDown={this.toggleMobileMenu}>
               <List>
                     {leftTextLinks.map(link => {
-                      const { id, href, external} = link;
+                      const { id, href, external, icon, text} = link;
                       let component;
                       if (external) component = {component: 'a', href: href}
                       else component = {component: RouterLink, to: href}
@@ -246,11 +249,9 @@ class AppAppBar extends React.Component {
                         {...component}
                     >
                     <ListItemIcon className={className}>
-                      {link.icon}
+                      {icon}
                      </ListItemIcon>
-                    <ListItemText className={className} primary={
-                                       link.text
-                    } />
+                    <ListItemText className={className} primary={text} />
                     </ListItem>)
               })}
                   </List>
