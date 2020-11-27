@@ -233,7 +233,7 @@ class AppAppBar extends React.Component {
                     if (this.props.additionalIconLinks) iconLinks = iconLinks.concat(this.props.additionalIconLinks(user, preferences));
                     return (
                   <React.Fragment>
-          <SwipeableDrawer onClose={this.toggleMobileMenu} onOpen={this.toggleMobileMenu} open={this.state.mobileMenuOpen}>
+          <SwipeableDrawer id="main-menu-drawer" onClose={this.toggleMobileMenu} onOpen={this.toggleMobileMenu} open={this.state.mobileMenuOpen}>
               <div role="presentation" onClick={this.toggleMobileMenu} onKeyDown={this.toggleMobileMenu}>
               <List>
                     {leftTextLinks.map(link => {
