@@ -212,7 +212,6 @@ class AppAppBar extends React.Component {
   }
 
   render() {
-    console.log('Rendering App Bar')
     const {title, homeText, location, initialWidth="lg", classes} = this.props;
     const pathname = location.pathname;
     return (
