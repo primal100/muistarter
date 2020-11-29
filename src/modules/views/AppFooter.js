@@ -93,7 +93,7 @@ export default function AppFooter(props) {
             </Grid>
           </Grid>
           <Grid item xs={3} sm={3} md={3}>
-            <Typography variant="h6" marked="left" gutterBottom>
+            <Typography color="textSecondary" variant="h6" marked="left" gutterBottom>
               Legal
             </Typography>
             <Typography component={'span'}  variant="body1">
