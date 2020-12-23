@@ -7,14 +7,16 @@ import Link from "@material-ui/core/Link"
 import { Link as RouterLink } from 'react-router-dom';
 
 
-const websiteLink = process.env.REACT_APP_WEBSITE_LINK
+const websiteLink = process.env.REACT_APP_WEBSITE_LINK;
+const footerLogo = process.env.REACT_APP_FOOTER_LOGO || "logo.svg";
 
 
 function Copyright(props) {
   const title = props.title || "Your Website";
+  const titleLink = props.titleLink || websiteLink;
   return (
       <Typography color="primary">
-        © {new Date().getFullYear() } <Link href={websiteLink}>{title}</Link>
+        © {new Date().getFullYear() } <Link href={titleLink}>{title}</Link>
        </Typography>
   );
 }
@@ -80,17 +82,10 @@ export default function AppFooter(props) {
       <Container className={classes.container}>
         <Grid container spacing={5}>
           <Grid item xs={9} sm={9} md={9}>
-            <Grid
-              container
-              direction="column"
-              justify="flex-end"
-              className={classes.iconsWrapper}
-              spacing={2}
-            >
-              <Grid item>
+            {footerLogo && <Link href={props.titleLink || websiteLink}>
+                <img height="64" width="64" src={footerLogo} alt={props.title}/>
+            </Link>}
                 <Copyright title={props.title} titleLink={props.titleLink}/>
-              </Grid>
-            </Grid>
           </Grid>
           <Grid item xs={3} sm={3} md={3}>
             <Typography color="textSecondary" variant="h6" marked="left" gutterBottom>
