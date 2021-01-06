@@ -22,7 +22,7 @@
     "e2es": "cd e2e && jest --runInBand"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "axios-jwt": "^1.2.0",
     "axios-mock-adapter": "^1.18.2",
     "clsx": "^1.1.1",
