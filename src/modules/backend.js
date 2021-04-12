@@ -174,7 +174,7 @@ export default function mockBackend(errorOnNoMatch) {
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_no_privacy).reply(400, register_no_privacy_response);
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL, register_data_no_terms).reply(400, register_no_terms_response);
         mockRaw.onPost(process.env.REACT_APP_SIGN_UP_URL).reply(201, userDetailsResponse);
-        mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(404, send_reset_password_no_user_response);
+        mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL, non_existing_email_details).reply(400, send_reset_password_no_user_response);
         mockRaw.onPost(process.env.REACT_APP_SEND_RESET_PASSWORD_URL).reply(200, send_reset_password_response);
         mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_too_short).reply(400, register_too_short_password_response);
         mockRaw.onPost(process.env.REACT_APP_RESET_PASSWORD_URL, reset_password_invalid_signature).reply(400, verify_response_invalid_signature);
